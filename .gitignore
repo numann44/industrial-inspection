@@ -6,6 +6,7 @@ __pycache__/
 .DS_Store
 data/
 runs/
+outputs/
 *.pt
 *.pth
 .env*
