@@ -1,0 +1,12 @@
+{
+  "category": "metal_nut",
+  "image_size": 128,
+  "base_channels": 16,
+  "seed": 42,
+  "batch_size": 8,
+  "epochs": 30,
+  "learning_rate": 0.001,
+  "normal_probability": 0.2,
+  "threshold_quantile": 0.95,
+  "device": "auto"
+}
