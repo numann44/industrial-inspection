@@ -1,0 +1,74 @@
+{
+  "image_auroc": 0.6549364613880744,
+  "image_average_precision": 0.9096951985825708,
+  "pixel_average_precision": 0.21298142192721015,
+  "threshold": 0.04053090065717697,
+  "decision_rule": "anomaly_score >= threshold",
+  "confusion": {
+    "true_positive": 37,
+    "false_positive": 2,
+    "true_negative": 20,
+    "false_negative": 56
+  },
+  "defect_recall": 0.3978494623655914,
+  "normal_false_alarm_rate": 0.09090909090909091,
+  "precision": 0.9487179487179487,
+  "images": 115,
+  "evaluation_resolution": "original resolution per image",
+  "pixel_average_precision_by_category": {
+    "metal_nut": {
+      "average_precision": 0.21298142192721015,
+      "pixels": 56350000,
+      "positive_pixels": 6602541,
+      "images": 115
+    }
+  },
+  "pixel_metric_space": "original",
+  "pixel_aggregation": "macro mean of per-category pixel average precision",
+  "pixel_resize": "bilinear anomaly-map upsampling; original masks are unchanged",
+  "recall_by_defect": {
+    "metal_nut/bent": {
+      "recall": 0.04,
+      "images": 25,
+      "detected": 1
+    },
+    "metal_nut/color": {
+      "recall": 0.5909090909090909,
+      "images": 22,
+      "detected": 13
+    },
+    "metal_nut/flip": {
+      "recall": 0.8260869565217391,
+      "images": 23,
+      "detected": 19
+    },
+    "metal_nut/scratch": {
+      "recall": 0.17391304347826086,
+      "images": 23,
+      "detected": 4
+    }
+  },
+  "latency": {
+    "single_image_median_ms": 4.275396000139153,
+    "single_image_p95_ms": 4.807808849727735,
+    "single_image_measurements": 32,
+    "batch_median_ms": 26.411499999994703,
+    "batch_p95_ms": 50.29232890019552,
+    "batch_size": 8,
+    "batches": 15,
+    "warmup_forwards": 3,
+    "scope": "model forward and image scoring only; excludes disk loading and host-to-device transfer",
+    "device": "mps"
+  },
+  "split_digest": "2df9587b2f8d3f7f389a7ef2a1e9e13cf21ea6b6738a1d9023e7daf1d59de5ad",
+  "threshold_source": "separate normal calibration split",
+  "score_definition": "mean of top 1% sigmoid anomaly-map pixels; not a calibrated probability",
+  "limitations": [
+    "Predictions originate at model resolution; upsampling cannot recover defects lost during input resizing.",
+    "A threshold fitted to a small normal calibration set has uncertain false-alarm generalization.",
+    "Synthetic-anomaly training does not guarantee transfer to all real defect types."
+  ],
+  "status": "exploratory initial pilot",
+  "code_revision": "b91f15f6bfe9c784115f5f53efe673e7efba1427",
+  "checkpoint_sha256": "adc69b510b1b855121d8d5482a85fc31007a614e6f4522011acb9623b4b28ddb"
+}

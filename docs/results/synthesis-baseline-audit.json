@@ -1,0 +1,77 @@
+{
+  "category": "metal_nut",
+  "split": "train",
+  "training_images": 154,
+  "synthetic_examples": 462,
+  "split_digest": "2df9587b2f8d3f7f389a7ef2a1e9e13cf21ea6b6738a1d9023e7daf1d59de5ad",
+  "image_size": 128,
+  "resampling": "bilinear",
+  "device": "cpu",
+  "torch_version": "2.14.1",
+  "numpy_version": "2.5.3",
+  "pillow_version": "12.3.0",
+  "seed": 420000,
+  "seed_rule": "seed + image_index * 3 + mode_index",
+  "forced_modes": [
+    "scratch",
+    "appearance",
+    "texture"
+  ],
+  "synthesis_strategy": "legacy",
+  "foreground_only": false,
+  "synthesis_source_sha256": "9e71b4678c6b03c4e815c33c72510b4c442893576a4d96e2026bebfcaaf14bf6",
+  "candidate_foreground_rule": "mean RGB > 0.12",
+  "brightness_definition": "arithmetic mean RGB in [0,1], not perceptual luminance",
+  "sampling": {
+    "border": "first/last five rows and columns, every eighth value",
+    "foreground_brightness": "every thirtieth candidate foreground pixel per image",
+    "absolute_change": "every eighth masked pixel per synthetic image"
+  },
+  "quantiles": {
+    "border_brightness": {
+      "0.05": 0.09281045943498611,
+      "0.5": 0.09673202782869339,
+      "0.95": 0.10326797515153885
+    },
+    "candidate_foreground_brightness": {
+      "0.05": 0.1908496767282486,
+      "0.5": 0.35947713255882263,
+      "0.95": 0.5751634240150452
+    },
+    "candidate_foreground_image_fraction": {
+      "0.05": 0.4886260986328125,
+      "0.5": 0.490997314453125,
+      "0.95": 0.493756103515625
+    },
+    "synthetic_mask_fraction_outside_candidate_foreground": {
+      "0.05": 0.0,
+      "0.5": 0.20532483876042157,
+      "0.95": 0.5343751633986927
+    },
+    "synthetic_mask_fraction_of_image": {
+      "0.05": 0.0092864990234375,
+      "0.5": 0.048095703125,
+      "0.95": 0.14179992675781247
+    },
+    "absolute_mean_rgb_change_inside_mask": {
+      "0.05": 0.039867897331714634,
+      "0.5": 0.16799885034561157,
+      "0.95": 0.37254127860069264
+    }
+  },
+  "measurement_samples": {
+    "border_brightness": 49280,
+    "candidate_foreground_brightness": 41386,
+    "candidate_foreground_image_fraction": 154,
+    "synthetic_mask_fraction_outside_candidate_foreground": 462,
+    "synthetic_mask_fraction_of_image": 462,
+    "absolute_mean_rgb_change_inside_mask": 54992
+  },
+  "limitations": [
+    "The foreground is a brightness heuristic, not an annotated segmentation.",
+    "Only original normal training records are read; validation, calibration and test images are not read.",
+    "Forced corruption modes omit the generator's probability of returning a clean example.",
+    "These descriptive measurements do not establish a cause of real-defect failures.",
+    "The default bilinear resizing matches the training loader; bicubic is an optional descriptive comparison."
+  ]
+}

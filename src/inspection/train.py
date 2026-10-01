@@ -17,11 +17,12 @@ from inspection.synthesis import synthesize
 
 
 class SyntheticDataset(Dataset):
-    def __init__(self, records, image_size, seed, normal_probability):
+    def __init__(self, records, image_size, seed, normal_probability, synthesis="legacy"):
         self.clean = InspectionDataset(records, image_size, include_masks=False)
         self.seed = seed
         self.epoch = 0
         self.normal_probability = normal_probability
+        self.synthesis = synthesis
 
     def __len__(self):
         return len(self.clean)
@@ -29,7 +30,7 @@ class SyntheticDataset(Dataset):
     def __getitem__(self, index):
         clean = self.clean[index]["image"]
         generator = torch.Generator().manual_seed(self.seed + self.epoch * len(self) + index)
-        image, mask = synthesize(clean, generator, self.normal_probability)
+        image, mask = synthesize(clean, generator, self.normal_probability, strategy=self.synthesis)
         return {"image": image, "clean": clean, "mask": mask}
 
 
@@ -118,6 +119,8 @@ def train(manifest_path, config_path, output, epochs=None, max_steps=None, devic
         raise ValueError("image_size must be at least 16 and base_channels must be positive")
     if not 0 <= config["normal_probability"] <= 1:
         raise ValueError("normal_probability must be between zero and one")
+    if config.get("synthesis", "legacy") not in ("legacy", "foreground"):
+        raise ValueError("synthesis must be legacy or foreground")
     if max_steps is not None and max_steps < 1:
         raise ValueError("max_steps must be positive")
     if not 0 < config["threshold_quantile"] < 1:
@@ -149,9 +152,10 @@ def train(manifest_path, config_path, output, epochs=None, max_steps=None, devic
         raise FileExistsError("Output already has a checkpoint; choose a new run directory")
     _write_json(output / "config.json", config)
     size, batch_size = config["image_size"], config["batch_size"]
-    training = SyntheticDataset(splits["train"], size, seed, config["normal_probability"])
+    synthesis = config.get("synthesis", "legacy")
+    training = SyntheticDataset(splits["train"], size, seed, config["normal_probability"], synthesis)
     validation = SyntheticDataset(splits["validation"], size, seed + 1_000_000,
-                                  config["normal_probability"])
+                                  config["normal_probability"], synthesis)
     shuffle_generator = torch.Generator().manual_seed(seed)
     train_loader = DataLoader(training, batch_size=batch_size, shuffle=True,
                               generator=shuffle_generator, num_workers=0)

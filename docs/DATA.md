@@ -2,6 +2,8 @@
 
 MVTec AD is available as a complete 5,264,982,680-byte XZ archive. The download was verified with a successful HTTP response and a real byte-range GET before beginning the full local download. The current official website uses a download form; the maintained Anomalib project publishes the working archive link and SHA-256 used by our preparation script.
 
+Dataset attribution: Paul Bergmann, Michael Fauser, David Sattlegger and Carsten Steger, *MVTec AD — A Comprehensive Real-World Dataset for Unsupervised Anomaly Detection*, CVPR 2019. Original data copyright: MVTec Software GmbH, 2019.
+
 Expected archive SHA-256:
 
 ```text
