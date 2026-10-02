@@ -39,6 +39,30 @@ def png_bytes(image):
     return buffer.getvalue()
 
 
+def model_context(entry):
+    """Task-specific explanation, including compatibility with the legacy pilot."""
+    supervised = entry.get('model_kind') == 'supervised_segmentation'
+    if supervised:
+        training = 'Real-defect supervised training · Real normal/defective images and annotated defect masks'
+        explanation = ('This selected KolektorSDD2 model learns from real labeled defects and their pixel masks. '
+                       'It is a separate supervised surface-inspection task; its results apply to that dataset’s acquisition conditions.')
+    else:
+        training = 'Normal-only training · Procedural synthetic defects and corruption masks'
+        explanation = ('This selected MVTec model learns from normal training images and procedural corruption masks. '
+                       'Original real-defect test images are used only for evaluation. Model weights apply to the selected part category.')
+    preparation = entry.get('preparation_note')
+    if not preparation:
+        spec = entry.get('preprocess', {})
+        dimensions = f" to {spec['width']} × {spec['height']} pixels (width × height)" if spec.get('width') and spec.get('height') else ''
+        if spec.get('mode') == 'letterbox' or supervised:
+            preparation = f'Preserve aspect ratio and add letterbox padding{dimensions}; exclude padding from image scoring.'
+        elif spec.get('mode') == 'square':
+            preparation = f'Use the checkpoint’s square resize{dimensions}.'
+        else:
+            preparation = 'Use the same orientation, color and resizing rules as this checkpoint’s evaluation.'
+    return {'training': training, 'preparation': preparation, 'explanation': explanation}
+
+
 def main():
     registry = load_registry(ROOT / "artifacts/models.json")
     with st.sidebar:
@@ -46,12 +70,15 @@ def main():
         st.caption("COMPUTER VISION · RESEARCH WORKBENCH")
         st.divider()
         entry = st.selectbox("Inspection model", registry["models"], format_func=lambda item: item["label"])
+        context = model_context(entry)
         st.caption(entry["description"])
         st.markdown("**What this model knows**")
         st.caption(entry["conditions"])
         st.divider()
         st.markdown("**Training**")
-        st.caption("Random initialization · PyTorch\n\nCategory-specific weights · Frozen decision threshold")
+        st.caption(f"Random initialization · PyTorch\n\n{context['training']}\n\nCategory-specific weights · Frozen decision threshold")
+        st.markdown("**Image preparation**")
+        st.caption(context['preparation'])
         st.markdown("[Source & experiments](https://github.com/numann44/industrial-inspection)")
         st.markdown("[Data & attribution](https://github.com/numann44/industrial-inspection/blob/main/docs/DATA.md)")
 
@@ -136,8 +163,8 @@ def main():
 
     with method_tab:
         st.subheader("From a photograph to a review decision")
-        st.markdown("1. **Prepare the image.** Apply the same orientation, color and resizing rules used during evaluation.\n2. **Run the trained model.** Produce an anomaly map from category-specific weights learned from random initialization.\n3. **Compare with a frozen threshold.** Average the strongest 1% of valid pixel activations and compare with a threshold fitted on separate normal images.\n4. **Inspect the evidence.** Review the overlay and retain the model identity and raw values in an export.")
-        st.write("The MVTec models learn from normal training images and procedural corruption masks. They do not train on the original real-defect test images. A separately labeled KolektorSDD2 experiment, when available, is explicitly identified as supervised.")
+        st.markdown(f"1. **Prepare the image.** {context['preparation']}\n2. **Run the trained model.** Produce an anomaly map from category-specific weights learned from random initialization.\n3. **Compare with a frozen threshold.** Average the strongest 1% of valid pixel activations and compare with a threshold fitted on separate normal images.\n4. **Inspect the evidence.** Review the overlay and retain the model identity and raw values in an export.")
+        st.write(context['explanation'])
         st.caption("This is a research portfolio demonstrator. Results depend on the selected category and imaging conditions; a new production line requires independent validation.")
     st.divider()
     st.caption("Industrial Inspection · Ahmet Numan Şahin · Source code: MIT · Dataset examples: CC BY-NC-SA 4.0 with source attribution")

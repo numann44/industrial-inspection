@@ -196,6 +196,39 @@ def _model_summary(category, candidate, metric, checkpoint, parameter_count):
             "limits": "Dataset point estimates only. Metal-nut development is exploratory. Small calibration sets, training-seed variability and domain shift limit generalization; this is not production approval."}
 
 
+def _presentation(category, summary):
+    """Describe the selected task and actual checkpoint preprocessing explicitly."""
+    supervised = summary['model_kind'] == 'supervised_segmentation'
+    scope = 'exploratory' if category == 'metal_nut' else 'held-out'
+    preprocess = summary['preprocess']
+    width, height = preprocess['width'], preprocess['height']
+    if supervised:
+        if preprocess['mode'] != 'letterbox':
+            raise ValueError('The supervised surface demo must preserve its letterbox preparation')
+        label = f'KolektorSDD2 surface · real-defect supervised · {scope}'
+        training = 'Real-defect supervised training'
+        description = ('Segmentation trained from random weights on real normal and defective '
+                       'KolektorSDD2 images with annotated defect masks. Separate supervised surface-inspection task.')
+        preparation = f'Preserve aspect ratio and add letterbox padding to {width} × {height} pixels (width × height); exclude padding from image scoring.'
+        evaluation = ('Validation selection uses real labeled defects and masks. Held-out KolektorSDD2 test results '
+                      'describe this separate supervised task; they are not interchangeable with normal-only MVTec results.')
+        conditions = 'KolektorSDD2 surface images matching the dataset acquisition conditions; select this surface task explicitly.'
+    else:
+        label = f"{category.replace('_', ' ').title()} · normal-only · {scope}"
+        training = 'Normal-only training with synthetic defects'
+        description = ('Category-specific reconstruction/segmentation' if summary['model_kind'] == 'joint_reconstruction_segmentation' else 'Category-specific segmentation')
+        description += ' trained from random weights on normal MVTec AD images and procedural corruption masks; no real-defect training images.'
+        preparation = f'Resize to {width} × {height} pixels (width × height) with the checkpoint’s square preparation.'
+        evaluation = (f"MVTec AD {category} {scope} test results. " +
+                      ('This category’s test set was inspected during development. ' if category == 'metal_nut' else 'Weights and model/seed selections were frozen before held-out testing. ') +
+                      'Validation selection uses a common synthetic challenge made from separate normal images.')
+        conditions = f"Only {category.replace('_', ' ')} images matching MVTec AD acquisition conditions; category is selected by the user, not recognized by the model."
+    return {'label': label, 'training_track': training, 'description': description,
+            'preparation_note': preparation, 'preprocess': preprocess, 'conditions': conditions,
+            'status_label': f"{'REAL-DEFECT SUPERVISED' if supervised else 'NORMAL-ONLY'} · {scope.upper()} MODEL · DATASET TARGET {'MET' if summary['measured_quality_target_met'] else 'NOT MET'}",
+            'evaluation_note': evaluation + ' Frozen 90th-percentile normal calibration threshold. Scores are not probabilities; dataset results do not guarantee production reliability.'}
+
+
 def _copy_galleries(root, destination, verified, categories):
     sources = verified["gallery_sources"]
     if set(sources) != set(categories):
@@ -258,18 +291,13 @@ def package_study(root, study="outputs/study-v2", output="outputs/release-v0.1.0
                 if category == "kolektor_surface" else results.get("mvtec_training_seed_variability", {}).get(category))
             summaries.append(summary)
             write_json(staging / "models" / f"{category}.json", summary)
-            scope = "exploratory" if category == "metal_nut" else "held-out"
             passed = summary["measured_quality_target_met"]
             models.append({"id": f"{category.replace('_', '-')}-study-v2-seed{candidate['seed']}",
-                           "label": f"{category.replace('_', ' ').title()} · {scope}", "category": category,
-                           "status_label": f"{scope.upper()} MODEL · DATASET TARGET {'MET' if passed else 'NOT MET'}",
-                           "description": "Compact segmentation model trained from random weights; see the bundled model summary.",
-                           "conditions": "Inputs must match this dataset category and acquisition conditions; category is selected by the user, not recognized by the model.",
+                           **_presentation(category, summary), "category": category,
                            "local_path": weight_path.as_posix(), "sha256": candidate["checkpoint_sha256"],
                            "metrics": summary["metrics"], "threshold": candidate["threshold"],
                            "model_kind": candidate["model_kind"], "training_seed": candidate["seed"],
                            "experimental_status": summary["experimental_status"], "target_met": passed,
-                           "evaluation_note": f"Pretest validation-selected deployment; {scope} test results. Frozen 90th-percentile normal calibration threshold. Scores are not probabilities; dataset results do not guarantee production reliability.",
                            "examples": examples})
         write_json(staging / "artifacts/models.json", {"schema_version": 1, "models": models,
                    "release_candidate": True, "published": False, "path_base": "release bundle root",

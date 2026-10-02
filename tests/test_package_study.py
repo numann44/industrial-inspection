@@ -38,6 +38,8 @@ def fixture_study(tmp_path, monkeypatch, supervised=False):
                       "model_kind": kind, "split_digest": f"split-{category}", "threshold": .5,
                       "best_metric": .9, "config": config, "image_size": 32, "best_epoch": 10,
                       "calibration": {"quantile": .9, "normal_count": 3}}
+        checkpoint['preprocess'] = ({'mode': 'letterbox', 'height': 640, 'width': 256}
+                                    if category == 'kolektor_surface' else {'mode': 'square', 'height': 32, 'width': 32})
         torch.save(checkpoint, run / "checkpoint.pt")
         item = {"checkpoint": (run / "checkpoint.pt").relative_to(tmp_path).as_posix(),
                 "run": run.relative_to(tmp_path).as_posix(), "checkpoint_sha256": release.sha256(run / "checkpoint.pt"),
@@ -123,6 +125,12 @@ def test_release_preserves_pretest_selected_weights_and_attributed_examples_with
         from inspection.artifacts import resolve_checkpoint
         assert resolve_checkpoint(model, output) == output / model["local_path"]
         assert model["target_met"] is True
+        assert 'normal-only' in model['label']
+        assert 'normal MVTec AD images and procedural corruption masks' in model['description']
+        assert 'square preparation' in model['preparation_note']
+        assert model['preprocess']['mode'] == 'square'
+        expected_scope = 'exploratory' if model['category'] == 'metal_nut' else 'frozen before held-out testing'
+        assert expected_scope in model['evaluation_note']
         checkpoint = torch.load(tmp_path / item["checkpoint"], map_location="cpu", weights_only=True)
         assert "parameters" not in checkpoint  # Matches real main-training outputs.
         assert release.read_json(output / "models" / f"{model['category']}.json")["parameters"] == 1
@@ -160,6 +168,15 @@ def test_conditional_supervised_bundle_keeps_unmet_targets_and_separate_supervis
     assert summary["supervision"] == "real defect images and masks"
     assert summary["experimental_status"] == "frozen-held-out"
     assert "Kolektor" in models[-1]["examples"][0]["attribution"]
+    surface = next(model for model in models if model['category'] == 'kolektor_surface')
+    assert 'real-defect supervised' in surface['label']
+    assert 'REAL-DEFECT SUPERVISED' in surface['status_label']
+    assert 'real normal and defective' in surface['description']
+    assert 'annotated defect masks' in surface['description']
+    assert 'letterbox padding to 256 × 640' in surface['preparation_note']
+    assert surface['preprocess'] == {'mode': 'letterbox', 'height': 640, 'width': 256}
+    assert 'real labeled defects and masks' in surface['evaluation_note']
+    assert 'not interchangeable with normal-only MVTec results' in surface['evaluation_note']
 
 
 def test_incomplete_study_is_rejected_before_any_weights_or_images_are_opened(tmp_path, monkeypatch):
