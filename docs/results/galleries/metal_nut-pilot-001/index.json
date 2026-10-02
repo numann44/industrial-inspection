@@ -1,0 +1,97 @@
+{
+  "selection": "highest-scoring FP; lowest-scoring FN; evenly spaced successful-case score ranks",
+  "groups": {
+    "FP": 2,
+    "FN": 2,
+    "TP": 2,
+    "TN": 2
+  },
+  "items": [
+    {
+      "file": "FP_0079_metal_nut_good.png",
+      "group": "FP",
+      "category": "metal_nut",
+      "defect": "good",
+      "source": "metal_nut/test/good/009.png",
+      "label": 0,
+      "score": 0.06487536430358887,
+      "predicted_defective": true
+    },
+    {
+      "file": "FP_0084_metal_nut_good.png",
+      "group": "FP",
+      "category": "metal_nut",
+      "defect": "good",
+      "source": "metal_nut/test/good/014.png",
+      "label": 0,
+      "score": 0.04660828411579132,
+      "predicted_defective": true
+    },
+    {
+      "file": "FN_0051_metal_nut_flip.png",
+      "group": "FN",
+      "category": "metal_nut",
+      "defect": "flip",
+      "source": "metal_nut/test/flip/004.png",
+      "label": 1,
+      "score": 0.0014422438107430935,
+      "predicted_defective": false
+    },
+    {
+      "file": "FN_0097_metal_nut_scratch.png",
+      "group": "FN",
+      "category": "metal_nut",
+      "defect": "scratch",
+      "source": "metal_nut/test/scratch/005.png",
+      "label": 1,
+      "score": 0.0015793159836903214,
+      "predicted_defective": false
+    },
+    {
+      "file": "TP_0098_metal_nut_scratch.png",
+      "group": "TP",
+      "category": "metal_nut",
+      "defect": "scratch",
+      "source": "metal_nut/test/scratch/006.png",
+      "label": 1,
+      "score": 0.041108451783657074,
+      "predicted_defective": true
+    },
+    {
+      "file": "TP_0040_metal_nut_color.png",
+      "group": "TP",
+      "category": "metal_nut",
+      "defect": "color",
+      "source": "metal_nut/test/color/015.png",
+      "label": 1,
+      "score": 0.9995480179786682,
+      "predicted_defective": true
+    },
+    {
+      "file": "TN_0077_metal_nut_good.png",
+      "group": "TN",
+      "category": "metal_nut",
+      "defect": "good",
+      "source": "metal_nut/test/good/007.png",
+      "label": 0,
+      "score": 0.0013615475036203861,
+      "predicted_defective": false
+    },
+    {
+      "file": "TN_0086_metal_nut_good.png",
+      "group": "TN",
+      "category": "metal_nut",
+      "defect": "good",
+      "source": "metal_nut/test/good/016.png",
+      "label": 0,
+      "score": 0.030625246465206146,
+      "predicted_defective": false
+    }
+  ],
+  "threshold": 0.04053090065717697,
+  "display_max": 0.08106180131435393,
+  "display_rule": "fixed per-checkpoint range, never per-image min/max; saturation is not a pixel decision",
+  "dataset": "MVTec AD",
+  "source_url": "https://www.mvtec.com/research-teaching/datasets/mvtec-ad",
+  "license": "MVTec AD derivatives: CC BY-NC-SA 4.0"
+}

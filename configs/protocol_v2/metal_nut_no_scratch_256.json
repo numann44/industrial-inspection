@@ -1,0 +1,21 @@
+{
+  "category": "metal_nut",
+  "model_kind": "joint_reconstruction_segmentation",
+  "image_size": 256,
+  "base_channels": 16,
+  "data_seed": 42,
+  "training_seed": 42,
+  "batch_size": 8,
+  "epochs": 100,
+  "learning_rate": 0.0003,
+  "normal_probability": 0.25,
+  "threshold_quantile": 0.9,
+  "synthesis": "foreground",
+  "restrict_foreground": true,
+  "scratch_enabled": false,
+  "selection_every": 5,
+  "require_bank": true,
+  "cache_images": true,
+  "cpu_threads": 1,
+  "device": "auto"
+}

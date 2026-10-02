@@ -14,9 +14,14 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = ["pytest>=8,<10"]
+demo = ["streamlit==1.64.0"]
+benchmark = ["torchvision==0.29.1", "timm==1.0.30", "tqdm>=4.62"]
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.setuptools.package-data]
+patchcore = ["LICENSE", "NOTICE", "UPSTREAM.json"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

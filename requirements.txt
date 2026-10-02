@@ -1,0 +1,10 @@
+--extra-index-url https://download.pytorch.org/whl/cpu
+torch==2.14.1+cpu; sys_platform == 'linux'
+torch==2.14.1; sys_platform != 'linux'
+numpy==2.5.3
+pillow==12.3.0
+scikit-learn==1.9.1
+scipy==1.18.1
+matplotlib==3.11.2
+streamlit==1.64.0
+-e .

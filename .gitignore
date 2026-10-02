@@ -10,3 +10,7 @@ outputs/
 *.pt
 *.pth
 .env*
+.cache/
+build/
+dist/
+.streamlit/secrets.toml

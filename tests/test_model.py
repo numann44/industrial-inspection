@@ -1,7 +1,7 @@
 import torch
 
 from inspection.losses import inspection_loss
-from inspection.model import InspectionModel, anomaly_score
+from inspection.model import InspectionModel, SegmentationOnlyModel, anomaly_score, create_model
 from inspection.synthesis import synthesize
 
 
@@ -35,3 +35,15 @@ def test_random_initialized_model_can_learn_fixed_synthetic_batch():
         assert all(torch.isfinite(parameter).all() for parameter in model.parameters())
     finally:
         torch.set_num_threads(previous_threads)
+
+
+def test_segmentation_only_ablation_has_no_reconstruction_parameters():
+    model = create_model("segmentation_only", {"base_channels": 4})
+    assert isinstance(model, SegmentationOnlyModel)
+    image = torch.rand(1, 3, 32, 32)
+    reconstruction, logits = model(image)
+    assert reconstruction is image
+    assert logits.shape == (1, 1, 32, 32)
+    assert not any(name.startswith("reconstruction") for name, _ in model.named_parameters())
+    logits.mean().backward()
+    assert any(parameter.grad is not None and parameter.grad.abs().sum() > 0 for parameter in model.parameters())

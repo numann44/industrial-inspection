@@ -37,7 +37,7 @@ def foreground_mask(image):
     return opened[0].bool()
 
 
-def _surface_corruption(image, generator, mode):
+def _surface_corruption(image, generator, mode, restrict_foreground=True):
     height, width = image.shape[-2:]
     surface = foreground_mask(image)
     interior = (1 - F.max_pool2d(1 - surface.float()[None], 3, stride=1, padding=1))[0].bool()
@@ -83,7 +83,8 @@ def _surface_corruption(image, generator, mode):
                       int(_random(generator, 0.02, 0.08) * width))
             replacement = torch.roll(image, shifts=shifts, dims=(1, 2))
             # Both destination and copied source must be on the original surface.
-            allowed = allowed & torch.roll(surface, shifts=shifts, dims=(1, 2))
+            if restrict_foreground:
+                allowed = allowed & torch.roll(surface, shifts=shifts, dims=(1, 2))
             replacement = replacement + torch.randn(image.shape, generator=generator) * 0.015
         elif mode == "warp":
             # Copy a slightly shifted local neighborhood from this same image.
@@ -97,7 +98,9 @@ def _surface_corruption(image, generator, mode):
                                         padding_mode="border", align_corners=True)[0]
         else:
             raise ValueError(f"Unknown foreground corruption mode: {mode}")
-    support = region[None] & allowed
+    # The ablation changes support only; random draws, centers and families are
+    # identical between restricted and unrestricted paired samples.
+    support = region[None] & allowed if restrict_foreground else region[None]
     strength = _random(generator, 0.7, 1.0)
     replacement = image * (1 - strength) + replacement.clamp(0, 1) * strength
     changed = (replacement - image).abs().amax(dim=0, keepdim=True) > 1e-6
@@ -106,7 +109,8 @@ def _surface_corruption(image, generator, mode):
     return corrupted.clamp(0, 1), mask
 
 
-def synthesize(image, generator, normal_probability=0.2, mode=None, strategy="legacy"):
+def synthesize(image, generator, normal_probability=0.2, mode=None, strategy="legacy",
+               restrict_foreground=True, scratch_enabled=True):
     """Return (corrupted RGB CHW image, binary 1HW mask) on CPU."""
     if image.device.type != "cpu":
         raise ValueError("Synthetic dataset augmentation expects CPU tensors")
@@ -119,13 +123,18 @@ def synthesize(image, generator, normal_probability=0.2, mode=None, strategy="le
     if strategy == "foreground":
         if mode is None:
             modes = ("scratch", "scratch", "scratch", "lighting", "texture", "warp", "warp", "appearance")
+            if not scratch_enabled:
+                modes = tuple(name for name in modes if name != "scratch")
             mode = modes[int(torch.randint(len(modes), (), generator=generator))]
-        return _surface_corruption(image, generator, mode)
+        if mode == "scratch" and not scratch_enabled:
+            raise ValueError("Scratch mode is disabled by this configuration")
+        return _surface_corruption(image, generator, mode, restrict_foreground)
     if strategy != "legacy":
         raise ValueError(f"Unknown synthesis strategy: {strategy}")
     if mode is None:
-        mode = ("scratch", "appearance", "texture")[
-            int(torch.randint(3, (), generator=generator).item())
+        modes = ("scratch", "appearance", "texture") if scratch_enabled else ("appearance", "texture")
+        mode = modes[
+            int(torch.randint(len(modes), (), generator=generator).item())
         ]
     if mode not in ("scratch", "appearance", "texture"):
         raise ValueError(f"Unknown corruption mode: {mode}")

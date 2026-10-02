@@ -1,0 +1,3556 @@
+{
+  "split_digest": "2df9587b2f8d3f7f389a7ef2a1e9e13cf21ea6b6738a1d9023e7daf1d59de5ad",
+  "runs": [
+    {
+      "run": "metal_nut-pilot-001",
+      "config": {
+        "category": "metal_nut",
+        "image_size": 128,
+        "base_channels": 16,
+        "seed": 42,
+        "batch_size": 8,
+        "epochs": 30,
+        "learning_rate": 0.001,
+        "normal_probability": 0.2,
+        "threshold_quantile": 0.95,
+        "device": "mps"
+      },
+      "model_kind": "joint_reconstruction_segmentation",
+      "image_size": 128,
+      "epochs": 30,
+      "best_epoch": 30,
+      "model_selection": "minimum per-method normal/synthetic validation loss",
+      "bank_digest": null,
+      "best_metric": null,
+      "calibration_quantile": 0.95,
+      "calibration_count": 33,
+      "training_seconds": 92.63098654200076,
+      "metrics": {
+        "image_auroc": 0.6549364613880744,
+        "image_average_precision": 0.9096951985825708,
+        "pixel_average_precision": 0.21298142192721015,
+        "threshold": 0.04053090065717697,
+        "decision_rule": "anomaly_score >= threshold",
+        "confusion": {
+          "true_positive": 37,
+          "false_positive": 2,
+          "true_negative": 20,
+          "false_negative": 56
+        },
+        "defect_recall": 0.3978494623655914,
+        "normal_false_alarm_rate": 0.09090909090909091,
+        "precision": 0.9487179487179487,
+        "images": 115,
+        "evaluation_resolution": "original resolution per image",
+        "pixel_average_precision_by_category": {
+          "metal_nut": {
+            "average_precision": 0.21298142192721015,
+            "pixels": 56350000,
+            "positive_pixels": 6602541,
+            "images": 115
+          }
+        },
+        "pixel_metric_space": "original",
+        "pixel_aggregation": "macro mean of per-category pixel average precision",
+        "pixel_resize": "bilinear anomaly-map upsampling; original masks are unchanged",
+        "recall_by_defect": {
+          "metal_nut/bent": {
+            "recall": 0.04,
+            "images": 25,
+            "detected": 1
+          },
+          "metal_nut/color": {
+            "recall": 0.5909090909090909,
+            "images": 22,
+            "detected": 13
+          },
+          "metal_nut/flip": {
+            "recall": 0.8260869565217391,
+            "images": 23,
+            "detected": 19
+          },
+          "metal_nut/scratch": {
+            "recall": 0.17391304347826086,
+            "images": 23,
+            "detected": 4
+          }
+        },
+        "latency": {
+          "single_image_median_ms": 4.275396000139153,
+          "single_image_p95_ms": 4.807808849727735,
+          "single_image_measurements": 32,
+          "batch_median_ms": 26.411499999994703,
+          "batch_p95_ms": 50.29232890019552,
+          "batch_size": 8,
+          "batches": 15,
+          "warmup_forwards": 3,
+          "scope": "model forward and image scoring only; excludes disk loading and host-to-device transfer",
+          "device": "mps"
+        },
+        "split_digest": "2df9587b2f8d3f7f389a7ef2a1e9e13cf21ea6b6738a1d9023e7daf1d59de5ad",
+        "threshold_source": "separate normal calibration split",
+        "score_definition": "mean of top 1% sigmoid anomaly-map pixels; not a calibrated probability",
+        "limitations": [
+          "Predictions originate at model resolution; upsampling cannot recover defects lost during input resizing.",
+          "A threshold fitted to a small normal calibration set has uncertain false-alarm generalization.",
+          "Synthetic-anomaly training does not guarantee transfer to all real defect types."
+        ],
+        "uncertainty": {
+          "confidence_level": 0.95,
+          "image_auroc_interval": [
+            0.5522849462365591,
+            0.7527126099706745
+          ],
+          "auroc_method": "percentile stratified bootstrap of independent test images",
+          "bootstrap_samples": 1000,
+          "bootstrap_seed": 42,
+          "defect_recall_interval": [
+            0.3043342343812164,
+            0.49946880378677255
+          ],
+          "normal_false_alarm_rate_interval": [
+            0.025295428990995267,
+            0.27814946841605814
+          ],
+          "precision_interval": [
+            0.8311435995238639,
+            0.9858220445847259
+          ],
+          "rate_method": "Wilson score interval",
+          "defective_images": 93,
+          "normal_images": 22,
+          "limitations": "Intervals describe finite-image sampling uncertainty, not training-seed variability, domain shift or independent-pixel uncertainty."
+        },
+        "defect_area_groups": {
+          "area_definition": "fraction of original image pixels with nonzero ground-truth mask",
+          "boundaries": [
+            0.001,
+            0.01,
+            0.05
+          ],
+          "groups": {
+            "tiny_below_0.1_percent": {
+              "images": 0,
+              "detected": 0,
+              "missed": 0,
+              "recall": null,
+              "recall_interval": null
+            },
+            "small_0.1_to_1_percent": {
+              "images": 7,
+              "detected": 1,
+              "missed": 6,
+              "recall": 0.14285714285714285,
+              "recall_interval": [
+                0.02567962434474355,
+                0.5131278292743189
+              ]
+            },
+            "medium_1_to_5_percent": {
+              "images": 50,
+              "detected": 13,
+              "missed": 37,
+              "recall": 0.26,
+              "recall_interval": [
+                0.15871527493552393,
+                0.39553157264848837
+              ]
+            },
+            "large_at_least_5_percent": {
+              "images": 36,
+              "detected": 23,
+              "missed": 13,
+              "recall": 0.6388888888888888,
+              "recall_interval": [
+                0.4757507548555804,
+                0.7752440705348462
+              ]
+            }
+          }
+        },
+        "checkpoint_sha256": "adc69b510b1b855121d8d5482a85fc31007a614e6f4522011acb9623b4b28ddb",
+        "status": "exploratory metal_nut development"
+      },
+      "predictions": [
+        {
+          "image": "metal_nut/test/bent/000.png",
+          "category": "metal_nut",
+          "defect": "bent",
+          "label": 1,
+          "score": 0.3550647795200348,
+          "predicted_defective": true
+        },
+        {
+          "image": "metal_nut/test/bent/001.png",
+          "category": "metal_nut",
+          "defect": "bent",
+          "label": 1,
+          "score": 0.02836642786860466,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/bent/002.png",
+          "category": "metal_nut",
+          "defect": "bent",
+          "label": 1,
+          "score": 0.0023206411860883236,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/bent/003.png",
+          "category": "metal_nut",
+          "defect": "bent",
+          "label": 1,
+          "score": 0.003948961850255728,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/bent/004.png",
+          "category": "metal_nut",
+          "defect": "bent",
+          "label": 1,
+          "score": 0.008983904495835304,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/bent/005.png",
+          "category": "metal_nut",
+          "defect": "bent",
+          "label": 1,
+          "score": 0.01289126742631197,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/bent/006.png",
+          "category": "metal_nut",
+          "defect": "bent",
+          "label": 1,
+          "score": 0.008769622072577477,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/bent/007.png",
+          "category": "metal_nut",
+          "defect": "bent",
+          "label": 1,
+          "score": 0.006866182200610638,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/bent/008.png",
+          "category": "metal_nut",
+          "defect": "bent",
+          "label": 1,
+          "score": 0.00939753744751215,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/bent/009.png",
+          "category": "metal_nut",
+          "defect": "bent",
+          "label": 1,
+          "score": 0.0020083419512957335,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/bent/010.png",
+          "category": "metal_nut",
+          "defect": "bent",
+          "label": 1,
+          "score": 0.0016648807795718312,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/bent/011.png",
+          "category": "metal_nut",
+          "defect": "bent",
+          "label": 1,
+          "score": 0.009973635897040367,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/bent/012.png",
+          "category": "metal_nut",
+          "defect": "bent",
+          "label": 1,
+          "score": 0.009263159707188606,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/bent/013.png",
+          "category": "metal_nut",
+          "defect": "bent",
+          "label": 1,
+          "score": 0.003879931755363941,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/bent/014.png",
+          "category": "metal_nut",
+          "defect": "bent",
+          "label": 1,
+          "score": 0.002422823803499341,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/bent/015.png",
+          "category": "metal_nut",
+          "defect": "bent",
+          "label": 1,
+          "score": 0.005996887572109699,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/bent/016.png",
+          "category": "metal_nut",
+          "defect": "bent",
+          "label": 1,
+          "score": 0.0037747942842543125,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/bent/017.png",
+          "category": "metal_nut",
+          "defect": "bent",
+          "label": 1,
+          "score": 0.0037449386436492205,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/bent/018.png",
+          "category": "metal_nut",
+          "defect": "bent",
+          "label": 1,
+          "score": 0.0022649948950856924,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/bent/019.png",
+          "category": "metal_nut",
+          "defect": "bent",
+          "label": 1,
+          "score": 0.0024357852526009083,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/bent/020.png",
+          "category": "metal_nut",
+          "defect": "bent",
+          "label": 1,
+          "score": 0.003324104705825448,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/bent/021.png",
+          "category": "metal_nut",
+          "defect": "bent",
+          "label": 1,
+          "score": 0.003850423963740468,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/bent/022.png",
+          "category": "metal_nut",
+          "defect": "bent",
+          "label": 1,
+          "score": 0.0030425379518419504,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/bent/023.png",
+          "category": "metal_nut",
+          "defect": "bent",
+          "label": 1,
+          "score": 0.008828734047710896,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/bent/024.png",
+          "category": "metal_nut",
+          "defect": "bent",
+          "label": 1,
+          "score": 0.008933313190937042,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/color/000.png",
+          "category": "metal_nut",
+          "defect": "color",
+          "label": 1,
+          "score": 0.012253119610249996,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/color/001.png",
+          "category": "metal_nut",
+          "defect": "color",
+          "label": 1,
+          "score": 0.0032845083624124527,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/color/002.png",
+          "category": "metal_nut",
+          "defect": "color",
+          "label": 1,
+          "score": 0.8294495940208435,
+          "predicted_defective": true
+        },
+        {
+          "image": "metal_nut/test/color/003.png",
+          "category": "metal_nut",
+          "defect": "color",
+          "label": 1,
+          "score": 0.014734113588929176,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/color/004.png",
+          "category": "metal_nut",
+          "defect": "color",
+          "label": 1,
+          "score": 0.053267017006874084,
+          "predicted_defective": true
+        },
+        {
+          "image": "metal_nut/test/color/005.png",
+          "category": "metal_nut",
+          "defect": "color",
+          "label": 1,
+          "score": 0.4138683080673218,
+          "predicted_defective": true
+        },
+        {
+          "image": "metal_nut/test/color/006.png",
+          "category": "metal_nut",
+          "defect": "color",
+          "label": 1,
+          "score": 0.03144044056534767,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/color/007.png",
+          "category": "metal_nut",
+          "defect": "color",
+          "label": 1,
+          "score": 0.0035888643469661474,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/color/008.png",
+          "category": "metal_nut",
+          "defect": "color",
+          "label": 1,
+          "score": 0.001768682966940105,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/color/009.png",
+          "category": "metal_nut",
+          "defect": "color",
+          "label": 1,
+          "score": 0.014385659247636795,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/color/010.png",
+          "category": "metal_nut",
+          "defect": "color",
+          "label": 1,
+          "score": 0.9620179533958435,
+          "predicted_defective": true
+        },
+        {
+          "image": "metal_nut/test/color/011.png",
+          "category": "metal_nut",
+          "defect": "color",
+          "label": 1,
+          "score": 0.03881368413567543,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/color/012.png",
+          "category": "metal_nut",
+          "defect": "color",
+          "label": 1,
+          "score": 0.9992761611938477,
+          "predicted_defective": true
+        },
+        {
+          "image": "metal_nut/test/color/013.png",
+          "category": "metal_nut",
+          "defect": "color",
+          "label": 1,
+          "score": 0.9985709190368652,
+          "predicted_defective": true
+        },
+        {
+          "image": "metal_nut/test/color/014.png",
+          "category": "metal_nut",
+          "defect": "color",
+          "label": 1,
+          "score": 0.6491600275039673,
+          "predicted_defective": true
+        },
+        {
+          "image": "metal_nut/test/color/015.png",
+          "category": "metal_nut",
+          "defect": "color",
+          "label": 1,
+          "score": 0.9995480179786682,
+          "predicted_defective": true
+        },
+        {
+          "image": "metal_nut/test/color/016.png",
+          "category": "metal_nut",
+          "defect": "color",
+          "label": 1,
+          "score": 0.580814778804779,
+          "predicted_defective": true
+        },
+        {
+          "image": "metal_nut/test/color/017.png",
+          "category": "metal_nut",
+          "defect": "color",
+          "label": 1,
+          "score": 0.9968792796134949,
+          "predicted_defective": true
+        },
+        {
+          "image": "metal_nut/test/color/018.png",
+          "category": "metal_nut",
+          "defect": "color",
+          "label": 1,
+          "score": 0.9866607189178467,
+          "predicted_defective": true
+        },
+        {
+          "image": "metal_nut/test/color/019.png",
+          "category": "metal_nut",
+          "defect": "color",
+          "label": 1,
+          "score": 0.996094286441803,
+          "predicted_defective": true
+        },
+        {
+          "image": "metal_nut/test/color/020.png",
+          "category": "metal_nut",
+          "defect": "color",
+          "label": 1,
+          "score": 0.9991233348846436,
+          "predicted_defective": true
+        },
+        {
+          "image": "metal_nut/test/color/021.png",
+          "category": "metal_nut",
+          "defect": "color",
+          "label": 1,
+          "score": 0.0023634324315935373,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/flip/000.png",
+          "category": "metal_nut",
+          "defect": "flip",
+          "label": 1,
+          "score": 0.9637774229049683,
+          "predicted_defective": true
+        },
+        {
+          "image": "metal_nut/test/flip/001.png",
+          "category": "metal_nut",
+          "defect": "flip",
+          "label": 1,
+          "score": 0.9012631177902222,
+          "predicted_defective": true
+        },
+        {
+          "image": "metal_nut/test/flip/002.png",
+          "category": "metal_nut",
+          "defect": "flip",
+          "label": 1,
+          "score": 0.6373538374900818,
+          "predicted_defective": true
+        },
+        {
+          "image": "metal_nut/test/flip/003.png",
+          "category": "metal_nut",
+          "defect": "flip",
+          "label": 1,
+          "score": 0.8639888763427734,
+          "predicted_defective": true
+        },
+        {
+          "image": "metal_nut/test/flip/004.png",
+          "category": "metal_nut",
+          "defect": "flip",
+          "label": 1,
+          "score": 0.0014422438107430935,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/flip/005.png",
+          "category": "metal_nut",
+          "defect": "flip",
+          "label": 1,
+          "score": 0.9285721778869629,
+          "predicted_defective": true
+        },
+        {
+          "image": "metal_nut/test/flip/006.png",
+          "category": "metal_nut",
+          "defect": "flip",
+          "label": 1,
+          "score": 0.20663508772850037,
+          "predicted_defective": true
+        },
+        {
+          "image": "metal_nut/test/flip/007.png",
+          "category": "metal_nut",
+          "defect": "flip",
+          "label": 1,
+          "score": 0.03505120053887367,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/flip/008.png",
+          "category": "metal_nut",
+          "defect": "flip",
+          "label": 1,
+          "score": 0.7041208744049072,
+          "predicted_defective": true
+        },
+        {
+          "image": "metal_nut/test/flip/009.png",
+          "category": "metal_nut",
+          "defect": "flip",
+          "label": 1,
+          "score": 0.9635420441627502,
+          "predicted_defective": true
+        },
+        {
+          "image": "metal_nut/test/flip/010.png",
+          "category": "metal_nut",
+          "defect": "flip",
+          "label": 1,
+          "score": 0.8874085545539856,
+          "predicted_defective": true
+        },
+        {
+          "image": "metal_nut/test/flip/011.png",
+          "category": "metal_nut",
+          "defect": "flip",
+          "label": 1,
+          "score": 0.2767787277698517,
+          "predicted_defective": true
+        },
+        {
+          "image": "metal_nut/test/flip/012.png",
+          "category": "metal_nut",
+          "defect": "flip",
+          "label": 1,
+          "score": 0.2404283881187439,
+          "predicted_defective": true
+        },
+        {
+          "image": "metal_nut/test/flip/013.png",
+          "category": "metal_nut",
+          "defect": "flip",
+          "label": 1,
+          "score": 0.34041595458984375,
+          "predicted_defective": true
+        },
+        {
+          "image": "metal_nut/test/flip/014.png",
+          "category": "metal_nut",
+          "defect": "flip",
+          "label": 1,
+          "score": 0.008286494761705399,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/flip/015.png",
+          "category": "metal_nut",
+          "defect": "flip",
+          "label": 1,
+          "score": 0.22544603049755096,
+          "predicted_defective": true
+        },
+        {
+          "image": "metal_nut/test/flip/016.png",
+          "category": "metal_nut",
+          "defect": "flip",
+          "label": 1,
+          "score": 0.18384647369384766,
+          "predicted_defective": true
+        },
+        {
+          "image": "metal_nut/test/flip/017.png",
+          "category": "metal_nut",
+          "defect": "flip",
+          "label": 1,
+          "score": 0.3634617030620575,
+          "predicted_defective": true
+        },
+        {
+          "image": "metal_nut/test/flip/018.png",
+          "category": "metal_nut",
+          "defect": "flip",
+          "label": 1,
+          "score": 0.7107242941856384,
+          "predicted_defective": true
+        },
+        {
+          "image": "metal_nut/test/flip/019.png",
+          "category": "metal_nut",
+          "defect": "flip",
+          "label": 1,
+          "score": 0.10191376507282257,
+          "predicted_defective": true
+        },
+        {
+          "image": "metal_nut/test/flip/020.png",
+          "category": "metal_nut",
+          "defect": "flip",
+          "label": 1,
+          "score": 0.010726354084908962,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/flip/021.png",
+          "category": "metal_nut",
+          "defect": "flip",
+          "label": 1,
+          "score": 0.4331427216529846,
+          "predicted_defective": true
+        },
+        {
+          "image": "metal_nut/test/flip/022.png",
+          "category": "metal_nut",
+          "defect": "flip",
+          "label": 1,
+          "score": 0.26091206073760986,
+          "predicted_defective": true
+        },
+        {
+          "image": "metal_nut/test/good/000.png",
+          "category": "metal_nut",
+          "defect": "good",
+          "label": 0,
+          "score": 0.004844561219215393,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/good/001.png",
+          "category": "metal_nut",
+          "defect": "good",
+          "label": 0,
+          "score": 0.005559676792472601,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/good/002.png",
+          "category": "metal_nut",
+          "defect": "good",
+          "label": 0,
+          "score": 0.0029077979270368814,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/good/003.png",
+          "category": "metal_nut",
+          "defect": "good",
+          "label": 0,
+          "score": 0.0025605205446481705,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/good/004.png",
+          "category": "metal_nut",
+          "defect": "good",
+          "label": 0,
+          "score": 0.003307207254692912,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/good/005.png",
+          "category": "metal_nut",
+          "defect": "good",
+          "label": 0,
+          "score": 0.013982162810862064,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/good/006.png",
+          "category": "metal_nut",
+          "defect": "good",
+          "label": 0,
+          "score": 0.021473949775099754,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/good/007.png",
+          "category": "metal_nut",
+          "defect": "good",
+          "label": 0,
+          "score": 0.0013615475036203861,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/good/008.png",
+          "category": "metal_nut",
+          "defect": "good",
+          "label": 0,
+          "score": 0.004989352077245712,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/good/009.png",
+          "category": "metal_nut",
+          "defect": "good",
+          "label": 0,
+          "score": 0.06487536430358887,
+          "predicted_defective": true
+        },
+        {
+          "image": "metal_nut/test/good/010.png",
+          "category": "metal_nut",
+          "defect": "good",
+          "label": 0,
+          "score": 0.003689599223434925,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/good/011.png",
+          "category": "metal_nut",
+          "defect": "good",
+          "label": 0,
+          "score": 0.02358308434486389,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/good/012.png",
+          "category": "metal_nut",
+          "defect": "good",
+          "label": 0,
+          "score": 0.00734903896227479,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/good/013.png",
+          "category": "metal_nut",
+          "defect": "good",
+          "label": 0,
+          "score": 0.001634205924347043,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/good/014.png",
+          "category": "metal_nut",
+          "defect": "good",
+          "label": 0,
+          "score": 0.04660828411579132,
+          "predicted_defective": true
+        },
+        {
+          "image": "metal_nut/test/good/015.png",
+          "category": "metal_nut",
+          "defect": "good",
+          "label": 0,
+          "score": 0.011866127140820026,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/good/016.png",
+          "category": "metal_nut",
+          "defect": "good",
+          "label": 0,
+          "score": 0.030625246465206146,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/good/017.png",
+          "category": "metal_nut",
+          "defect": "good",
+          "label": 0,
+          "score": 0.010209926404058933,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/good/018.png",
+          "category": "metal_nut",
+          "defect": "good",
+          "label": 0,
+          "score": 0.009511672891676426,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/good/019.png",
+          "category": "metal_nut",
+          "defect": "good",
+          "label": 0,
+          "score": 0.002690352965146303,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/good/020.png",
+          "category": "metal_nut",
+          "defect": "good",
+          "label": 0,
+          "score": 0.006806595716625452,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/good/021.png",
+          "category": "metal_nut",
+          "defect": "good",
+          "label": 0,
+          "score": 0.005778631195425987,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/scratch/000.png",
+          "category": "metal_nut",
+          "defect": "scratch",
+          "label": 1,
+          "score": 0.013645874336361885,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/scratch/001.png",
+          "category": "metal_nut",
+          "defect": "scratch",
+          "label": 1,
+          "score": 0.21696893870830536,
+          "predicted_defective": true
+        },
+        {
+          "image": "metal_nut/test/scratch/002.png",
+          "category": "metal_nut",
+          "defect": "scratch",
+          "label": 1,
+          "score": 0.0034660580568015575,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/scratch/003.png",
+          "category": "metal_nut",
+          "defect": "scratch",
+          "label": 1,
+          "score": 0.002089328831061721,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/scratch/004.png",
+          "category": "metal_nut",
+          "defect": "scratch",
+          "label": 1,
+          "score": 0.002148545579984784,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/scratch/005.png",
+          "category": "metal_nut",
+          "defect": "scratch",
+          "label": 1,
+          "score": 0.0015793159836903214,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/scratch/006.png",
+          "category": "metal_nut",
+          "defect": "scratch",
+          "label": 1,
+          "score": 0.041108451783657074,
+          "predicted_defective": true
+        },
+        {
+          "image": "metal_nut/test/scratch/007.png",
+          "category": "metal_nut",
+          "defect": "scratch",
+          "label": 1,
+          "score": 0.06010003387928009,
+          "predicted_defective": true
+        },
+        {
+          "image": "metal_nut/test/scratch/008.png",
+          "category": "metal_nut",
+          "defect": "scratch",
+          "label": 1,
+          "score": 0.002887821290642023,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/scratch/009.png",
+          "category": "metal_nut",
+          "defect": "scratch",
+          "label": 1,
+          "score": 0.002961360616609454,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/scratch/010.png",
+          "category": "metal_nut",
+          "defect": "scratch",
+          "label": 1,
+          "score": 0.004142625257372856,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/scratch/011.png",
+          "category": "metal_nut",
+          "defect": "scratch",
+          "label": 1,
+          "score": 0.0028218883089721203,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/scratch/012.png",
+          "category": "metal_nut",
+          "defect": "scratch",
+          "label": 1,
+          "score": 0.02196100354194641,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/scratch/013.png",
+          "category": "metal_nut",
+          "defect": "scratch",
+          "label": 1,
+          "score": 0.03292624652385712,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/scratch/014.png",
+          "category": "metal_nut",
+          "defect": "scratch",
+          "label": 1,
+          "score": 0.03872859105467796,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/scratch/015.png",
+          "category": "metal_nut",
+          "defect": "scratch",
+          "label": 1,
+          "score": 0.001898247399367392,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/scratch/016.png",
+          "category": "metal_nut",
+          "defect": "scratch",
+          "label": 1,
+          "score": 0.09968487173318863,
+          "predicted_defective": true
+        },
+        {
+          "image": "metal_nut/test/scratch/017.png",
+          "category": "metal_nut",
+          "defect": "scratch",
+          "label": 1,
+          "score": 0.006935126148164272,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/scratch/018.png",
+          "category": "metal_nut",
+          "defect": "scratch",
+          "label": 1,
+          "score": 0.0019333340460434556,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/scratch/019.png",
+          "category": "metal_nut",
+          "defect": "scratch",
+          "label": 1,
+          "score": 0.024181921035051346,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/scratch/020.png",
+          "category": "metal_nut",
+          "defect": "scratch",
+          "label": 1,
+          "score": 0.005703264381736517,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/scratch/021.png",
+          "category": "metal_nut",
+          "defect": "scratch",
+          "label": 1,
+          "score": 0.010660678148269653,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/scratch/022.png",
+          "category": "metal_nut",
+          "defect": "scratch",
+          "label": 1,
+          "score": 0.0025859351735562086,
+          "predicted_defective": false
+        }
+      ],
+      "gallery": {
+        "selection": "highest-scoring FP; lowest-scoring FN; evenly spaced successful-case score ranks",
+        "groups": {
+          "FP": 2,
+          "FN": 2,
+          "TP": 2,
+          "TN": 2
+        },
+        "items": [
+          {
+            "file": "FP_0079_metal_nut_good.png",
+            "group": "FP",
+            "category": "metal_nut",
+            "defect": "good",
+            "source": "metal_nut/test/good/009.png",
+            "label": 0,
+            "score": 0.06487536430358887,
+            "predicted_defective": true
+          },
+          {
+            "file": "FP_0084_metal_nut_good.png",
+            "group": "FP",
+            "category": "metal_nut",
+            "defect": "good",
+            "source": "metal_nut/test/good/014.png",
+            "label": 0,
+            "score": 0.04660828411579132,
+            "predicted_defective": true
+          },
+          {
+            "file": "FN_0051_metal_nut_flip.png",
+            "group": "FN",
+            "category": "metal_nut",
+            "defect": "flip",
+            "source": "metal_nut/test/flip/004.png",
+            "label": 1,
+            "score": 0.0014422438107430935,
+            "predicted_defective": false
+          },
+          {
+            "file": "FN_0097_metal_nut_scratch.png",
+            "group": "FN",
+            "category": "metal_nut",
+            "defect": "scratch",
+            "source": "metal_nut/test/scratch/005.png",
+            "label": 1,
+            "score": 0.0015793159836903214,
+            "predicted_defective": false
+          },
+          {
+            "file": "TP_0098_metal_nut_scratch.png",
+            "group": "TP",
+            "category": "metal_nut",
+            "defect": "scratch",
+            "source": "metal_nut/test/scratch/006.png",
+            "label": 1,
+            "score": 0.041108451783657074,
+            "predicted_defective": true
+          },
+          {
+            "file": "TP_0040_metal_nut_color.png",
+            "group": "TP",
+            "category": "metal_nut",
+            "defect": "color",
+            "source": "metal_nut/test/color/015.png",
+            "label": 1,
+            "score": 0.9995480179786682,
+            "predicted_defective": true
+          },
+          {
+            "file": "TN_0077_metal_nut_good.png",
+            "group": "TN",
+            "category": "metal_nut",
+            "defect": "good",
+            "source": "metal_nut/test/good/007.png",
+            "label": 0,
+            "score": 0.0013615475036203861,
+            "predicted_defective": false
+          },
+          {
+            "file": "TN_0086_metal_nut_good.png",
+            "group": "TN",
+            "category": "metal_nut",
+            "defect": "good",
+            "source": "metal_nut/test/good/016.png",
+            "label": 0,
+            "score": 0.030625246465206146,
+            "predicted_defective": false
+          }
+        ],
+        "threshold": 0.04053090065717697,
+        "display_max": 0.08106180131435393,
+        "display_rule": "fixed per-checkpoint range, never per-image min/max; saturation is not a pixel decision",
+        "dataset": "MVTec AD",
+        "source_url": "https://www.mvtec.com/research-teaching/datasets/mvtec-ad",
+        "license": "MVTec AD derivatives: CC BY-NC-SA 4.0"
+      },
+      "gallery_map_generation": "Reused existing gallery with matching frozen threshold; no new inference in this report invocation"
+    },
+    {
+      "run": "metal_nut-reconstruction-001",
+      "config": {
+        "category": "metal_nut",
+        "image_size": 128,
+        "base_channels": 16,
+        "seed": 42,
+        "batch_size": 8,
+        "epochs": 50,
+        "learning_rate": 0.001,
+        "noise_std": 0.03,
+        "threshold_quantile": 0.95,
+        "device": "mps"
+      },
+      "model_kind": "normal_only_denoising_reconstruction",
+      "image_size": 128,
+      "epochs": 50,
+      "best_epoch": 45,
+      "model_selection": "minimum clean normal validation L1; no test-image reads during training",
+      "bank_digest": null,
+      "best_metric": null,
+      "calibration_quantile": 0.95,
+      "calibration_count": 33,
+      "training_seconds": 121.39334058300028,
+      "metrics": {
+        "image_auroc": 0.626099706744868,
+        "image_average_precision": 0.8693216123454673,
+        "pixel_average_precision": 0.21744696096100358,
+        "threshold": 0.03946596160531044,
+        "decision_rule": "anomaly_score >= threshold",
+        "confusion": {
+          "true_positive": 10,
+          "false_positive": 1,
+          "true_negative": 21,
+          "false_negative": 83
+        },
+        "defect_recall": 0.10752688172043011,
+        "normal_false_alarm_rate": 0.045454545454545456,
+        "precision": 0.9090909090909091,
+        "images": 115,
+        "evaluation_resolution": "original resolution per image",
+        "pixel_average_precision_by_category": {
+          "metal_nut": {
+            "average_precision": 0.21744696096100358,
+            "pixels": 56350000,
+            "positive_pixels": 6602541,
+            "images": 115
+          }
+        },
+        "pixel_metric_space": "original",
+        "pixel_aggregation": "macro mean of per-category pixel average precision",
+        "pixel_resize": "bilinear anomaly-map upsampling; original masks are unchanged",
+        "recall_by_defect": {
+          "metal_nut/bent": {
+            "images": 25,
+            "detected": 1,
+            "recall": 0.04
+          },
+          "metal_nut/color": {
+            "images": 22,
+            "detected": 7,
+            "recall": 0.3181818181818182
+          },
+          "metal_nut/flip": {
+            "images": 23,
+            "detected": 2,
+            "recall": 0.08695652173913043
+          },
+          "metal_nut/scratch": {
+            "images": 23,
+            "detected": 0,
+            "recall": 0.0
+          }
+        },
+        "model_kind": "normal_only_denoising_reconstruction",
+        "split_digest": "2df9587b2f8d3f7f389a7ef2a1e9e13cf21ea6b6738a1d9023e7daf1d59de5ad",
+        "threshold_source": "separate normal calibration split",
+        "score_definition": "mean top 1% of per-pixel channel-mean absolute reconstruction error; no sigmoid or probability calibration",
+        "latency": {
+          "single_image_median_ms": 6.355750500460999,
+          "single_image_p95_ms": 16.58183735012244,
+          "single_image_measurements": 32,
+          "warmup_forwards": 3,
+          "device": "mps",
+          "scope": "forward and image scoring; excludes loading and device transfer"
+        },
+        "limitations": [
+          "Skip connections can reconstruct abnormal pixels and weaken anomaly separation.",
+          "Small normal calibration sets do not guarantee future false alarm rates.",
+          "Native-mask pixel AP uses upsampled predictions; input resizing can erase small defects."
+        ],
+        "uncertainty": {
+          "confidence_level": 0.95,
+          "image_auroc_interval": [
+            0.4809261974584555,
+            0.7541544477028348
+          ],
+          "auroc_method": "percentile stratified bootstrap of independent test images",
+          "bootstrap_samples": 1000,
+          "bootstrap_seed": 42,
+          "defect_recall_interval": [
+            0.059463070231909915,
+            0.18672755009773168
+          ],
+          "normal_false_alarm_rate_interval": [
+            0.00806942762126385,
+            0.21798045838657332
+          ],
+          "precision_interval": [
+            0.6226415635484043,
+            0.9837678271141151
+          ],
+          "rate_method": "Wilson score interval",
+          "defective_images": 93,
+          "normal_images": 22,
+          "limitations": "Intervals describe finite-image sampling uncertainty, not training-seed variability, domain shift or independent-pixel uncertainty."
+        },
+        "defect_area_groups": {
+          "area_definition": "fraction of original image pixels with nonzero ground-truth mask",
+          "boundaries": [
+            0.001,
+            0.01,
+            0.05
+          ],
+          "groups": {
+            "tiny_below_0.1_percent": {
+              "images": 0,
+              "detected": 0,
+              "missed": 0,
+              "recall": null,
+              "recall_interval": null
+            },
+            "small_0.1_to_1_percent": {
+              "images": 7,
+              "detected": 0,
+              "missed": 7,
+              "recall": 0.0,
+              "recall_interval": [
+                5.551115123125783e-17,
+                0.35433043506668743
+              ]
+            },
+            "medium_1_to_5_percent": {
+              "images": 50,
+              "detected": 7,
+              "missed": 43,
+              "recall": 0.14,
+              "recall_interval": [
+                0.06950833427016294,
+                0.2618619371058554
+              ]
+            },
+            "large_at_least_5_percent": {
+              "images": 36,
+              "detected": 3,
+              "missed": 33,
+              "recall": 0.08333333333333333,
+              "recall_interval": [
+                0.02874861133599338,
+                0.2182669124927263
+              ]
+            }
+          }
+        },
+        "checkpoint_sha256": "b59353b0589e4961478b316ded20d53afa6610b81e85e8cdf6d54eb65bd102cc",
+        "status": "exploratory metal_nut development"
+      },
+      "predictions": [
+        {
+          "image": "metal_nut/test/bent/000.png",
+          "category": "metal_nut",
+          "defect": "bent",
+          "label": 1,
+          "score": 0.03983811289072037,
+          "predicted_defective": true
+        },
+        {
+          "image": "metal_nut/test/bent/001.png",
+          "category": "metal_nut",
+          "defect": "bent",
+          "label": 1,
+          "score": 0.030149810016155243,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/bent/002.png",
+          "category": "metal_nut",
+          "defect": "bent",
+          "label": 1,
+          "score": 0.030356448143720627,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/bent/003.png",
+          "category": "metal_nut",
+          "defect": "bent",
+          "label": 1,
+          "score": 0.03269461914896965,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/bent/004.png",
+          "category": "metal_nut",
+          "defect": "bent",
+          "label": 1,
+          "score": 0.033915694802999496,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/bent/005.png",
+          "category": "metal_nut",
+          "defect": "bent",
+          "label": 1,
+          "score": 0.03360489383339882,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/bent/006.png",
+          "category": "metal_nut",
+          "defect": "bent",
+          "label": 1,
+          "score": 0.028929755091667175,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/bent/007.png",
+          "category": "metal_nut",
+          "defect": "bent",
+          "label": 1,
+          "score": 0.031166328117251396,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/bent/008.png",
+          "category": "metal_nut",
+          "defect": "bent",
+          "label": 1,
+          "score": 0.0324975959956646,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/bent/009.png",
+          "category": "metal_nut",
+          "defect": "bent",
+          "label": 1,
+          "score": 0.03170952573418617,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/bent/010.png",
+          "category": "metal_nut",
+          "defect": "bent",
+          "label": 1,
+          "score": 0.03041202388703823,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/bent/011.png",
+          "category": "metal_nut",
+          "defect": "bent",
+          "label": 1,
+          "score": 0.03300705552101135,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/bent/012.png",
+          "category": "metal_nut",
+          "defect": "bent",
+          "label": 1,
+          "score": 0.03192925080657005,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/bent/013.png",
+          "category": "metal_nut",
+          "defect": "bent",
+          "label": 1,
+          "score": 0.03531816974282265,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/bent/014.png",
+          "category": "metal_nut",
+          "defect": "bent",
+          "label": 1,
+          "score": 0.030275462195277214,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/bent/015.png",
+          "category": "metal_nut",
+          "defect": "bent",
+          "label": 1,
+          "score": 0.03492716699838638,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/bent/016.png",
+          "category": "metal_nut",
+          "defect": "bent",
+          "label": 1,
+          "score": 0.03508758544921875,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/bent/017.png",
+          "category": "metal_nut",
+          "defect": "bent",
+          "label": 1,
+          "score": 0.0327942818403244,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/bent/018.png",
+          "category": "metal_nut",
+          "defect": "bent",
+          "label": 1,
+          "score": 0.037585124373435974,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/bent/019.png",
+          "category": "metal_nut",
+          "defect": "bent",
+          "label": 1,
+          "score": 0.0363595075905323,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/bent/020.png",
+          "category": "metal_nut",
+          "defect": "bent",
+          "label": 1,
+          "score": 0.028914636000990868,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/bent/021.png",
+          "category": "metal_nut",
+          "defect": "bent",
+          "label": 1,
+          "score": 0.030869759619235992,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/bent/022.png",
+          "category": "metal_nut",
+          "defect": "bent",
+          "label": 1,
+          "score": 0.0317252054810524,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/bent/023.png",
+          "category": "metal_nut",
+          "defect": "bent",
+          "label": 1,
+          "score": 0.031053414568305016,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/bent/024.png",
+          "category": "metal_nut",
+          "defect": "bent",
+          "label": 1,
+          "score": 0.03646009787917137,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/color/000.png",
+          "category": "metal_nut",
+          "defect": "color",
+          "label": 1,
+          "score": 0.0258202962577343,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/color/001.png",
+          "category": "metal_nut",
+          "defect": "color",
+          "label": 1,
+          "score": 0.03194575384259224,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/color/002.png",
+          "category": "metal_nut",
+          "defect": "color",
+          "label": 1,
+          "score": 0.0457751601934433,
+          "predicted_defective": true
+        },
+        {
+          "image": "metal_nut/test/color/003.png",
+          "category": "metal_nut",
+          "defect": "color",
+          "label": 1,
+          "score": 0.03476811572909355,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/color/004.png",
+          "category": "metal_nut",
+          "defect": "color",
+          "label": 1,
+          "score": 0.030694160610437393,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/color/005.png",
+          "category": "metal_nut",
+          "defect": "color",
+          "label": 1,
+          "score": 0.02842889167368412,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/color/006.png",
+          "category": "metal_nut",
+          "defect": "color",
+          "label": 1,
+          "score": 0.03291299194097519,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/color/007.png",
+          "category": "metal_nut",
+          "defect": "color",
+          "label": 1,
+          "score": 0.03127500042319298,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/color/008.png",
+          "category": "metal_nut",
+          "defect": "color",
+          "label": 1,
+          "score": 0.03289813920855522,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/color/009.png",
+          "category": "metal_nut",
+          "defect": "color",
+          "label": 1,
+          "score": 0.0362791083753109,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/color/010.png",
+          "category": "metal_nut",
+          "defect": "color",
+          "label": 1,
+          "score": 0.03770589083433151,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/color/011.png",
+          "category": "metal_nut",
+          "defect": "color",
+          "label": 1,
+          "score": 0.0306149460375309,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/color/012.png",
+          "category": "metal_nut",
+          "defect": "color",
+          "label": 1,
+          "score": 0.08040525019168854,
+          "predicted_defective": true
+        },
+        {
+          "image": "metal_nut/test/color/013.png",
+          "category": "metal_nut",
+          "defect": "color",
+          "label": 1,
+          "score": 0.05956906080245972,
+          "predicted_defective": true
+        },
+        {
+          "image": "metal_nut/test/color/014.png",
+          "category": "metal_nut",
+          "defect": "color",
+          "label": 1,
+          "score": 0.053027838468551636,
+          "predicted_defective": true
+        },
+        {
+          "image": "metal_nut/test/color/015.png",
+          "category": "metal_nut",
+          "defect": "color",
+          "label": 1,
+          "score": 0.08598345518112183,
+          "predicted_defective": true
+        },
+        {
+          "image": "metal_nut/test/color/016.png",
+          "category": "metal_nut",
+          "defect": "color",
+          "label": 1,
+          "score": 0.033091168850660324,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/color/017.png",
+          "category": "metal_nut",
+          "defect": "color",
+          "label": 1,
+          "score": 0.03662476688623428,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/color/018.png",
+          "category": "metal_nut",
+          "defect": "color",
+          "label": 1,
+          "score": 0.030389925464987755,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/color/019.png",
+          "category": "metal_nut",
+          "defect": "color",
+          "label": 1,
+          "score": 0.07813452929258347,
+          "predicted_defective": true
+        },
+        {
+          "image": "metal_nut/test/color/020.png",
+          "category": "metal_nut",
+          "defect": "color",
+          "label": 1,
+          "score": 0.08764482289552689,
+          "predicted_defective": true
+        },
+        {
+          "image": "metal_nut/test/color/021.png",
+          "category": "metal_nut",
+          "defect": "color",
+          "label": 1,
+          "score": 0.031160978600382805,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/flip/000.png",
+          "category": "metal_nut",
+          "defect": "flip",
+          "label": 1,
+          "score": 0.03146839886903763,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/flip/001.png",
+          "category": "metal_nut",
+          "defect": "flip",
+          "label": 1,
+          "score": 0.03253212943673134,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/flip/002.png",
+          "category": "metal_nut",
+          "defect": "flip",
+          "label": 1,
+          "score": 0.035447437316179276,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/flip/003.png",
+          "category": "metal_nut",
+          "defect": "flip",
+          "label": 1,
+          "score": 0.032585758715867996,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/flip/004.png",
+          "category": "metal_nut",
+          "defect": "flip",
+          "label": 1,
+          "score": 0.040488630533218384,
+          "predicted_defective": true
+        },
+        {
+          "image": "metal_nut/test/flip/005.png",
+          "category": "metal_nut",
+          "defect": "flip",
+          "label": 1,
+          "score": 0.032425928860902786,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/flip/006.png",
+          "category": "metal_nut",
+          "defect": "flip",
+          "label": 1,
+          "score": 0.034991856664419174,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/flip/007.png",
+          "category": "metal_nut",
+          "defect": "flip",
+          "label": 1,
+          "score": 0.03419525548815727,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/flip/008.png",
+          "category": "metal_nut",
+          "defect": "flip",
+          "label": 1,
+          "score": 0.03541656211018562,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/flip/009.png",
+          "category": "metal_nut",
+          "defect": "flip",
+          "label": 1,
+          "score": 0.03232143446803093,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/flip/010.png",
+          "category": "metal_nut",
+          "defect": "flip",
+          "label": 1,
+          "score": 0.03253794088959694,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/flip/011.png",
+          "category": "metal_nut",
+          "defect": "flip",
+          "label": 1,
+          "score": 0.0332295186817646,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/flip/012.png",
+          "category": "metal_nut",
+          "defect": "flip",
+          "label": 1,
+          "score": 0.03651179373264313,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/flip/013.png",
+          "category": "metal_nut",
+          "defect": "flip",
+          "label": 1,
+          "score": 0.033084433525800705,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/flip/014.png",
+          "category": "metal_nut",
+          "defect": "flip",
+          "label": 1,
+          "score": 0.0412195548415184,
+          "predicted_defective": true
+        },
+        {
+          "image": "metal_nut/test/flip/015.png",
+          "category": "metal_nut",
+          "defect": "flip",
+          "label": 1,
+          "score": 0.03270048648118973,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/flip/016.png",
+          "category": "metal_nut",
+          "defect": "flip",
+          "label": 1,
+          "score": 0.030448103323578835,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/flip/017.png",
+          "category": "metal_nut",
+          "defect": "flip",
+          "label": 1,
+          "score": 0.0386352613568306,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/flip/018.png",
+          "category": "metal_nut",
+          "defect": "flip",
+          "label": 1,
+          "score": 0.03252631053328514,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/flip/019.png",
+          "category": "metal_nut",
+          "defect": "flip",
+          "label": 1,
+          "score": 0.03193223476409912,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/flip/020.png",
+          "category": "metal_nut",
+          "defect": "flip",
+          "label": 1,
+          "score": 0.03523329272866249,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/flip/021.png",
+          "category": "metal_nut",
+          "defect": "flip",
+          "label": 1,
+          "score": 0.03324495628476143,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/flip/022.png",
+          "category": "metal_nut",
+          "defect": "flip",
+          "label": 1,
+          "score": 0.03324870765209198,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/good/000.png",
+          "category": "metal_nut",
+          "defect": "good",
+          "label": 0,
+          "score": 0.03337502107024193,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/good/001.png",
+          "category": "metal_nut",
+          "defect": "good",
+          "label": 0,
+          "score": 0.026430662721395493,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/good/002.png",
+          "category": "metal_nut",
+          "defect": "good",
+          "label": 0,
+          "score": 0.03039512410759926,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/good/003.png",
+          "category": "metal_nut",
+          "defect": "good",
+          "label": 0,
+          "score": 0.030107945203781128,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/good/004.png",
+          "category": "metal_nut",
+          "defect": "good",
+          "label": 0,
+          "score": 0.027159685268998146,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/good/005.png",
+          "category": "metal_nut",
+          "defect": "good",
+          "label": 0,
+          "score": 0.0293497983366251,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/good/006.png",
+          "category": "metal_nut",
+          "defect": "good",
+          "label": 0,
+          "score": 0.03404555469751358,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/good/007.png",
+          "category": "metal_nut",
+          "defect": "good",
+          "label": 0,
+          "score": 0.03345899656414986,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/good/008.png",
+          "category": "metal_nut",
+          "defect": "good",
+          "label": 0,
+          "score": 0.03172432258725166,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/good/009.png",
+          "category": "metal_nut",
+          "defect": "good",
+          "label": 0,
+          "score": 0.03888385742902756,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/good/010.png",
+          "category": "metal_nut",
+          "defect": "good",
+          "label": 0,
+          "score": 0.03561147674918175,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/good/011.png",
+          "category": "metal_nut",
+          "defect": "good",
+          "label": 0,
+          "score": 0.03203742206096649,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/good/012.png",
+          "category": "metal_nut",
+          "defect": "good",
+          "label": 0,
+          "score": 0.0413510799407959,
+          "predicted_defective": true
+        },
+        {
+          "image": "metal_nut/test/good/013.png",
+          "category": "metal_nut",
+          "defect": "good",
+          "label": 0,
+          "score": 0.03392735496163368,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/good/014.png",
+          "category": "metal_nut",
+          "defect": "good",
+          "label": 0,
+          "score": 0.033300936222076416,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/good/015.png",
+          "category": "metal_nut",
+          "defect": "good",
+          "label": 0,
+          "score": 0.031233470886945724,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/good/016.png",
+          "category": "metal_nut",
+          "defect": "good",
+          "label": 0,
+          "score": 0.033103372901678085,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/good/017.png",
+          "category": "metal_nut",
+          "defect": "good",
+          "label": 0,
+          "score": 0.026061508804559708,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/good/018.png",
+          "category": "metal_nut",
+          "defect": "good",
+          "label": 0,
+          "score": 0.028625959530472755,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/good/019.png",
+          "category": "metal_nut",
+          "defect": "good",
+          "label": 0,
+          "score": 0.027797196060419083,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/good/020.png",
+          "category": "metal_nut",
+          "defect": "good",
+          "label": 0,
+          "score": 0.028719492256641388,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/good/021.png",
+          "category": "metal_nut",
+          "defect": "good",
+          "label": 0,
+          "score": 0.02888002060353756,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/scratch/000.png",
+          "category": "metal_nut",
+          "defect": "scratch",
+          "label": 1,
+          "score": 0.026008863002061844,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/scratch/001.png",
+          "category": "metal_nut",
+          "defect": "scratch",
+          "label": 1,
+          "score": 0.03379744663834572,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/scratch/002.png",
+          "category": "metal_nut",
+          "defect": "scratch",
+          "label": 1,
+          "score": 0.031852174550294876,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/scratch/003.png",
+          "category": "metal_nut",
+          "defect": "scratch",
+          "label": 1,
+          "score": 0.032832514494657516,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/scratch/004.png",
+          "category": "metal_nut",
+          "defect": "scratch",
+          "label": 1,
+          "score": 0.030924100428819656,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/scratch/005.png",
+          "category": "metal_nut",
+          "defect": "scratch",
+          "label": 1,
+          "score": 0.03722148761153221,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/scratch/006.png",
+          "category": "metal_nut",
+          "defect": "scratch",
+          "label": 1,
+          "score": 0.03180883079767227,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/scratch/007.png",
+          "category": "metal_nut",
+          "defect": "scratch",
+          "label": 1,
+          "score": 0.033252377063035965,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/scratch/008.png",
+          "category": "metal_nut",
+          "defect": "scratch",
+          "label": 1,
+          "score": 0.036602769047021866,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/scratch/009.png",
+          "category": "metal_nut",
+          "defect": "scratch",
+          "label": 1,
+          "score": 0.03307892382144928,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/scratch/010.png",
+          "category": "metal_nut",
+          "defect": "scratch",
+          "label": 1,
+          "score": 0.03845332935452461,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/scratch/011.png",
+          "category": "metal_nut",
+          "defect": "scratch",
+          "label": 1,
+          "score": 0.030998539179563522,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/scratch/012.png",
+          "category": "metal_nut",
+          "defect": "scratch",
+          "label": 1,
+          "score": 0.030406638979911804,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/scratch/013.png",
+          "category": "metal_nut",
+          "defect": "scratch",
+          "label": 1,
+          "score": 0.0269174687564373,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/scratch/014.png",
+          "category": "metal_nut",
+          "defect": "scratch",
+          "label": 1,
+          "score": 0.038786016404628754,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/scratch/015.png",
+          "category": "metal_nut",
+          "defect": "scratch",
+          "label": 1,
+          "score": 0.029235579073429108,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/scratch/016.png",
+          "category": "metal_nut",
+          "defect": "scratch",
+          "label": 1,
+          "score": 0.029125243425369263,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/scratch/017.png",
+          "category": "metal_nut",
+          "defect": "scratch",
+          "label": 1,
+          "score": 0.030009668320417404,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/scratch/018.png",
+          "category": "metal_nut",
+          "defect": "scratch",
+          "label": 1,
+          "score": 0.03238542750477791,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/scratch/019.png",
+          "category": "metal_nut",
+          "defect": "scratch",
+          "label": 1,
+          "score": 0.03284895047545433,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/scratch/020.png",
+          "category": "metal_nut",
+          "defect": "scratch",
+          "label": 1,
+          "score": 0.025371750816702843,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/scratch/021.png",
+          "category": "metal_nut",
+          "defect": "scratch",
+          "label": 1,
+          "score": 0.026591617614030838,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/scratch/022.png",
+          "category": "metal_nut",
+          "defect": "scratch",
+          "label": 1,
+          "score": 0.028534643352031708,
+          "predicted_defective": false
+        }
+      ],
+      "gallery": {
+        "selection": "highest-scoring FP; lowest-scoring FN; evenly spaced successful-case score ranks",
+        "groups": {
+          "FP": 1,
+          "FN": 2,
+          "TP": 2,
+          "TN": 2
+        },
+        "items": [
+          {
+            "file": "FP_0082_metal_nut_good.png",
+            "group": "FP",
+            "category": "metal_nut",
+            "defect": "good",
+            "source": "metal_nut/test/good/012.png",
+            "label": 0,
+            "score": 0.0413510799407959,
+            "predicted_defective": true
+          },
+          {
+            "file": "FN_0112_metal_nut_scratch.png",
+            "group": "FN",
+            "category": "metal_nut",
+            "defect": "scratch",
+            "source": "metal_nut/test/scratch/020.png",
+            "label": 1,
+            "score": 0.025371750816702843,
+            "predicted_defective": false
+          },
+          {
+            "file": "FN_0025_metal_nut_color.png",
+            "group": "FN",
+            "category": "metal_nut",
+            "defect": "color",
+            "source": "metal_nut/test/color/000.png",
+            "label": 1,
+            "score": 0.0258202962577343,
+            "predicted_defective": false
+          },
+          {
+            "file": "TP_0000_metal_nut_bent.png",
+            "group": "TP",
+            "category": "metal_nut",
+            "defect": "bent",
+            "source": "metal_nut/test/bent/000.png",
+            "label": 1,
+            "score": 0.03983811289072037,
+            "predicted_defective": true
+          },
+          {
+            "file": "TP_0045_metal_nut_color.png",
+            "group": "TP",
+            "category": "metal_nut",
+            "defect": "color",
+            "source": "metal_nut/test/color/020.png",
+            "label": 1,
+            "score": 0.08764482289552689,
+            "predicted_defective": true
+          },
+          {
+            "file": "TN_0087_metal_nut_good.png",
+            "group": "TN",
+            "category": "metal_nut",
+            "defect": "good",
+            "source": "metal_nut/test/good/017.png",
+            "label": 0,
+            "score": 0.026061508804559708,
+            "predicted_defective": false
+          },
+          {
+            "file": "TN_0079_metal_nut_good.png",
+            "group": "TN",
+            "category": "metal_nut",
+            "defect": "good",
+            "source": "metal_nut/test/good/009.png",
+            "label": 0,
+            "score": 0.03888385742902756,
+            "predicted_defective": false
+          }
+        ],
+        "threshold": 0.03946596160531044,
+        "display_max": 0.07893192321062088,
+        "display_rule": "fixed per-checkpoint range, never per-image min/max; saturation is not a pixel decision",
+        "dataset": "MVTec AD",
+        "source_url": "https://www.mvtec.com/research-teaching/datasets/mvtec-ad",
+        "license": "MVTec AD derivatives: CC BY-NC-SA 4.0"
+      },
+      "gallery_map_generation": "Reused existing gallery with matching frozen threshold; no new inference in this report invocation"
+    },
+    {
+      "run": "metal_nut-foreground-001",
+      "config": {
+        "category": "metal_nut",
+        "image_size": 256,
+        "base_channels": 16,
+        "seed": 42,
+        "batch_size": 8,
+        "epochs": 100,
+        "learning_rate": 0.0003,
+        "normal_probability": 0.25,
+        "threshold_quantile": 0.95,
+        "synthesis": "foreground",
+        "device": "mps"
+      },
+      "model_kind": "joint_reconstruction_segmentation",
+      "image_size": 256,
+      "epochs": 100,
+      "best_epoch": 100,
+      "model_selection": "minimum per-method normal/synthetic validation loss",
+      "bank_digest": null,
+      "best_metric": null,
+      "calibration_quantile": 0.95,
+      "calibration_count": 33,
+      "training_seconds": 1611.2669753330001,
+      "metrics": {
+        "image_auroc": 0.7693059628543499,
+        "image_average_precision": 0.9426150591729849,
+        "pixel_average_precision": 0.14843457630908613,
+        "threshold": 2.8040850884281093e-05,
+        "decision_rule": "anomaly_score >= threshold",
+        "confusion": {
+          "true_positive": 51,
+          "false_positive": 1,
+          "true_negative": 21,
+          "false_negative": 42
+        },
+        "defect_recall": 0.5483870967741935,
+        "normal_false_alarm_rate": 0.045454545454545456,
+        "precision": 0.9807692307692307,
+        "images": 115,
+        "evaluation_resolution": "original resolution per image",
+        "pixel_average_precision_by_category": {
+          "metal_nut": {
+            "average_precision": 0.14843457630908613,
+            "pixels": 56350000,
+            "positive_pixels": 6602541,
+            "images": 115
+          }
+        },
+        "pixel_metric_space": "original",
+        "pixel_aggregation": "macro mean of per-category pixel average precision",
+        "pixel_resize": "bilinear anomaly-map upsampling; original masks are unchanged",
+        "recall_by_defect": {
+          "metal_nut/bent": {
+            "recall": 0.64,
+            "images": 25,
+            "detected": 16
+          },
+          "metal_nut/color": {
+            "recall": 0.5,
+            "images": 22,
+            "detected": 11
+          },
+          "metal_nut/flip": {
+            "recall": 0.9565217391304348,
+            "images": 23,
+            "detected": 22
+          },
+          "metal_nut/scratch": {
+            "recall": 0.08695652173913043,
+            "images": 23,
+            "detected": 2
+          }
+        },
+        "latency": {
+          "single_image_median_ms": 10.619228999985353,
+          "single_image_p95_ms": 11.888714400095068,
+          "single_image_measurements": 32,
+          "batch_median_ms": 76.79137500008437,
+          "batch_p95_ms": 142.018562299927,
+          "batch_size": 8,
+          "batches": 15,
+          "warmup_forwards": 3,
+          "scope": "model forward and image scoring only; excludes disk loading and host-to-device transfer",
+          "device": "mps"
+        },
+        "split_digest": "2df9587b2f8d3f7f389a7ef2a1e9e13cf21ea6b6738a1d9023e7daf1d59de5ad",
+        "threshold_source": "separate normal calibration split",
+        "score_definition": "mean of top 1% sigmoid anomaly-map pixels; not a calibrated probability",
+        "limitations": [
+          "Predictions originate at model resolution; upsampling cannot recover defects lost during input resizing.",
+          "A threshold fitted to a small normal calibration set has uncertain false-alarm generalization.",
+          "Synthetic-anomaly training does not guarantee transfer to all real defect types."
+        ],
+        "uncertainty": {
+          "confidence_level": 0.95,
+          "image_auroc_interval": [
+            0.6739980449657869,
+            0.8533846529814272
+          ],
+          "auroc_method": "percentile stratified bootstrap of independent test images",
+          "bootstrap_samples": 1000,
+          "bootstrap_seed": 42,
+          "defect_recall_interval": [
+            0.44733301650860635,
+            0.6456023864644514
+          ],
+          "normal_false_alarm_rate_interval": [
+            0.00806942762126385,
+            0.21798045838657332
+          ],
+          "precision_interval": [
+            0.8987948887210774,
+            0.9965971919290547
+          ],
+          "rate_method": "Wilson score interval",
+          "defective_images": 93,
+          "normal_images": 22,
+          "limitations": "Intervals describe finite-image sampling uncertainty, not training-seed variability, domain shift or independent-pixel uncertainty."
+        },
+        "defect_area_groups": {
+          "area_definition": "fraction of original image pixels with nonzero ground-truth mask",
+          "boundaries": [
+            0.001,
+            0.01,
+            0.05
+          ],
+          "groups": {
+            "tiny_below_0.1_percent": {
+              "images": 0,
+              "detected": 0,
+              "missed": 0,
+              "recall": null,
+              "recall_interval": null
+            },
+            "small_0.1_to_1_percent": {
+              "images": 7,
+              "detected": 0,
+              "missed": 7,
+              "recall": 0.0,
+              "recall_interval": [
+                5.551115123125783e-17,
+                0.35433043506668743
+              ]
+            },
+            "medium_1_to_5_percent": {
+              "images": 50,
+              "detected": 27,
+              "missed": 23,
+              "recall": 0.54,
+              "recall_interval": [
+                0.40398871399157477,
+                0.6703034780777566
+              ]
+            },
+            "large_at_least_5_percent": {
+              "images": 36,
+              "detected": 24,
+              "missed": 12,
+              "recall": 0.6666666666666666,
+              "recall_interval": [
+                0.5033399787115652,
+                0.7978538117569468
+              ]
+            }
+          }
+        },
+        "checkpoint_sha256": "2af135ddc52038aa32b31a2545d923459a0072bde1173a57583ce88d62136f71",
+        "status": "exploratory metal_nut development"
+      },
+      "predictions": [
+        {
+          "image": "metal_nut/test/bent/000.png",
+          "category": "metal_nut",
+          "defect": "bent",
+          "label": 1,
+          "score": 2.3898232029750943e-05,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/bent/001.png",
+          "category": "metal_nut",
+          "defect": "bent",
+          "label": 1,
+          "score": 2.517816210456658e-05,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/bent/002.png",
+          "category": "metal_nut",
+          "defect": "bent",
+          "label": 1,
+          "score": 2.323463195352815e-05,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/bent/003.png",
+          "category": "metal_nut",
+          "defect": "bent",
+          "label": 1,
+          "score": 2.4871949790394865e-05,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/bent/004.png",
+          "category": "metal_nut",
+          "defect": "bent",
+          "label": 1,
+          "score": 2.4254026357084513e-05,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/bent/005.png",
+          "category": "metal_nut",
+          "defect": "bent",
+          "label": 1,
+          "score": 2.8410508093656972e-05,
+          "predicted_defective": true
+        },
+        {
+          "image": "metal_nut/test/bent/006.png",
+          "category": "metal_nut",
+          "defect": "bent",
+          "label": 1,
+          "score": 2.4122949980664998e-05,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/bent/007.png",
+          "category": "metal_nut",
+          "defect": "bent",
+          "label": 1,
+          "score": 2.4060353098320775e-05,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/bent/008.png",
+          "category": "metal_nut",
+          "defect": "bent",
+          "label": 1,
+          "score": 0.9630927443504333,
+          "predicted_defective": true
+        },
+        {
+          "image": "metal_nut/test/bent/009.png",
+          "category": "metal_nut",
+          "defect": "bent",
+          "label": 1,
+          "score": 0.1417168825864792,
+          "predicted_defective": true
+        },
+        {
+          "image": "metal_nut/test/bent/010.png",
+          "category": "metal_nut",
+          "defect": "bent",
+          "label": 1,
+          "score": 0.9998018145561218,
+          "predicted_defective": true
+        },
+        {
+          "image": "metal_nut/test/bent/011.png",
+          "category": "metal_nut",
+          "defect": "bent",
+          "label": 1,
+          "score": 0.34238341450691223,
+          "predicted_defective": true
+        },
+        {
+          "image": "metal_nut/test/bent/012.png",
+          "category": "metal_nut",
+          "defect": "bent",
+          "label": 1,
+          "score": 0.8174840211868286,
+          "predicted_defective": true
+        },
+        {
+          "image": "metal_nut/test/bent/013.png",
+          "category": "metal_nut",
+          "defect": "bent",
+          "label": 1,
+          "score": 0.66929692029953,
+          "predicted_defective": true
+        },
+        {
+          "image": "metal_nut/test/bent/014.png",
+          "category": "metal_nut",
+          "defect": "bent",
+          "label": 1,
+          "score": 2.4180904802051373e-05,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/bent/015.png",
+          "category": "metal_nut",
+          "defect": "bent",
+          "label": 1,
+          "score": 0.9226226806640625,
+          "predicted_defective": true
+        },
+        {
+          "image": "metal_nut/test/bent/016.png",
+          "category": "metal_nut",
+          "defect": "bent",
+          "label": 1,
+          "score": 0.9987049102783203,
+          "predicted_defective": true
+        },
+        {
+          "image": "metal_nut/test/bent/017.png",
+          "category": "metal_nut",
+          "defect": "bent",
+          "label": 1,
+          "score": 0.8533411622047424,
+          "predicted_defective": true
+        },
+        {
+          "image": "metal_nut/test/bent/018.png",
+          "category": "metal_nut",
+          "defect": "bent",
+          "label": 1,
+          "score": 0.9996585845947266,
+          "predicted_defective": true
+        },
+        {
+          "image": "metal_nut/test/bent/019.png",
+          "category": "metal_nut",
+          "defect": "bent",
+          "label": 1,
+          "score": 2.3983071514521725e-05,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/bent/020.png",
+          "category": "metal_nut",
+          "defect": "bent",
+          "label": 1,
+          "score": 0.6750437617301941,
+          "predicted_defective": true
+        },
+        {
+          "image": "metal_nut/test/bent/021.png",
+          "category": "metal_nut",
+          "defect": "bent",
+          "label": 1,
+          "score": 0.2873239815235138,
+          "predicted_defective": true
+        },
+        {
+          "image": "metal_nut/test/bent/022.png",
+          "category": "metal_nut",
+          "defect": "bent",
+          "label": 1,
+          "score": 0.04631263390183449,
+          "predicted_defective": true
+        },
+        {
+          "image": "metal_nut/test/bent/023.png",
+          "category": "metal_nut",
+          "defect": "bent",
+          "label": 1,
+          "score": 0.002637128345668316,
+          "predicted_defective": true
+        },
+        {
+          "image": "metal_nut/test/bent/024.png",
+          "category": "metal_nut",
+          "defect": "bent",
+          "label": 1,
+          "score": 0.09556341171264648,
+          "predicted_defective": true
+        },
+        {
+          "image": "metal_nut/test/color/000.png",
+          "category": "metal_nut",
+          "defect": "color",
+          "label": 1,
+          "score": 2.4387214580201544e-05,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/color/001.png",
+          "category": "metal_nut",
+          "defect": "color",
+          "label": 1,
+          "score": 2.4101069357129745e-05,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/color/002.png",
+          "category": "metal_nut",
+          "defect": "color",
+          "label": 1,
+          "score": 3.809833651757799e-05,
+          "predicted_defective": true
+        },
+        {
+          "image": "metal_nut/test/color/003.png",
+          "category": "metal_nut",
+          "defect": "color",
+          "label": 1,
+          "score": 2.393230897723697e-05,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/color/004.png",
+          "category": "metal_nut",
+          "defect": "color",
+          "label": 1,
+          "score": 2.4323086108779535e-05,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/color/005.png",
+          "category": "metal_nut",
+          "defect": "color",
+          "label": 1,
+          "score": 2.4161772671504878e-05,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/color/006.png",
+          "category": "metal_nut",
+          "defect": "color",
+          "label": 1,
+          "score": 2.5025668946909718e-05,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/color/007.png",
+          "category": "metal_nut",
+          "defect": "color",
+          "label": 1,
+          "score": 2.642933941388037e-05,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/color/008.png",
+          "category": "metal_nut",
+          "defect": "color",
+          "label": 1,
+          "score": 2.4118711735354736e-05,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/color/009.png",
+          "category": "metal_nut",
+          "defect": "color",
+          "label": 1,
+          "score": 2.9177754186093807e-05,
+          "predicted_defective": true
+        },
+        {
+          "image": "metal_nut/test/color/010.png",
+          "category": "metal_nut",
+          "defect": "color",
+          "label": 1,
+          "score": 0.6567821502685547,
+          "predicted_defective": true
+        },
+        {
+          "image": "metal_nut/test/color/011.png",
+          "category": "metal_nut",
+          "defect": "color",
+          "label": 1,
+          "score": 2.8624232072615996e-05,
+          "predicted_defective": true
+        },
+        {
+          "image": "metal_nut/test/color/012.png",
+          "category": "metal_nut",
+          "defect": "color",
+          "label": 1,
+          "score": 0.9999589920043945,
+          "predicted_defective": true
+        },
+        {
+          "image": "metal_nut/test/color/013.png",
+          "category": "metal_nut",
+          "defect": "color",
+          "label": 1,
+          "score": 0.9982149600982666,
+          "predicted_defective": true
+        },
+        {
+          "image": "metal_nut/test/color/014.png",
+          "category": "metal_nut",
+          "defect": "color",
+          "label": 1,
+          "score": 0.9986773729324341,
+          "predicted_defective": true
+        },
+        {
+          "image": "metal_nut/test/color/015.png",
+          "category": "metal_nut",
+          "defect": "color",
+          "label": 1,
+          "score": 0.9999738931655884,
+          "predicted_defective": true
+        },
+        {
+          "image": "metal_nut/test/color/016.png",
+          "category": "metal_nut",
+          "defect": "color",
+          "label": 1,
+          "score": 2.328812115592882e-05,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/color/017.png",
+          "category": "metal_nut",
+          "defect": "color",
+          "label": 1,
+          "score": 0.013093884103000164,
+          "predicted_defective": true
+        },
+        {
+          "image": "metal_nut/test/color/018.png",
+          "category": "metal_nut",
+          "defect": "color",
+          "label": 1,
+          "score": 2.43263511947589e-05,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/color/019.png",
+          "category": "metal_nut",
+          "defect": "color",
+          "label": 1,
+          "score": 0.9983912706375122,
+          "predicted_defective": true
+        },
+        {
+          "image": "metal_nut/test/color/020.png",
+          "category": "metal_nut",
+          "defect": "color",
+          "label": 1,
+          "score": 0.9999834299087524,
+          "predicted_defective": true
+        },
+        {
+          "image": "metal_nut/test/color/021.png",
+          "category": "metal_nut",
+          "defect": "color",
+          "label": 1,
+          "score": 2.4730908990022726e-05,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/flip/000.png",
+          "category": "metal_nut",
+          "defect": "flip",
+          "label": 1,
+          "score": 4.957938290317543e-05,
+          "predicted_defective": true
+        },
+        {
+          "image": "metal_nut/test/flip/001.png",
+          "category": "metal_nut",
+          "defect": "flip",
+          "label": 1,
+          "score": 0.19616466760635376,
+          "predicted_defective": true
+        },
+        {
+          "image": "metal_nut/test/flip/002.png",
+          "category": "metal_nut",
+          "defect": "flip",
+          "label": 1,
+          "score": 0.0003815925738308579,
+          "predicted_defective": true
+        },
+        {
+          "image": "metal_nut/test/flip/003.png",
+          "category": "metal_nut",
+          "defect": "flip",
+          "label": 1,
+          "score": 0.008078467100858688,
+          "predicted_defective": true
+        },
+        {
+          "image": "metal_nut/test/flip/004.png",
+          "category": "metal_nut",
+          "defect": "flip",
+          "label": 1,
+          "score": 0.15987199544906616,
+          "predicted_defective": true
+        },
+        {
+          "image": "metal_nut/test/flip/005.png",
+          "category": "metal_nut",
+          "defect": "flip",
+          "label": 1,
+          "score": 0.5333974361419678,
+          "predicted_defective": true
+        },
+        {
+          "image": "metal_nut/test/flip/006.png",
+          "category": "metal_nut",
+          "defect": "flip",
+          "label": 1,
+          "score": 0.24375994503498077,
+          "predicted_defective": true
+        },
+        {
+          "image": "metal_nut/test/flip/007.png",
+          "category": "metal_nut",
+          "defect": "flip",
+          "label": 1,
+          "score": 0.13284429907798767,
+          "predicted_defective": true
+        },
+        {
+          "image": "metal_nut/test/flip/008.png",
+          "category": "metal_nut",
+          "defect": "flip",
+          "label": 1,
+          "score": 0.00018515673582442105,
+          "predicted_defective": true
+        },
+        {
+          "image": "metal_nut/test/flip/009.png",
+          "category": "metal_nut",
+          "defect": "flip",
+          "label": 1,
+          "score": 0.09890294075012207,
+          "predicted_defective": true
+        },
+        {
+          "image": "metal_nut/test/flip/010.png",
+          "category": "metal_nut",
+          "defect": "flip",
+          "label": 1,
+          "score": 0.4177778959274292,
+          "predicted_defective": true
+        },
+        {
+          "image": "metal_nut/test/flip/011.png",
+          "category": "metal_nut",
+          "defect": "flip",
+          "label": 1,
+          "score": 0.1593717783689499,
+          "predicted_defective": true
+        },
+        {
+          "image": "metal_nut/test/flip/012.png",
+          "category": "metal_nut",
+          "defect": "flip",
+          "label": 1,
+          "score": 0.9698261022567749,
+          "predicted_defective": true
+        },
+        {
+          "image": "metal_nut/test/flip/013.png",
+          "category": "metal_nut",
+          "defect": "flip",
+          "label": 1,
+          "score": 0.3048075735569,
+          "predicted_defective": true
+        },
+        {
+          "image": "metal_nut/test/flip/014.png",
+          "category": "metal_nut",
+          "defect": "flip",
+          "label": 1,
+          "score": 0.24167896807193756,
+          "predicted_defective": true
+        },
+        {
+          "image": "metal_nut/test/flip/015.png",
+          "category": "metal_nut",
+          "defect": "flip",
+          "label": 1,
+          "score": 0.09576438367366791,
+          "predicted_defective": true
+        },
+        {
+          "image": "metal_nut/test/flip/016.png",
+          "category": "metal_nut",
+          "defect": "flip",
+          "label": 1,
+          "score": 2.765530371107161e-05,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/flip/017.png",
+          "category": "metal_nut",
+          "defect": "flip",
+          "label": 1,
+          "score": 0.053088437765836716,
+          "predicted_defective": true
+        },
+        {
+          "image": "metal_nut/test/flip/018.png",
+          "category": "metal_nut",
+          "defect": "flip",
+          "label": 1,
+          "score": 0.16483774781227112,
+          "predicted_defective": true
+        },
+        {
+          "image": "metal_nut/test/flip/019.png",
+          "category": "metal_nut",
+          "defect": "flip",
+          "label": 1,
+          "score": 0.43782493472099304,
+          "predicted_defective": true
+        },
+        {
+          "image": "metal_nut/test/flip/020.png",
+          "category": "metal_nut",
+          "defect": "flip",
+          "label": 1,
+          "score": 0.7756319046020508,
+          "predicted_defective": true
+        },
+        {
+          "image": "metal_nut/test/flip/021.png",
+          "category": "metal_nut",
+          "defect": "flip",
+          "label": 1,
+          "score": 0.060932356864213943,
+          "predicted_defective": true
+        },
+        {
+          "image": "metal_nut/test/flip/022.png",
+          "category": "metal_nut",
+          "defect": "flip",
+          "label": 1,
+          "score": 0.11743197590112686,
+          "predicted_defective": true
+        },
+        {
+          "image": "metal_nut/test/good/000.png",
+          "category": "metal_nut",
+          "defect": "good",
+          "label": 0,
+          "score": 2.342411971767433e-05,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/good/001.png",
+          "category": "metal_nut",
+          "defect": "good",
+          "label": 0,
+          "score": 2.292847966600675e-05,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/good/002.png",
+          "category": "metal_nut",
+          "defect": "good",
+          "label": 0,
+          "score": 2.5302973881480284e-05,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/good/003.png",
+          "category": "metal_nut",
+          "defect": "good",
+          "label": 0,
+          "score": 2.6388695914647542e-05,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/good/004.png",
+          "category": "metal_nut",
+          "defect": "good",
+          "label": 0,
+          "score": 2.3705293642706238e-05,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/good/005.png",
+          "category": "metal_nut",
+          "defect": "good",
+          "label": 0,
+          "score": 2.4824799766065553e-05,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/good/006.png",
+          "category": "metal_nut",
+          "defect": "good",
+          "label": 0,
+          "score": 2.5069457478821278e-05,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/good/007.png",
+          "category": "metal_nut",
+          "defect": "good",
+          "label": 0,
+          "score": 2.7545325792743824e-05,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/good/008.png",
+          "category": "metal_nut",
+          "defect": "good",
+          "label": 0,
+          "score": 2.49438380706124e-05,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/good/009.png",
+          "category": "metal_nut",
+          "defect": "good",
+          "label": 0,
+          "score": 2.480028706486337e-05,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/good/010.png",
+          "category": "metal_nut",
+          "defect": "good",
+          "label": 0,
+          "score": 2.5219191229552962e-05,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/good/011.png",
+          "category": "metal_nut",
+          "defect": "good",
+          "label": 0,
+          "score": 2.4381233743042685e-05,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/good/012.png",
+          "category": "metal_nut",
+          "defect": "good",
+          "label": 0,
+          "score": 6.403008592315018e-05,
+          "predicted_defective": true
+        },
+        {
+          "image": "metal_nut/test/good/013.png",
+          "category": "metal_nut",
+          "defect": "good",
+          "label": 0,
+          "score": 2.416508868918754e-05,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/good/014.png",
+          "category": "metal_nut",
+          "defect": "good",
+          "label": 0,
+          "score": 2.3712511392659508e-05,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/good/015.png",
+          "category": "metal_nut",
+          "defect": "good",
+          "label": 0,
+          "score": 2.4328872314072214e-05,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/good/016.png",
+          "category": "metal_nut",
+          "defect": "good",
+          "label": 0,
+          "score": 2.4300541554111987e-05,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/good/017.png",
+          "category": "metal_nut",
+          "defect": "good",
+          "label": 0,
+          "score": 2.277061139466241e-05,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/good/018.png",
+          "category": "metal_nut",
+          "defect": "good",
+          "label": 0,
+          "score": 2.2604041078011505e-05,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/good/019.png",
+          "category": "metal_nut",
+          "defect": "good",
+          "label": 0,
+          "score": 2.367907654843293e-05,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/good/020.png",
+          "category": "metal_nut",
+          "defect": "good",
+          "label": 0,
+          "score": 2.3810769562260248e-05,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/good/021.png",
+          "category": "metal_nut",
+          "defect": "good",
+          "label": 0,
+          "score": 2.3772787244524807e-05,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/scratch/000.png",
+          "category": "metal_nut",
+          "defect": "scratch",
+          "label": 1,
+          "score": 2.305731140950229e-05,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/scratch/001.png",
+          "category": "metal_nut",
+          "defect": "scratch",
+          "label": 1,
+          "score": 2.457791197230108e-05,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/scratch/002.png",
+          "category": "metal_nut",
+          "defect": "scratch",
+          "label": 1,
+          "score": 2.3310121832764708e-05,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/scratch/003.png",
+          "category": "metal_nut",
+          "defect": "scratch",
+          "label": 1,
+          "score": 2.5445529900025576e-05,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/scratch/004.png",
+          "category": "metal_nut",
+          "defect": "scratch",
+          "label": 1,
+          "score": 2.7794538254966028e-05,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/scratch/005.png",
+          "category": "metal_nut",
+          "defect": "scratch",
+          "label": 1,
+          "score": 2.4591452529421076e-05,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/scratch/006.png",
+          "category": "metal_nut",
+          "defect": "scratch",
+          "label": 1,
+          "score": 0.00016218272503465414,
+          "predicted_defective": true
+        },
+        {
+          "image": "metal_nut/test/scratch/007.png",
+          "category": "metal_nut",
+          "defect": "scratch",
+          "label": 1,
+          "score": 3.7823920138180256e-05,
+          "predicted_defective": true
+        },
+        {
+          "image": "metal_nut/test/scratch/008.png",
+          "category": "metal_nut",
+          "defect": "scratch",
+          "label": 1,
+          "score": 2.3375127057079226e-05,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/scratch/009.png",
+          "category": "metal_nut",
+          "defect": "scratch",
+          "label": 1,
+          "score": 2.5711664420668967e-05,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/scratch/010.png",
+          "category": "metal_nut",
+          "defect": "scratch",
+          "label": 1,
+          "score": 2.3620183128514327e-05,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/scratch/011.png",
+          "category": "metal_nut",
+          "defect": "scratch",
+          "label": 1,
+          "score": 2.4190005206037313e-05,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/scratch/012.png",
+          "category": "metal_nut",
+          "defect": "scratch",
+          "label": 1,
+          "score": 2.4453083824482746e-05,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/scratch/013.png",
+          "category": "metal_nut",
+          "defect": "scratch",
+          "label": 1,
+          "score": 2.4719627617741935e-05,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/scratch/014.png",
+          "category": "metal_nut",
+          "defect": "scratch",
+          "label": 1,
+          "score": 2.4150629542418756e-05,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/scratch/015.png",
+          "category": "metal_nut",
+          "defect": "scratch",
+          "label": 1,
+          "score": 2.624788976390846e-05,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/scratch/016.png",
+          "category": "metal_nut",
+          "defect": "scratch",
+          "label": 1,
+          "score": 2.5463928977842443e-05,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/scratch/017.png",
+          "category": "metal_nut",
+          "defect": "scratch",
+          "label": 1,
+          "score": 2.310208583367057e-05,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/scratch/018.png",
+          "category": "metal_nut",
+          "defect": "scratch",
+          "label": 1,
+          "score": 2.426184801151976e-05,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/scratch/019.png",
+          "category": "metal_nut",
+          "defect": "scratch",
+          "label": 1,
+          "score": 2.438989577058237e-05,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/scratch/020.png",
+          "category": "metal_nut",
+          "defect": "scratch",
+          "label": 1,
+          "score": 2.350019167352002e-05,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/scratch/021.png",
+          "category": "metal_nut",
+          "defect": "scratch",
+          "label": 1,
+          "score": 2.3270482415682636e-05,
+          "predicted_defective": false
+        },
+        {
+          "image": "metal_nut/test/scratch/022.png",
+          "category": "metal_nut",
+          "defect": "scratch",
+          "label": 1,
+          "score": 2.4005787054193206e-05,
+          "predicted_defective": false
+        }
+      ],
+      "gallery": {
+        "selection": "highest-scoring FP; lowest-scoring FN; evenly spaced successful-case score ranks",
+        "groups": {
+          "FP": 1,
+          "FN": 2,
+          "TP": 2,
+          "TN": 2
+        },
+        "items": [
+          {
+            "file": "FP_0082_metal_nut_good.png",
+            "group": "FP",
+            "category": "metal_nut",
+            "defect": "good",
+            "source": "metal_nut/test/good/012.png",
+            "label": 0,
+            "score": 6.403008592315018e-05,
+            "predicted_defective": true
+          },
+          {
+            "file": "FN_0092_metal_nut_scratch.png",
+            "group": "FN",
+            "category": "metal_nut",
+            "defect": "scratch",
+            "source": "metal_nut/test/scratch/000.png",
+            "label": 1,
+            "score": 2.305731140950229e-05,
+            "predicted_defective": false
+          },
+          {
+            "file": "FN_0109_metal_nut_scratch.png",
+            "group": "FN",
+            "category": "metal_nut",
+            "defect": "scratch",
+            "source": "metal_nut/test/scratch/017.png",
+            "label": 1,
+            "score": 2.310208583367057e-05,
+            "predicted_defective": false
+          },
+          {
+            "file": "TP_0005_metal_nut_bent.png",
+            "group": "TP",
+            "category": "metal_nut",
+            "defect": "bent",
+            "source": "metal_nut/test/bent/005.png",
+            "label": 1,
+            "score": 2.8410508093656972e-05,
+            "predicted_defective": true
+          },
+          {
+            "file": "TP_0045_metal_nut_color.png",
+            "group": "TP",
+            "category": "metal_nut",
+            "defect": "color",
+            "source": "metal_nut/test/color/020.png",
+            "label": 1,
+            "score": 0.9999834299087524,
+            "predicted_defective": true
+          },
+          {
+            "file": "TN_0088_metal_nut_good.png",
+            "group": "TN",
+            "category": "metal_nut",
+            "defect": "good",
+            "source": "metal_nut/test/good/018.png",
+            "label": 0,
+            "score": 2.2604041078011505e-05,
+            "predicted_defective": false
+          },
+          {
+            "file": "TN_0077_metal_nut_good.png",
+            "group": "TN",
+            "category": "metal_nut",
+            "defect": "good",
+            "source": "metal_nut/test/good/007.png",
+            "label": 0,
+            "score": 2.7545325792743824e-05,
+            "predicted_defective": false
+          }
+        ],
+        "threshold": 2.8040850884281093e-05,
+        "display_max": 5.608170176856219e-05,
+        "display_rule": "fixed per-checkpoint range, never per-image min/max; saturation is not a pixel decision",
+        "dataset": "MVTec AD",
+        "source_url": "https://www.mvtec.com/research-teaching/datasets/mvtec-ad",
+        "license": "MVTec AD derivatives: CC BY-NC-SA 4.0"
+      },
+      "gallery_map_generation": "Reused existing gallery with matching frozen threshold; no new inference in this report invocation"
+    }
+  ]
+}

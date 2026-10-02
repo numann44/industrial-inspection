@@ -1,0 +1,12 @@
+{
+  "base_channels": 16,
+  "training_seed": 42,
+  "batch_size": 8,
+  "epochs": 100,
+  "patience": 15,
+  "learning_rate": 0.0003,
+  "positive_pixel_weight": 3.0,
+  "threshold_quantile": 0.90,
+  "preprocess": {"mode": "letterbox", "height": 640, "width": 256},
+  "device": "auto"
+}

@@ -1,0 +1,87 @@
+{
+  "selection": "highest-scoring FP; lowest-scoring FN; evenly spaced successful-case score ranks",
+  "groups": {
+    "FP": 1,
+    "FN": 2,
+    "TP": 2,
+    "TN": 2
+  },
+  "items": [
+    {
+      "file": "FP_0082_metal_nut_good.png",
+      "group": "FP",
+      "category": "metal_nut",
+      "defect": "good",
+      "source": "metal_nut/test/good/012.png",
+      "label": 0,
+      "score": 6.403008592315018e-05,
+      "predicted_defective": true
+    },
+    {
+      "file": "FN_0092_metal_nut_scratch.png",
+      "group": "FN",
+      "category": "metal_nut",
+      "defect": "scratch",
+      "source": "metal_nut/test/scratch/000.png",
+      "label": 1,
+      "score": 2.305731140950229e-05,
+      "predicted_defective": false
+    },
+    {
+      "file": "FN_0109_metal_nut_scratch.png",
+      "group": "FN",
+      "category": "metal_nut",
+      "defect": "scratch",
+      "source": "metal_nut/test/scratch/017.png",
+      "label": 1,
+      "score": 2.310208583367057e-05,
+      "predicted_defective": false
+    },
+    {
+      "file": "TP_0005_metal_nut_bent.png",
+      "group": "TP",
+      "category": "metal_nut",
+      "defect": "bent",
+      "source": "metal_nut/test/bent/005.png",
+      "label": 1,
+      "score": 2.8410508093656972e-05,
+      "predicted_defective": true
+    },
+    {
+      "file": "TP_0045_metal_nut_color.png",
+      "group": "TP",
+      "category": "metal_nut",
+      "defect": "color",
+      "source": "metal_nut/test/color/020.png",
+      "label": 1,
+      "score": 0.9999834299087524,
+      "predicted_defective": true
+    },
+    {
+      "file": "TN_0088_metal_nut_good.png",
+      "group": "TN",
+      "category": "metal_nut",
+      "defect": "good",
+      "source": "metal_nut/test/good/018.png",
+      "label": 0,
+      "score": 2.2604041078011505e-05,
+      "predicted_defective": false
+    },
+    {
+      "file": "TN_0077_metal_nut_good.png",
+      "group": "TN",
+      "category": "metal_nut",
+      "defect": "good",
+      "source": "metal_nut/test/good/007.png",
+      "label": 0,
+      "score": 2.7545325792743824e-05,
+      "predicted_defective": false
+    }
+  ],
+  "threshold": 2.8040850884281093e-05,
+  "display_max": 5.608170176856219e-05,
+  "display_rule": "fixed per-checkpoint range, never per-image min/max; saturation is not a pixel decision",
+  "dataset": "MVTec AD",
+  "source_url": "https://www.mvtec.com/research-teaching/datasets/mvtec-ad",
+  "license": "MVTec AD derivatives: CC BY-NC-SA 4.0"
+}

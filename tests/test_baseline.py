@@ -98,3 +98,20 @@ def test_training_never_reads_test_images_and_evaluation_uses_stored_threshold(t
         assert metrics["threshold_source"] == "separate normal calibration split"
     finally:
         torch.set_num_threads(previous_threads)
+
+
+def test_baseline_exact_cpu_resume_includes_noise_rng(tmp_path):
+    from test_train import _resume_fixture
+    _, manifest_path, config_path, config = _resume_fixture(tmp_path)
+    config.pop("normal_probability")
+    config["noise_std"] = 0.03
+    config_path.write_text(json.dumps(config))
+    complete = train_baseline(manifest_path, config_path, tmp_path / "complete", max_steps=2)
+    train_baseline(manifest_path, config_path, tmp_path / "resumed", max_steps=2, stop_after_epoch=1)
+    resumed = train_baseline(manifest_path, config_path, tmp_path / "resumed", max_steps=2,
+                             resume=tmp_path / "resumed" / "last.pt")
+    assert complete["threshold"] == resumed["threshold"]
+    for key in complete["model_state"]:
+        assert torch.equal(complete["model_state"][key], resumed["model_state"][key]), key
+    for first, second in zip(complete["history"], resumed["history"]):
+        assert first["train"] == second["train"]

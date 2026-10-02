@@ -1,0 +1,6 @@
+{
+  "repository": "https://github.com/amazon-science/patchcore-inspection",
+  "commit": "fcaa92f124fb1ad74a7acf56726decd4b27cbcad",
+  "files": "Five runtime modules, LICENSE and NOTICE. common.py modified only to load FAISS lazily; adapter uses exact PyTorch squared-L2 nearest-neighbor search. Other four runtime modules unchanged.",
+  "license": "Apache-2.0"
+}

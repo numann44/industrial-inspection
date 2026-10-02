@@ -1,40 +1,62 @@
-# Planned experiments and interpretation
+# Experiment protocol v2
 
-This is a small, predeclared experiment set rather than an unrestricted search on real test labels. Keep original test data untouched during optimization and use synthetic validation for configuration selection. Record exploratory test inspections explicitly.
+## Question and target
 
-## Fixed protocol
+Can a compact, randomly initialized model identify defective industrial images and locate suspicious regions using normal training photographs plus procedural corruptions? The engineering target is **defect recall ≥0.90 and normal false-alarm rate ≤0.10**, assessed separately for each supported category. A separate labeled surface-defect track is available if the normal-only study fails to meet this target. This is a measured target, not a promised outcome.
 
-- Initial category: metal_nut. Start at 128 pixels, 16 base channels, Adam, batch size 8 and seed 42.
-- Training supervision: original normal training images and known procedural corruption masks.
-- Original normal images partitioned 70/15/15 into train, synthetic validation and normal calibration.
-- Best epoch selected by fixed synthetic-validation loss. The 95th normal calibration-score percentile determines the image decision threshold.
-- No pretrained weights in the main model. No texture dataset dependency in the starting generator.
-- Report each frozen run, including unsuccessful variants. Compare on the same original-resolution test masks.
+## Existing evidence
 
-## Comparisons
+The three legacy metal-nut runs are exploratory. Their original thresholds and weights are retained. The foreground run changes resolution, learning rate, duration, normal probability and corruption families together; it cannot isolate a causal foreground effect. The legacy reconstruction comparison also differs in architecture, supervision and budget. See [measured results](results/EXPERIMENT_REPORT.md).
 
-| Comparison | Question | Controlled conditions |
+Metal-nut test outcomes have already informed development. Screw and transistor predictions remain sealed until configurations and deployment checkpoints are selected without their test labels. Category-specific retraining is not cross-category inference by a single model.
+
+## Data and common selection bank
+
+- Preserve official MVTec train/test membership. Split each category's original normal training images into 70% training, 15% validation and 15% calibration using data seed 42.
+- Keep this split unchanged across training seeds 42, 43, 44. Archive hashes and portable split hashes accompany every run.
+- Build a canonical 256-pixel synthetic validation bank exclusively from original validation normals. For each source save one clean case, three legacy corruptions and five foreground corruptions. Float 32 images and binary masks are immutable and hash verified.
+- Metal-nut bank:33 source images, 297 cases, bank SHA256 `032a8148af58b23ca2f2757ab80c075782cae4f18606968fac3980cfe22f5aaf`.
+- A 128-pixel candidate sees resized versions of the same bank; predictions are restored to the same canonical 256 masks for comparison.
+- Rank main candidates by the harmonic mean of synthetic image AUROC and pixel AP. Within a run evaluate the bank every five epochs and at the final epoch. Cross-candidate exact ties use CPU inference time under the same measurement conditions, followed by stable configuration identity if still equal.
+- Synthetic success is a model-selection proxy, not evidence of real-defect recall.
+
+## Bounded initial matrix
+
+All runs use 100 epochs, 16 base channels, batch 8, Adam learning rate 0.0003, normal probability 0.25 and training seed 42 unless that field is the comparison under study. Normal-image caching preserves decoded tensors; CPU thread count 1 and all code/environment identities are saved.
+
+| Configuration | Controlled change | Interpretation |
 | --- | --- | --- |
-| Reconstruction-only baseline vs joint reconstruction/segmentation | Does learning corruption masks improve real-defect localization? | Same normal split, image size, synthesis budget and calibration rule |
-| Pretrained feature baseline vs from-scratch model | What accuracy/runtime tradeoff does from-scratch learning achieve? | Same category, test images and normal calibration protocol; disclose pretrained data |
-| Appearance/texture patches vs patches plus scratches | Does adding thin structures help real scratches without increasing normal alarms? | Same model, training epochs, splits and seeds |
-| Unrestricted vs foreground-constrained synthesis | Is the generator teaching background shortcuts? | Same corruption families and approximate altered-area distribution |
-| 128 vs 256 pixels | Does retaining fine structure improve small-defect detection? | Original-resolution pixel targets, same split; report additional memory and time |
+| Joint 256 | Reference | Reconstruction plus segmentation; foreground-restricted synthesis |
+| Joint 128 | Input resolution | Same original bank masks and data partitions |
+| Unrestricted 256 | Placement restriction off | Same implemented corruption families; report actual corrupted area distributions |
+| No-scratch 256 | Scratch family disabled | Remaining families renormalized |
+| Segmentation 256 | Reconstruction network removed | Architecture comparison; changed parameter count disclosed |
+| Reconstruction 256 | Normal denoising reference | Same split, resolution and epoch budget; different supervision and capacity |
 
-Initially run one seed to validate the pipeline. Repeat shortlisted settings at seeds 42, 43 and 44; separate variability across training seeds from uncertainty caused by the finite test set. A reasonable result can include a baseline outperforming our trained model.
+Select the main configuration among the five joint/segmentation variants. The reconstruction and pretrained baselines are reported separately. Repeat the chosen configuration with seeds 43 and 44, retaining seed 42. Select a deployment seed using validation evidence before test evaluation; report results for all seeds, not just the selected one.
 
-## Metrics and useful analysis
+Apply the frozen selected configuration to screws and transistors with separate category training, validation banks and calibration subsets. Changes based on category normal validation are documented before opening its test predictions.
 
-Image AUROC measures ranking across good/defective images. It does not establish the usefulness of a particular operating threshold. At the frozen threshold, report defective parts detected/missed, good parts falsely flagged, precision and recall. Show raw counts alongside percentages.
+## Threshold policy
 
-Pixel average precision measures spatial ranking. Use the original masks and upsampled predicted maps. Input resizing can still destroy fine image evidence, even though target masks are preserved. Compare performance by defect type and by annotated defect-area fraction.
+For v2, use the empirical 90 th percentile of a frozen checkpoint's separate normal calibration scores with NumPy's linear quantile interpolation. Predict defective when score >= threshold. Score the strongest 1% of valid anomaly-map pixels. Do not select hyperparameters, seeds or epochs from calibration performance, and never tune the threshold on test labels. Legacy v1 retains its 95 th-percentile thresholds.
 
-For each category, inspect the highest-scoring good images, lowest-scoring defective images, broad maps and missing thin defects. Keep annotated masks separate from predictions. Relate failures to lighting/reflections, object boundaries, size and corruption coverage only where the examples support that explanation.
+With few normal calibration/test images, observed false alarms can differ substantially from the nominal 10%. Report counts and Wilson intervals. The result is not a calibrated probability.
 
-Measure warm single-image inference p50/p95 on the same device and resolution. Report batch throughput separately. Include the scope of timing: preprocessing, transfer, model inference or the whole inspection path. Avoid converting batch timings into unsupported interactive latency claims.
+## Reference and conditional supervised track
 
-Later robustness experiments can apply mild blur, exposure changes and compression to copies of held-out images. Keep original and perturbed results paired. These are stress tests on this dataset, not proof of factory deployment reliability.
+PatchCore uses ImageNet-pretrained WideResNet50-2, layer 2/3 features, patch size 3, 1024-dimensional embeddings, a 1% approximate greedy coreset and one nearest neighbor. Fit the memory only on our normal training partition. Use the same separate normal calibration policy and native test masks. The official implementation is retained with Apache-2.0 notices; an exact PyTorch squared-L 2 backend replaces FAISS for macOS runtime compatibility. Square 256 input and restricted training data differ from the original published benchmark. No paper performance is copied into our result table.
+
+If no selected MVTec category meets the target, execute the separately documented [KolektorSDD2 supervised protocol](SUPERVISED_PROTOCOL.md). Its real-defect labels and preserved official test membership are explicit. Do not mix its metrics with MVTec or claim that it establishes recognition of unseen defect families.
+
+## Frozen evaluation and interpretation
+
+Report image AUROC/AP, class prevalence, confusion counts, recall, false alarms, precision, native-mask pixel AP, per-defect recall and predeclared defect-area bins. Use image-level stratified bootstrap for AUROC and Wilson rate intervals. Training-seed spread and test-sample uncertainty are different quantities.
+
+Gallery selection includes worst false positives/negatives and rank-spaced correct cases. Panels show the original, fixed-scale prediction and ground-truth annotation separately, with dataset attribution. Float maps remain available independently of display images.
+
+After primary evaluation, run paired mild blur, exposure and JPEG stress tests with the same frozen threshold. Benchmark CPU/MPS with no competing training, recording warm p 50/p 95 and full inspection time separately. Stress results do not establish factory robustness.
 
 ## Completion evidence
 
-A final release requires trained checkpoints, experiment configurations, split identifiers, curves, a reproducible evaluation, failure examples and a working image-inspection demo. The repo should explain why design choices were made and what the measurements show. No target accuracy is promised before seeing real results.
+A successful release needs reproducible configs and checkpoints, saved selection decisions made before test access, results from every declared run, failure analysis, a working public CPU demo, a clean installation and passing hosted CI. If measured quality misses the target, the release remains explicitly experimental and the model-quality objective remains unmet.

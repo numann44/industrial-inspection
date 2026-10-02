@@ -25,6 +25,7 @@ class ReconstructionBaseline(nn.Module):
     """Random-initialized U-Net; second output is raw reconstruction error."""
     def __init__(self, base_channels: int = 16):
         super().__init__()
+        self.model_kind = MODEL_KIND
         self.network = SmallUNet(3, 3, base_channels)
 
     def forward(self, image):
@@ -95,80 +96,12 @@ def calibrate_baseline(model, records, image_size, batch_size, device, quantile)
     return threshold_from_normal_scores(scores, quantile), scores
 
 
-def train_baseline(manifest_path, config_path, output, epochs=None, device_override=None):
-    config = json.loads(Path(config_path).read_text())
-    if epochs is not None:
-        config["epochs"] = epochs
-    if device_override is not None:
-        config["device"] = device_override
-    if config["epochs"] < 1 or config["batch_size"] < 1 or config["base_channels"] < 1 or config["image_size"] < 16:
-        raise ValueError("Positive epochs/batch_size/base_channels and image_size >=16 required")
-    if config["learning_rate"] <= 0 or not 0 <= config["noise_std"] <= 0.2 or not 0 < config["threshold_quantile"] < 1:
-        raise ValueError("Invalid learning rate, noise standard deviation, or threshold quantile")
-    manifest = load_manifest(manifest_path, verify_splits=("train", "validation", "calibration"))
-    splits = manifest["splits"]
-    for name in ("train", "validation", "calibration"):
-        if not splits[name] or any(record["label"] != 0 or record["category"] != config["category"] for record in splits[name]):
-            raise ValueError(f"{name} must be nonempty normal-only data for the configured category")
-    output = Path(output)
-    output.mkdir(parents=True, exist_ok=True)
-    if (output / "checkpoint.pt").exists():
-        raise FileExistsError("A checkpoint already exists; choose a distinct baseline output directory")
-    seed = config["seed"]
-    random.seed(seed)
-    np.random.seed(seed)
-    torch.manual_seed(seed)
-    device = select_device(config["device"])
-    model_config = {"base_channels": config["base_channels"]}
-    model = ReconstructionBaseline(**model_config).to(device)
-    optimizer = torch.optim.Adam(model.parameters(), lr=config["learning_rate"])
-    size, batch_size = config["image_size"], config["batch_size"]
-    loaders = {name: DataLoader(InspectionDataset(splits[name], size, include_masks=False),
-                                batch_size=batch_size, shuffle=name == "train", num_workers=0,
-                                generator=torch.Generator().manual_seed(seed))
-               for name in ("train", "validation")}
-    history, best_state, best_epoch = [], None, None
-    best_loss = float("inf")
-    started = time.perf_counter()
-    _write_json(output / "config.json", config)
-    print(json.dumps({"model_kind": MODEL_KIND, "device": str(device),
-                      "parameters": sum(parameter.numel() for parameter in model.parameters()),
-                      "split_counts": {name: len(splits[name]) for name in ("train", "validation", "calibration")}}), flush=True)
-    for epoch in range(config["epochs"]):
-        _sync(device)
-        epoch_start = time.perf_counter()
-        training_loss = _normal_epoch(model, loaders["train"], device, optimizer, config["noise_std"])
-        validation_loss = _normal_epoch(model, loaders["validation"], device)
-        _sync(device)
-        row = {"epoch": epoch + 1, "train_l1": training_loss, "validation_l1": validation_loss,
-               "seconds": time.perf_counter() - epoch_start}
-        history.append(row)
-        if validation_loss < best_loss:
-            best_loss, best_epoch = validation_loss, epoch + 1
-            best_state = {key: value.detach().cpu().clone() for key, value in model.state_dict().items()}
-        _write_json(output / "history.json", history)
-        print(json.dumps(row), flush=True)
-    model.load_state_dict(best_state)
-    threshold, scores = calibrate_baseline(model, splits["calibration"], size, batch_size,
-                                          device, config["threshold_quantile"])
-    checkpoint = {"schema_version": 1, "model_kind": MODEL_KIND, "model_state": best_state,
-                  "model_config": model_config, "config": config, "image_size": size,
-                  "threshold": threshold, "threshold_source": "separate normal calibration split",
-                  "score_definition": SCORE_DEFINITION, "manifest_digest": manifest["digest"],
-                  "split_digest": manifest["split_digest"], "history": history, "best_epoch": best_epoch,
-                  "calibration": {"count": len(scores), "scores": scores, "quantile": config["threshold_quantile"],
-                                  "quantile_method": "linear", "calibration_exceedances": sum(score >= threshold for score in scores)},
-                  "elapsed_seconds": time.perf_counter() - started, "device": str(device),
-                  "torch_version": str(torch.__version__),
-                  "learning_target": "clean normal image; optional Gaussian noise is added only to training inputs",
-                  "model_selection": "minimum clean normal validation L1; no test-image reads during training"}
-    temporary = output / "checkpoint.pt.tmp"
-    torch.save(checkpoint, temporary)
-    temporary.replace(output / "checkpoint.pt")
-    _write_json(output / "summary.json", {key: value for key, value in checkpoint.items() if key not in ("model_state", "history")})
-    print(json.dumps({"checkpoint": str(output / "checkpoint.pt"), "best_epoch": best_epoch,
-                      "threshold": threshold, "elapsed_seconds": checkpoint["elapsed_seconds"]}), flush=True)
-    return checkpoint
+def train_baseline(manifest_path, config_path, output, epochs=None, device_override=None,
+                   resume=None, bank_path=None, stop_after_epoch=None, max_steps=None):
+    """Use the same atomic checkpoint/resume/provenance protocol as the main model."""
+    from inspection.train import train
+    return train(manifest_path, config_path, output, epochs, max_steps, device_override,
+                 resume, bank_path, stop_after_epoch, model_kind_override=MODEL_KIND)
 
 
 def evaluate_baseline(manifest_path, checkpoint_path, device_name="auto", batch_size=8, pixel_space="original"):
@@ -248,6 +181,10 @@ def main():
     training.add_argument("--config", type=Path, default=Path("configs/metal_nut_reconstruction.json"))
     training.add_argument("--output", required=True, type=Path)
     training.add_argument("--epochs", type=int)
+    training.add_argument("--resume", type=Path)
+    training.add_argument("--bank", type=Path)
+    training.add_argument("--stop-after-epoch", type=int)
+    training.add_argument("--max-steps", type=int)
     training.add_argument("--device", default=None, choices=["auto", "cpu", "mps", "cuda"])
     evaluation = modes.add_parser("evaluate")
     evaluation.add_argument("--manifest", required=True, type=Path)
@@ -258,7 +195,8 @@ def main():
     evaluation.add_argument("--pixel-space", default="original", choices=["original", "model"])
     args = parser.parse_args()
     if args.mode == "train":
-        train_baseline(args.manifest, args.config, args.output, args.epochs, args.device)
+        train_baseline(args.manifest, args.config, args.output, args.epochs, args.device,
+                       args.resume, args.bank, args.stop_after_epoch, args.max_steps)
     else:
         metrics = evaluate_baseline(args.manifest, args.checkpoint, args.device, args.batch_size, args.pixel_space)
         _write_json(args.output, metrics)

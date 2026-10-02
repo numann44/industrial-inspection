@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "models": [
+    {
+      "id": "metal-nut-foreground-pilot",
+      "label": "Metal nut \u00b7 exploratory pilot",
+      "category": "metal_nut",
+      "status_label": "EXPLORATORY MODEL \u00b7 TARGET NOT MET",
+      "description": "Compact reconstruction and segmentation model trained from random weights.",
+      "conditions": "Centered metal nuts photographed against a uniform background, matching MVTec AD.",
+      "local_path": "runs/metal_nut-foreground-001/checkpoint.pt",
+      "sha256": "2af135ddc52038aa32b31a2545d923459a0072bde1173a57583ce88d62136f71",
+      "url": null,
+      "metrics": {
+        "defect_recall": 0.5483870967741935,
+        "normal_false_alarm_rate": 0.045454545454545456,
+        "pixel_average_precision": 0.14843457630908613,
+        "image_auroc": 0.7693059628543499,
+        "confusion": {
+          "true_positive": 51,
+          "false_positive": 1,
+          "true_negative": 21,
+          "false_negative": 42
+        }
+      },
+      "evaluation_note": "Original metal_nut test: 93 defective / 22 normal images. This test has been inspected during development; these are exploratory results. This legacy pilot used a 95th-percentile threshold; protocol v2 uses the 90th percentile.",
+      "examples": [
+        {
+          "label": "Normal part",
+          "path": "assets/examples/metal_nut_good_000.png",
+          "defective": false,
+          "attribution": "MVTec AD \u00b7 metal_nut/test/good/000.png \u00b7 MVTec Software GmbH \u00b7 CC BY-NC-SA 4.0"
+        },
+        {
+          "label": "Bent part",
+          "path": "assets/examples/metal_nut_bent_000.png",
+          "defective": true,
+          "attribution": "MVTec AD \u00b7 metal_nut/test/bent/000.png \u00b7 MVTec Software GmbH \u00b7 CC BY-NC-SA 4.0"
+        },
+        {
+          "label": "Discolored surface",
+          "path": "assets/examples/metal_nut_color_000.png",
+          "defective": true,
+          "attribution": "MVTec AD \u00b7 metal_nut/test/color/000.png \u00b7 MVTec Software GmbH \u00b7 CC BY-NC-SA 4.0"
+        },
+        {
+          "label": "Flipped part",
+          "path": "assets/examples/metal_nut_flip_000.png",
+          "defective": true,
+          "attribution": "MVTec AD \u00b7 metal_nut/test/flip/000.png \u00b7 MVTec Software GmbH \u00b7 CC BY-NC-SA 4.0"
+        },
+        {
+          "label": "Fine scratch",
+          "path": "assets/examples/metal_nut_scratch_000.png",
+          "defective": true,
+          "attribution": "MVTec AD \u00b7 metal_nut/test/scratch/000.png \u00b7 MVTec Software GmbH \u00b7 CC BY-NC-SA 4.0"
+        }
+      ]
+    }
+  ]
+}

@@ -52,3 +52,31 @@ def test_foreground_normal_probability_and_empty_surface_are_safe():
                                      normal_probability=probability, strategy="foreground")
         assert torch.equal(corrupted, image)
         assert not mask.any()
+
+
+def test_foreground_toggle_keeps_identical_values_on_shared_corruption_support():
+    image = torch.full((3, 64, 64), 0.08)
+    image[:, 8:56, 8:56] = torch.rand((3, 48, 48), generator=torch.Generator().manual_seed(9)) * 0.1 + 0.5
+    image[:, 25:39, 25:39] = 0.08
+    saw_additional_support = False
+    for mode in ("scratch", "lighting", "texture", "warp", "appearance"):
+        for seed in range(5):
+            first, restricted = synthesize(image, torch.Generator().manual_seed(seed), mode=mode,
+                                            strategy="foreground", restrict_foreground=True)
+            second, unrestricted = synthesize(image, torch.Generator().manual_seed(seed), mode=mode,
+                                               strategy="foreground", restrict_foreground=False)
+            assert not (restricted.bool() & ~unrestricted.bool()).any()
+            assert torch.equal(first[:, restricted[0] == 1], second[:, restricted[0] == 1])
+            saw_additional_support |= bool((unrestricted.bool() & ~restricted.bool()).any())
+    assert saw_additional_support
+
+
+def test_scratch_toggle_does_not_change_other_family_implementation():
+    image = torch.full((3, 64, 64), 0.08)
+    image[:, 8:56, 8:56] = 0.5
+    for mode in ("lighting", "texture", "warp", "appearance"):
+        first = synthesize(image, torch.Generator().manual_seed(8), mode=mode,
+                           strategy="foreground", scratch_enabled=True)
+        second = synthesize(image, torch.Generator().manual_seed(8), mode=mode,
+                            strategy="foreground", scratch_enabled=False)
+        assert torch.equal(first[0], second[0]) and torch.equal(first[1], second[1])

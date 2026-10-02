@@ -4,6 +4,10 @@ import torch
 from torch import nn
 from torch.nn import functional as F
 
+JOINT_MODEL_KIND = "joint_reconstruction_segmentation"
+SEGMENTATION_MODEL_KIND = "segmentation_only"
+SCORE_DEFINITION = "mean of highest 1% sigmoid anomaly-map pixels; not a calibrated probability"
+
 
 class ConvBlock(nn.Module):
     def __init__(self, in_channels: int, out_channels: int):
@@ -56,6 +60,7 @@ class InspectionModel(nn.Module):
 
     def __init__(self, base_channels: int = 16):
         super().__init__()
+        self.model_kind = JOINT_MODEL_KIND
         self.reconstruction = SmallUNet(3, 3, base_channels)
         self.segmentation = SmallUNet(6, 1, base_channels)
 
@@ -63,6 +68,29 @@ class InspectionModel(nn.Module):
         reconstruction = torch.sigmoid(self.reconstruction(image))
         logits = self.segmentation(torch.cat((image, reconstruction), dim=1))
         return reconstruction, logits
+
+
+class SegmentationOnlyModel(nn.Module):
+    """A single U-Net ablation with the same segmentation target and score rule."""
+
+    def __init__(self, base_channels: int = 16):
+        super().__init__()
+        self.model_kind = SEGMENTATION_MODEL_KIND
+        self.segmentation = SmallUNet(3, 1, base_channels)
+
+    def forward(self, image):
+        return image, self.segmentation(image)
+
+
+def create_model(model_kind, model_config):
+    if model_kind == JOINT_MODEL_KIND:
+        return InspectionModel(**model_config)
+    if model_kind in (SEGMENTATION_MODEL_KIND, "supervised_segmentation"):
+        return SegmentationOnlyModel(**model_config)
+    if model_kind == "normal_only_denoising_reconstruction":
+        from inspection.baseline import ReconstructionBaseline
+        return ReconstructionBaseline(**model_config)
+    raise ValueError(f"Unsupported model kind: {model_kind}")
 
 
 def anomaly_score(logits: torch.Tensor) -> torch.Tensor:

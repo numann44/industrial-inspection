@@ -181,31 +181,32 @@ def build_manifest(
 
 class InspectionDataset:
     """Small CPU loader: RGB in [0,1], nearest-neighbor binary mask resizing."""
-    def __init__(self, records: list[dict], image_size: int = 128, include_masks: bool = True):
+    def __init__(self, records: list[dict], image_size: int = 128, include_masks: bool = True, preprocess=None):
+        from .preprocessing import normalize_spec
         self.records = records
         self.image_size = image_size
         self.include_masks = include_masks
+        self.preprocess = normalize_spec(preprocess, image_size)
 
     def __len__(self) -> int:
         return len(self.records)
 
     def __getitem__(self, index: int) -> dict:
         import torch
+        from .preprocessing import decode_image, prepare_image, prepare_mask
         record = self.records[index]
-        with Image.open(record["image"]) as image:
-            array = np.asarray(image.convert("RGB").resize(
-                (self.image_size, self.image_size), Image.Resampling.BILINEAR), dtype=np.float32).copy() / 255
-        sample = {"image": torch.from_numpy(array).permute(2, 0, 1),
+        image = decode_image(record["image"])
+        tensor, valid_mask, _ = prepare_image(image, self.preprocess)
+        sample = {"image": tensor, "valid_mask": valid_mask,
                   "label": record["label"], "path": record["image"],
                   "category": record["category"], "defect": record["defect"]}
         if self.include_masks:
             if record["mask"]:
                 with Image.open(record["mask"]) as image:
-                    mask = np.asarray(image.convert("L").resize(
-                        (self.image_size, self.image_size), Image.Resampling.NEAREST)).copy() > 0
+                    mask = prepare_mask(image, self.preprocess)
             else:
-                mask = np.zeros((self.image_size, self.image_size), dtype=bool)
-            sample["mask"] = torch.from_numpy(mask.astype(np.float32))[None]
+                mask = torch.zeros((1, self.preprocess["height"], self.preprocess["width"]), dtype=torch.float32)
+            sample["mask"] = mask
         return sample
 
 
