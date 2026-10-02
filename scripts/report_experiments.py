@@ -31,6 +31,8 @@ def build_report(run_directories, manifest_path, output, *, device="cpu", galler
     for directory in map(Path, run_directories):
         evaluation = json.loads((directory / "evaluation.json").read_text())
         summary = json.loads((directory / "summary.json").read_text())
+        if summary.get("excluded_from_evidence"):
+            raise ValueError(f"Excluded engineering run cannot enter scientific evidence: {directory.name}")
         history_path = directory / "history.json"
         history = json.loads(history_path.read_text()) if history_path.exists() else []
         predictions = evaluation["predictions"]
@@ -63,12 +65,19 @@ def build_report(run_directories, manifest_path, output, *, device="cpu", galler
         report = {"run": directory.name, "config": config, "model_kind": summary.get("model_kind", "joint_reconstruction_segmentation"),
                   "image_size": summary.get("image_size", config.get("image_size")),
                   "epochs": len(history), "best_epoch": summary.get("best_epoch"),
-                  "model_selection": summary.get("model_selection", "minimum per-method normal/synthetic validation loss"),
+                  "model_selection": summary.get("model_selection", summary.get("selection", "minimum per-method normal/synthetic validation loss")),
                   "bank_digest": summary.get("bank_digest"), "best_metric": summary.get("best_metric"),
                   "calibration_quantile": summary.get("calibration", {}).get("quantile", config.get("threshold_quantile")),
                   "calibration_count": summary.get("calibration", {}).get("count"),
+                  "pretrained": bool(summary.get("pretrained", summary.get("model_kind") == "patchcore_imagenet")),
                   "training_seconds": summary.get("elapsed_seconds", summary.get("seconds")), "metrics": portable_metrics,
                   "predictions": portable_predictions}
+        report["operating_targets"] = {
+            "minimum_defect_recall": 0.90, "maximum_normal_false_alarm_rate": 0.10,
+            "recall_passed": evaluation["defect_recall"] >= 0.90,
+            "false_alarm_passed": evaluation["normal_false_alarm_rate"] <= 0.10,
+            "passed": evaluation["defect_recall"] >= 0.90 and evaluation["normal_false_alarm_rate"] <= 0.10,
+            "interpretation": "Descriptive exploratory check; does not authorize deployment or test-based threshold tuning."}
         if galleries:
             engine = InspectionEngine(checkpoint_path, device=device)
             maps = [None] * len(records)
@@ -114,11 +123,14 @@ def build_report(run_directories, manifest_path, output, *, device="cpu", galler
         labels = [prediction["label"] for prediction in report["predictions"]]
         scores = [prediction["score"] for prediction in report["predictions"]]
         false_alarm, recall, _ = roc_curve(labels, scores)
-        axes[0].plot(false_alarm, recall, label=f"{report['run']} ({report['metrics']['image_auroc']:.3f})")
+        axes[0].plot(false_alarm, recall, label=f"{report['run']} ({report['metrics']['image_auroc']:.4f})")
         axes[1].scatter(report["metrics"]["normal_false_alarm_rate"], report["metrics"]["defect_recall"], label=report["run"])
     axes[0].plot([0, 1], [0, 1], linestyle="--", color="gray")
     axes[0].set(title="Exploratory image ranking", xlabel="False positive rate", ylabel="True positive rate", xlim=(0, 1), ylim=(0, 1))
     axes[1].set(title="Frozen operating thresholds", xlabel="Normal false-alarm rate", ylabel="Defect recall", xlim=(0, 1), ylim=(0, 1))
+    axes[1].axvline(0.10, color="gray", linestyle=":", alpha=0.7)
+    axes[1].axhline(0.90, color="gray", linestyle=":", alpha=0.7)
+    axes[1].fill_between([0, 0.10], 0.90, 1.0, color="green", alpha=0.08)
     for axis in axes:
         axis.legend(fontsize=7)
         axis.grid(alpha=0.2)
@@ -143,25 +155,33 @@ def build_report(run_directories, manifest_path, output, *, device="cpu", galler
         metrics = report["metrics"]
         interval = metrics["uncertainty"]["image_auroc_interval"]
         ci = f"[{interval[0]:.3f}, {interval[1]:.3f}]" if interval else "n/a"
-        rows.append(f"| {report['run']} | {report['image_size']} | {report['epochs']} / {report['best_epoch']} | "
-                    f"{metrics['image_auroc']:.3f} {ci} | {_format(metrics['pixel_average_precision'])} |")
+        epoch_description = "normal memory fitting; no gradient training" if report["pretrained"] else f"{report['epochs']} / {report['best_epoch']}"
+        initialization = "ImageNet reference" if report["pretrained"] else "random weights"
+        rows.append(f"| {report['run']} | {initialization} | {report['image_size']} | {epoch_description} | "
+                    f"{metrics['image_auroc']:.4f} {ci} | {_format(metrics['pixel_average_precision'])} |")
         confusion = metrics["confusion"]
         operating_rows.append(f"| {report['run']} | {report['calibration_quantile']} | {confusion['true_positive']} / "
                               f"{confusion['true_positive'] + confusion['false_negative']} | {confusion['false_positive']} / "
-                              f"{confusion['false_positive'] + confusion['true_negative']} | {_format(metrics['precision'])} |")
+                              f"{confusion['false_positive'] + confusion['true_negative']} | {_format(metrics['precision'])} | "
+                              f"{'passed' if report['operating_targets']['passed'] else 'failed'} |")
     prevalence = float(np.mean([record["label"] for record in manifest["splits"]["test"]]))
     text = "# Frozen experiment evidence\n\n"
     text += "These metal-nut results are **exploratory development measurements**. The category's test set has been inspected during development; these are not blind final benchmark results. All weights and thresholds were frozen before each reported evaluation.\n\n"
-    text += "| Run | Input size | Trained / selected epoch | Image AUROC [95% image bootstrap interval] | Native-mask pixel AP |\n| --- | --- | --- | --- | --- |\n" + "\n".join(rows) + "\n\n"
-    text += "| Run | Normal calibration quantile | Defects detected / available | Good parts falsely flagged / available | Precision |\n| --- | --- | --- | --- | --- |\n" + "\n".join(operating_rows) + "\n\n"
+    text += "| Run | Initialization | Input size | Trained / selected epoch | Image AUROC [95% image bootstrap interval] | Native-mask pixel AP |\n| --- | --- | --- | --- | --- | --- |\n" + "\n".join(rows) + "\n\n"
+    text += "| Run | Normal calibration quantile | Defects detected / available | Good parts falsely flagged / available | Precision | Recall ≥90% and false alarms ≤10% |\n| --- | --- | --- | --- | --- | --- |\n" + "\n".join(operating_rows) + "\n\n"
+    text += "The operating targets are checked at the existing frozen thresholds. No threshold is retuned on test labels. Passing a point-estimate check would still not establish production readiness; these measurements are exploratory and the good-part sample is small.\n\n"
     text += f"Defective-image prevalence is {prevalence:.1%}; image average precision and positive predictive value depend on this unusually defect-heavy test mix. An uninformative image ranking has an AP reference approximately equal to this prevalence. The normal calibration sample size is small, so empirical quantiles do not guarantee future false-alarm rates. Full rate intervals, native-mask area groups, checkpoint checksums and portable prediction records are in [experiment-metrics.json](experiment-metrics.json).\n\n"
     text += "![Per-method learning objectives](experiment-learning-curves.png)\n\n![Ranking and frozen decisions](experiment-ranking-and-decisions.png)\n\n![Defect recall](experiment-defect-recall.png)\n\n"
     text += "## What the measurements show\n\n"
     best_image = max(reports, key=lambda report: report["metrics"]["image_auroc"])
     best_pixel = max(reports, key=lambda report: report["metrics"]["pixel_average_precision"] or -1)
-    text += f"The highest image-AUROC point estimate belongs to `{best_image['run']}` ({best_image['metrics']['image_auroc']:.3f}); "
+    text += f"The highest image-AUROC point estimate belongs to `{best_image['run']}` ({best_image['metrics']['image_auroc']:.6f}); "
     text += f"the highest native-mask pixel-AP point estimate belongs to `{best_pixel['run']}` ({best_pixel['metrics']['pixel_average_precision']:.3f}). "
     text += "Image ranking and defect localization are different outcomes. The confidence intervals and fixed-threshold counts should be considered together; these test comparisons do not choose the deployed checkpoint.\n\n"
+    for report in reports:
+        if report["pretrained"]:
+            text += f"The ImageNet reference detects {report['metrics']['confusion']['true_positive']} defective parts but falsely flags {report['metrics']['confusion']['false_positive']} good parts "
+            text += f"({report['metrics']['normal_false_alarm_rate']:.1%}): its false-alarm target is {'passed' if report['operating_targets']['false_alarm_passed'] else '**failed**'}. It remains a separate reference rather than the released scratch-model demo. See [audited reference provenance](PATCHCORE_REFERENCE.md).\n\n"
     for report in reports:
         metrics = report["metrics"]
         group_name, weakest = min(metrics["recall_by_defect"].items(), key=lambda item: item[1]["recall"])
@@ -170,7 +190,7 @@ def build_report(run_directories, manifest_path, output, *, device="cpu", galler
         text += f"Its lowest-recall annotated group is `{group_name.split('/')[-1]}`: {weakest['detected']}/{weakest['images']} detected. "
         text += "The corresponding failure-gallery panels allow direct comparison of predicted activations with annotated defects.\n"
     text += "\nHigh precision alone cannot compensate for missed defective parts. In this defect-heavy test set, inspect recall and false alarms alongside precision. A normal operating threshold remains an empirical calibration rule rather than an accuracy guarantee.\n\n"
-    text += "## Interpretation limits\n\nThese pilots differ in objective, network capacity, corruption generator, input resolution, learning rate and training budget. They provide descriptive whole-method comparisons and do not isolate the causal effect of any single component. Lower training/validation loss does not establish better real-defect detection. Pixel AP uses original masks and restored model maps; resizing can remove small input evidence. Image bootstrap intervals do not capture variation across training seeds or deployment domain shift.\n\n"
+    text += "## Interpretation limits\n\nThese methods differ in initialization, objective, network capacity, corruption generator, input resolution, learning rate and training budget. They provide descriptive whole-method comparisons and do not isolate the causal effect of any single component. The ImageNet reference uses pretrained WideResNet features and a normal-feature memory bank; it is not a model trained from scratch and its test outcomes do not choose the from-scratch configuration. Its 256-square resize and audited normal split differ from published-paper settings. Lower training/validation loss does not establish better real-defect detection. Pixel AP uses original masks and restored model maps; resizing can remove small input evidence. Image bootstrap intervals do not capture variation across training seeds or deployment domain shift.\n\n"
     text += "## Balanced failure galleries\n\nGallery selection is deterministic: highest-scoring false positives, lowest-scoring false negatives, and rank-spaced successful cases. Prediction activations and ground truth occupy separate panels. Display ranges are fixed per checkpoint at twice its frozen image threshold; colors are not calibrated probabilities or pixel decisions.\n\n"
     for report in reports:
         if "gallery" in report:

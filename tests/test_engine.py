@@ -91,3 +91,16 @@ def test_unknown_schema_and_nonfinite_rejected(tmp_path):
     torch.save(data, path)
     with pytest.raises(ValueError, match="schema"):
         InspectionEngine(path, "cpu")
+
+
+@pytest.mark.parametrize("preprocess", [
+    {"mode": "letterbox", "height": 256, "width": 256},
+    {"mode": "square", "height": 128, "width": 128},
+])
+def test_patchcore_rejects_preprocessing_that_changes_reference_scoring(tmp_path, preprocess):
+    path = tmp_path / "reference.pt"
+    torch.save({"category": "metal_nut", "threshold": 1.0,
+                "model_kind": "patchcore_imagenet", "model_config": {"image_size": 256},
+                "image_size": 256, "preprocess": preprocess}, path)
+    with pytest.raises(ValueError, match="square preprocessing matching"):
+        InspectionEngine(path, "cpu")

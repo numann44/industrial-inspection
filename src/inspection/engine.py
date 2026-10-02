@@ -84,9 +84,14 @@ class InspectionEngine:
             from .model import SegmentationOnlyModel
             self.model = SegmentationOnlyModel(**model_config)
         elif self.model_kind == "patchcore_imagenet":
-            from .patchcore_baseline import PatchCoreReference
+            reference_size = int(model_config.get("image_size", 256))
+            if (self.preprocess["mode"] != "square" or
+                    self.preprocess["height"] != reference_size or
+                    self.preprocess["width"] != reference_size):
+                raise ValueError("PatchCore requires square preprocessing matching its model image_size")
             if str(device) not in {"auto", "cpu"}:
                 raise ValueError("The reference PatchCore adapter uses exact CPU nearest-neighbor search")
+            from .patchcore_baseline import PatchCoreReference
             device = "cpu"
             self.model = PatchCoreReference(**model_config)
         else:

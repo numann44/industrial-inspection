@@ -4,6 +4,8 @@
 
 [Experiment evidence](docs/results/EXPERIMENT_REPORT.md) · [Training protocol](docs/EXPERIMENTS.md) · [Data provenance](docs/DATA.md) · [Model card](docs/MODEL_CARD.md)
 
+[![Source checks](https://github.com/numann44/industrial-inspection/actions/workflows/checks.yml/badge.svg)](https://github.com/numann44/industrial-inspection/actions/workflows/checks.yml)
+
 This project connects the full inspection workflow: audited industrial images, controlled training, independent threshold calibration, native-resolution evaluation, and an interactive image inspection app. It starts with metal nuts, then tests the same procedure on screws and transistors using separate category models. A separately documented supervised surface-defect track uses KolektorSDD2.
 
 > **Current status:** three exploratory metal-nut models are trained and measured. The controlled experiment study is running. The latest exploratory model detects **51 of 93 defective images**, with **1 false alarm among 22 normal images**. It does **not** meet the project target of ≥90% defect recall and ≤10% normal false alarms. The demo exposes these limitations and includes failure examples.
@@ -26,8 +28,11 @@ These runs all use the original metal-nut test set: **93 defective and 22 normal
 | Initial joint model, 128 px | 0.655 | 0.213 | 37 / 93 | 56 | 2 / 22 |
 | Denoising reconstruction, 128 px | 0.626 | 0.217 | 10 / 93 | 83 | 1 / 22 |
 | Foreground synthesis, 256 px | 0.769 | 0.148 | 51 / 93 | 42 | 1 / 22 |
+| PatchCore reference, ImageNet features | 0.9995 | 0.885 | 93 / 93 | 0 | 4 / 22 |
 
-The last model improves image decisions but localizes defects less effectively. It catches only **2 of 23 scratches**. Resolution, learning rate, training duration and corruption generation changed together in that run; the results do not isolate the contribution of foreground masking. The next study changes one factor at a time.
+The foreground model improves image decisions but localizes defects less effectively. It catches only **2 of 23 scratches**. Resolution, learning rate, training duration and corruption generation changed together in that run; the results do not isolate the contribution of foreground masking. The next study changes one factor at a time.
+
+The separately fitted [PatchCore reference](docs/results/PATCHCORE_REFERENCE.md) uses pretrained ImageNet features and the declared 90th-percentile normal calibration threshold. It detects every defect in this exploratory set but raises **18.2% false alarms**, exceeding the 10% target. Its threshold is not retuned on test images, and its results do not select the from-scratch model.
 
 ![Measured exploratory decisions and ranking](docs/results/experiment-ranking-and-decisions.png)
 
@@ -60,13 +65,14 @@ Python 3.12 is the tested runtime. CPU works for inspection; local training uses
 ```bash
 python3.12 -m venv .venv
 source .venv/bin/activate
-python -m pip install -r requirements.lock.txt
+python -m pip install -r requirements.txt
 python -m pip install -e '.[dev,demo]'
+python scripts/fetch_demo_models.py
 python -m pytest
 streamlit run app.py
 ```
 
-The model registry in `artifacts/models.json` verifies weight checksums. It uses local trained checkpoints when present and published release assets when available. The full datasets are not needed to serve the demo.
+The model registry in `artifacts/models.json` verifies weight checksums. It uses local trained checkpoints when present and the [published experimental model](https://github.com/numann44/industrial-inspection/releases/tag/v0.1.0-alpha.1) otherwise. The full datasets are not needed to serve the demo. `requirements.lock.txt` records the local experiment environment; the deployment requirements use CPU PyTorch wheels on Linux.
 
 ### Reproduce the normal-only experiment
 

@@ -17,10 +17,11 @@ ROOT = Path(__file__).resolve().parents[1]
 @pytest.fixture(scope="module")
 def registered_pilot():
     registry = json.loads((ROOT / "artifacts/models.json").read_text())
-    pilots = [entry for entry in registry["models"] if entry.get("local_path")
-              and (ROOT / entry["local_path"]).is_file() and entry.get("examples")]
+    pilots = [entry for entry in registry["models"] if entry.get("examples") and (
+        (entry.get("local_path") and (ROOT / entry["local_path"]).is_file()) or
+        (ROOT / ".cache/inspection" / f"{entry['sha256']}.pt").is_file())]
     if not pilots:
-        pytest.skip("A registered local checkpoint is required for the optional real-model demo test")
+        pytest.skip("Run scripts/fetch_demo_models.py to enable the real-model demo checks")
     return pilots[0]
 
 

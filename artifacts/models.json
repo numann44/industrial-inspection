@@ -10,7 +10,7 @@
       "conditions": "Centered metal nuts photographed against a uniform background, matching MVTec AD.",
       "local_path": "runs/metal_nut-foreground-001/checkpoint.pt",
       "sha256": "2af135ddc52038aa32b31a2545d923459a0072bde1173a57583ce88d62136f71",
-      "url": null,
+      "url": "https://github.com/numann44/industrial-inspection/releases/download/v0.1.0-alpha.1/metal-nut-pilot.pt",
       "metrics": {
         "defect_recall": 0.5483870967741935,
         "normal_false_alarm_rate": 0.045454545454545456,

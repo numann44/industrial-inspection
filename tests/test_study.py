@@ -8,6 +8,8 @@ import pytest
 from scripts.run_study import (
     BASELINE_KIND, MATRIX, StudyRunner, category_manifest, plan, quality_target_met,
     reconcile_queue, scheduler_lock, select_by_validation, sha256,
+    validate_completed_queue,
+    seed_variability,
 )
 
 
@@ -81,6 +83,78 @@ def test_running_initial_queue_and_missing_handoff_block_execution(tmp_path):
     assert not (tmp_path / "outputs").exists()
 
 
+def test_failed_or_dead_incomplete_initial_queue_stops_automatic_handoff(tmp_path):
+    queue = tmp_path / "queue.json"
+    queue.write_text(json.dumps({"state": "failed", "pid": 99999999}))
+    with pytest.raises(RuntimeError, match="Initial queue failed"):
+        reconcile_queue(queue, wait=True)
+    queue.write_text(json.dumps({"state": "running", "pid": 99999999}))
+    with pytest.raises(RuntimeError, match="stale or incomplete"):
+        reconcile_queue(queue, wait=True)
+    queue.write_text(json.dumps({"state": "complete", "pid": 99999999}))
+    assert reconcile_queue(queue, wait=True)["state"] == "complete"
+
+
+def test_handoff_checks_the_exact_completed_six_job_declaration():
+    status = {"protocol": "v2", "state": "complete", "jobs": [
+        {"name": name, "state": "complete", "config": f"configs/protocol_v2/{filename}"}
+        for name, filename in MATRIX]}
+    validate_completed_queue(status)
+    status["jobs"][0]["config"] = "different-config.json"
+    with pytest.raises(RuntimeError, match="mismatched"):
+        validate_completed_queue(status)
+
+
+def test_resumed_frozen_selection_rejects_tampered_choice_and_candidate_metadata(tmp_path):
+    runner = StudyRunner(tmp_path, device="cpu")
+    candidates = []
+    for name, score in (("first", .7), ("best", .9)):
+        path = tmp_path / f"{name}.pt"
+        path.write_bytes(name.encode())
+        candidates.append({**candidate(sha256(path), score), "checkpoint": path.name})
+    choice = runner._freeze_selection("example", candidates)
+    assert runner._freeze_selection("example", candidates) == choice
+    path = runner.output / "selections" / "example.json"
+    changed = json.loads(path.read_text())
+    changed["selected"] = candidates[0]
+    path.write_text(json.dumps(changed))
+    with pytest.raises(ValueError, match="validation-only rule"):
+        runner._freeze_selection("example", candidates)
+    path.write_text(json.dumps(choice))
+    candidates[0] = {**candidates[0], "validation_score": .8}
+    with pytest.raises(ValueError, match="candidate metadata changed"):
+        runner._freeze_selection("example", candidates)
+
+
+def test_cached_evaluation_rejects_wrong_split_or_threshold_without_opening_test_files(tmp_path):
+    runner = StudyRunner(tmp_path, device="cpu")
+    item = {**candidate("checkpoint", .8), "threshold": .5}
+    path = runner.output / "evaluations" / "example.json"
+    path.parent.mkdir(parents=True)
+    valid = {"checkpoint_sha256": "checkpoint", "split_digest": "fixed-split", "threshold": .5}
+    path.write_text(json.dumps(valid))
+    assert runner._evaluate_once(item, "example") == valid
+    for changed in ({**valid, "split_digest": "other-split"}, {**valid, "threshold": .1}):
+        path.write_text(json.dumps(changed))
+        with pytest.raises(ValueError, match="weights, split or frozen threshold"):
+            runner._evaluate_once(item, "example")
+
+
+def test_partial_final_checkpoint_replays_finalization_from_atomic_last_checkpoint(tmp_path, monkeypatch):
+    import inspection.train
+    runner = StudyRunner(tmp_path, device="cpu")
+    run = tmp_path / "partial-run"
+    run.mkdir()
+    (run / "checkpoint.pt").write_bytes(b"published-before-summary")
+    (run / "last.pt").write_bytes(b"last-complete-epoch")
+    observed = []
+    monkeypatch.setattr(inspection.train, "train", lambda *args, **kwargs: observed.append((args, kwargs)))
+    runner._run_training("partial", tmp_path / "manifest.json", tmp_path / "config.json", run)
+    assert observed[0][1]["resume"] == run / "last.pt"
+    assert observed[0][1]["device_override"] == "cpu"
+    assert (run / "checkpoint.pt").read_bytes() == b"published-before-summary"
+
+
 def test_targets_require_both_rates_and_dry_plan_is_bounded():
     assert quality_target_met({"defect_recall": .9, "normal_false_alarm_rate": .1})
     assert not quality_target_met({"defect_recall": 1, "normal_false_alarm_rate": .11})
@@ -88,6 +162,17 @@ def test_targets_require_both_rates_and_dry_plan_is_bounded():
     assert not quality_target_met({"defect_recall": None, "normal_false_alarm_rate": 0})
     assert plan()["maximum_total_training_jobs"] == 17
     assert plan()["maximum_new_jobs_after_initial_queue"] == 11
+
+
+def test_seed_variability_reports_all_seeds_without_choosing_the_best_test_run():
+    candidates = [candidate("first", .8, seed=42), candidate("second", .9, seed=43), candidate("third", .7, seed=44)]
+    evaluations = {"first": {"defect_recall": .5}, "second": {"defect_recall": .6}, "third": {"defect_recall": 1.0}}
+    result = seed_variability(candidates, evaluations)
+    assert result["seeds"] == [42, 43, 44]
+    assert result["metrics"]["defect_recall"]["values"] == [.5, .6, 1.0]
+    assert result["metrics"]["defect_recall"]["mean"] == pytest.approx(.7)
+    assert result["metrics"]["defect_recall"]["sample_standard_deviation"] > 0
+    assert result["metrics"]["pixel_average_precision"]["count"] == 0
 
 
 class FakeStudyRunner(StudyRunner):

@@ -8,10 +8,16 @@ from __future__ import annotations
 import argparse
 import contextlib
 import copy
+import fcntl
 import hashlib
+import importlib.metadata
 import json
 import math
 import os
+import shutil
+import subprocess
+import statistics
+import sys
 import time
 from collections import Counter
 from datetime import datetime, timezone
@@ -46,6 +52,21 @@ def quality_target_met(metrics):
     return bool(recall is not None and false_alarm is not None
                 and math.isfinite(recall) and math.isfinite(false_alarm)
                 and recall >= 0.90 and false_alarm <= 0.10)
+
+
+def seed_variability(candidates, evaluations):
+    """Descriptive training-seed variability, kept separate from image CIs."""
+    metrics = ("image_auroc", "pixel_average_precision", "defect_recall", "normal_false_alarm_rate")
+    result = {"seeds": [item["seed"] for item in candidates], "metrics": {},
+              "scope": "same audited split and configuration; variation across model training seeds, not a confidence interval"}
+    for name in metrics:
+        values = [evaluations[item["checkpoint_sha256"]].get(name) for item in candidates]
+        finite = [value for value in values if value is not None and math.isfinite(value)]
+        result["metrics"][name] = {"values": values, "count": len(finite),
+                                  "mean": statistics.mean(finite) if finite else None,
+                                  "sample_standard_deviation": statistics.stdev(finite) if len(finite) > 1 else None,
+                                  "minimum": min(finite) if finite else None, "maximum": max(finite) if finite else None}
+    return result
 
 
 def select_by_validation(candidates, latency_measure=None, exclude_baseline=True):
@@ -111,6 +132,9 @@ def ensure_immutable_json(path, value):
 def process_alive(pid):
     try:
         os.kill(int(pid), 0)
+        result = subprocess.run(["ps", "-p", str(pid), "-o", "stat="], capture_output=True, text=True, check=False)
+        if result.returncode == 0 and result.stdout.strip().startswith("Z"):
+            return False
         return True
     except (ProcessLookupError, ValueError, TypeError):
         return False
@@ -118,18 +142,37 @@ def process_alive(pid):
         return True
 
 
-def reconcile_queue(path, wait=False, sleep=time.sleep):
+def reconcile_queue(path, wait=False, sleep=time.sleep, on_status=None):
     """Wait or refuse while the existing queue owns MPS; stale jobs can resume."""
     path = Path(path)
     while path.exists():
         status = json.loads(path.read_text())
-        if status.get("state") == "complete" or not process_alive(status.get("pid")):
+        if on_status is not None:
+            on_status(status)
+        alive = process_alive(status.get("pid"))
+        if status.get("state") == "failed":
+            raise RuntimeError("Initial queue failed; automatic scheduler handoff is stopped")
+        if status.get("state") == "complete" and not alive:
             return status
+        if not alive:
+            raise RuntimeError("Initial queue status is stale or incomplete; verify its runs before scheduler handoff")
         if not wait:
             raise RuntimeError("The initial queue still owns MPS; wait for completion and obtain scheduler handoff")
-        print(json.dumps({"waiting_for_initial_queue_pid": status.get("pid")}), flush=True)
         sleep(30)
     return None
+
+
+def validate_completed_queue(status):
+    if status is None:
+        raise RuntimeError("The authorized initial queue status is missing")
+    expected = {name: f"configs/protocol_v2/{filename}" for name, filename in MATRIX}
+    jobs = status.get("jobs", [])
+    if status.get("protocol") != "v2" or status.get("state") != "complete" or len(jobs) != len(expected):
+        raise RuntimeError("Initial queue completion metadata differs from the declared six-job study")
+    if {item.get("name") for item in jobs} != set(expected):
+        raise RuntimeError("Initial queue candidate names differ")
+    if any(item.get("state") != "complete" or item.get("config") != expected[item["name"]] for item in jobs):
+        raise RuntimeError("Initial queue contains incomplete or mismatched jobs")
 
 
 @contextlib.contextmanager
@@ -137,23 +180,27 @@ def scheduler_lock(path):
     """Project-wide outer-runner lease; stale dead-process leases are recoverable."""
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
-    while True:
+    # Serialize stale-lease recovery as well as creation. Without this guard,
+    # two recoverers could both observe a dead PID and unlink each other's new
+    # leases. Keep the guard inode persistent to avoid an unlink/lock race.
+    with path.with_name(path.name + ".guard").open("a") as guard:
+        fcntl.flock(guard, fcntl.LOCK_EX)
         try:
+            if path.exists():
+                try:
+                    owner = json.loads(path.read_text())
+                except (OSError, json.JSONDecodeError) as error:
+                    raise RuntimeError("Existing scheduler lease cannot be verified; do not start a second runner") from error
+                if process_alive(owner.get("pid")):
+                    raise RuntimeError("Another study runner currently owns the project scheduler")
+                path.unlink()
             handle = os.open(path, os.O_CREAT | os.O_EXCL | os.O_WRONLY, 0o600)
-        except FileExistsError:
-            try:
-                owner = json.loads(path.read_text())
-            except (OSError, json.JSONDecodeError) as error:
-                raise RuntimeError("Existing scheduler lease cannot be verified; do not start a second runner") from error
-            if process_alive(owner.get("pid")):
-                raise RuntimeError("Another study runner currently owns the project scheduler")
-            path.unlink()
-            continue
-        with os.fdopen(handle, "w") as stream:
-            json.dump({"pid": os.getpid(), "created_at": timestamp()}, stream)
-            stream.flush()
-            os.fsync(stream.fileno())
-        break
+            with os.fdopen(handle, "w") as stream:
+                json.dump({"pid": os.getpid(), "created_at": timestamp()}, stream)
+                stream.flush()
+                os.fsync(stream.fileno())
+        finally:
+            fcntl.flock(guard, fcntl.LOCK_UN)
     try:
         yield
     finally:
@@ -217,6 +264,15 @@ class StudyRunner:
         for key in ("model_kind", "best_metric", "best_epoch", "split_digest", "config", "threshold", "bank_digest"):
             if summary.get(key) != checkpoint.get(key):
                 raise ValueError(f"Completed checkpoint and summary disagree: {key}")
+        source = self.root / "src" / "inspection"
+        source_maps = (checkpoint["provenance"]["source_files"],
+                       checkpoint["provenance"].get("supervised_source_files", {}))
+        for name, digest in {name: digest for mapping in source_maps for name, digest in mapping.items()}.items():
+            if not (source / name).is_file() or sha256(source / name) != digest:
+                raise ValueError(f"Completed run training source changed: {name}")
+        for name, version in checkpoint["provenance"]["packages"].items():
+            if version is not None and importlib.metadata.version(name) != version:
+                raise ValueError(f"Completed run package version changed: {name}")
         metadata = load_evaluation_manifest(manifest, verify_splits=())
         if summary.get("split_digest") != metadata["split_digest"]:
             raise ValueError("Completed checkpoint summary belongs to a different audited split")
@@ -247,9 +303,13 @@ class StudyRunner:
         path = self.output / "selections" / f"{name}.json"
         if path.exists():
             choice = json.loads(path.read_text())
-            known = {item["checkpoint_sha256"] for item in candidates}
-            if choice["selected"]["checkpoint_sha256"] not in known:
-                raise ValueError("Frozen selection checkpoint differs from the candidate set")
+            eligible = [item for item in candidates if item["model_kind"] != BASELINE_KIND]
+            if choice["candidates"] != eligible:
+                raise ValueError("Frozen selection candidate metadata changed")
+            measured = {item["checkpoint_sha256"]: item["cpu_p50_ms"] for item in choice["tie_measurements"]}
+            expected = select_by_validation(candidates, lambda item: measured[item["checkpoint_sha256"]])
+            if any(choice[key] != expected[key] for key in expected):
+                raise ValueError("Frozen selection decision does not match the declared validation-only rule")
             for item in choice["candidates"]:
                 if sha256(self.path(item["checkpoint"])) != item["checkpoint_sha256"]:
                     raise ValueError("Checkpoint changed after validation-only selection")
@@ -262,7 +322,10 @@ class StudyRunner:
     def _run_training(self, name, manifest, config, run, bank=None, supervised=False):
         from inspection.train import _normalized_config, train
         manifest, config, run = map(Path, (manifest, config, run))
-        if (run / "checkpoint.pt").exists():
+        # A crash can occur between publishing the inference checkpoint and
+        # its summary. Replay finalization from last.pt for an incomplete pair;
+        # completed pairs are never silently replaced.
+        if (run / "checkpoint.pt").exists() and (run / "summary.json").exists():
             result = json.loads((run / "summary.json").read_text())
             expected = json.loads(config.read_text())
             expected["device"] = self.device
@@ -297,7 +360,16 @@ class StudyRunner:
         bank_dir = self.output / "banks" / category
         bank_path = bank_dir / "bank.json"
         if not bank_path.exists():
-            create_bank(manifest_path, bank_dir, seed=1_000_042, image_size=256)
+            if bank_dir.exists():
+                raise ValueError("An incomplete final bank directory exists; preserve and review it before resuming")
+            staging = bank_dir.with_name(f".{category}-building")
+            # Only this runner's disposable, uncommitted normal-image bank is
+            # regenerated after interruption; final bank artifacts stay immutable.
+            if staging.exists():
+                shutil.rmtree(staging)
+            create_bank(manifest_path, staging, seed=1_000_042, image_size=256)
+            load_bank(staging / "bank.json")
+            staging.rename(bank_dir)
         bank = load_bank(bank_path)
         if bank["split_digest"] != manifest["split_digest"]:
             raise ValueError("Category bank split differs")
@@ -317,8 +389,10 @@ class StudyRunner:
         path = self.output / "evaluations" / f"{name}.json"
         if path.exists():
             result = json.loads(path.read_text())
-            if result["checkpoint_sha256"] != candidate["checkpoint_sha256"]:
-                raise ValueError("Cached evaluation belongs to different weights")
+            if (result["checkpoint_sha256"] != candidate["checkpoint_sha256"]
+                    or result.get("split_digest") != candidate["split_digest"]
+                    or result.get("threshold") != candidate["threshold"]):
+                raise ValueError("Cached evaluation belongs to different weights, split or frozen threshold")
             return result
         category = candidate["config"].get("category", "kolektor_surface")
         gallery = self.output / "galleries" / name if selected else None
@@ -342,8 +416,10 @@ class StudyRunner:
         path = self.output / "analyses" / f"{category}.json"
         if path.exists():
             result = json.loads(path.read_text())
-            if result["checkpoint_sha256"] != candidate["checkpoint_sha256"]:
-                raise ValueError("Analysis checkpoint changed")
+            if (result["checkpoint_sha256"] != candidate["checkpoint_sha256"]
+                    or result["stress"].get("split_digest") != candidate["split_digest"]
+                    or result["stress"].get("threshold") != candidate["threshold"]):
+                raise ValueError("Analysis weights, split or frozen threshold changed")
             return result
         manifest = load_evaluation_manifest(self.path(candidate["manifest"]), verify_splits=("calibration",))
         image = next(record["image"] for record in manifest["splits"]["calibration"] if record["label"] == 0)
@@ -444,12 +520,17 @@ class StudyRunner:
                 fallback_evaluations[candidate["checkpoint_sha256"]] = result
             self._step("analyze-ksdd2", lambda: self._selected_analyses("kolektor_surface", supervised_choice))
             fallback.update(selected=supervised_choice, evaluations=fallback_evaluations,
+                            training_seed_variability=seed_variability(supervised_candidates, fallback_evaluations),
                             measured_quality_target_met=quality_target_met(fallback_evaluations[supervised_choice["checkpoint_sha256"]]))
         summary = {"protocol": "study-v2", "pretest_selections": selections, "mvtec_target_met": mvtec_pass,
                    "mvtec_selected_metrics": selected_metrics, "all_mvtec_evaluations": evaluations,
+                   "mvtec_training_seed_variability": {category: seed_variability(candidates, evaluations)
+                                                       for category, candidates in category_candidates.items()},
                    "conditional_supervised": fallback,
                    "any_validation_selected_model_met_dataset_target": any(mvtec_pass.values()) or bool(fallback.get("measured_quality_target_met")),
                    "selection_used_test_metrics": False,
+                   "model_and_seed_selection_used_test_metrics": False,
+                   "dataset_fallback_trigger_uses_frozen_mvtec_test_targets": True,
                    "limits": "Dataset point estimates only; failures and training-seed variability retained, no factory-reliability guarantee."}
         atomic_json(self.output / "study-results.json", summary)
         self.status.update(state="complete", finished_at=timestamp())
@@ -470,6 +551,37 @@ def main():
     if not args.execute:
         print(json.dumps(plan(), indent=2))
         return
+    if args.wait_existing:
+        if not args.mps_handoff:
+            raise RuntimeError("Waiting execution also requires explicit scheduler handoff authorization")
+        root = args.root.resolve()
+        waiting_path = root / args.output / "waiting-status.json"
+        def update_waiting(queue):
+            progress = None
+            for item in queue.get("jobs", []):
+                history_path = root / item.get("output", "") / "history.json"
+                if item.get("state") == "running" and history_path.is_file():
+                    history = json.loads(history_path.read_text())
+                    progress = {"job": item["name"], "completed_epochs": len(history),
+                                "latest_epoch_seconds": history[-1]["seconds"] if history else None}
+            atomic_json(waiting_path, {"state": "waiting-for-initial-queue", "pid": os.getpid(),
+                                      "queue": queue, "initial_queue_progress": progress,
+                                      "updated_at_utc": timestamp()})
+        print(json.dumps({"waiting_coordinator_pid": os.getpid(), "status": str(waiting_path)}), flush=True)
+        try:
+            completed = reconcile_queue(root / "outputs/protocol-v2-queue.json", wait=True, on_status=update_waiting)
+            validate_completed_queue(completed)
+        except BaseException as error:
+            atomic_json(waiting_path, {"state": "failed", "pid": os.getpid(), "error": str(error),
+                                      "updated_at_utc": timestamp()})
+            raise
+        atomic_json(waiting_path, {"state": "handoff-complete", "pid": os.getpid(), "updated_at_utc": timestamp()})
+        # Load the final tested runner revision after waiting; edits to the
+        # orchestration script cannot leave stale code alive for several hours.
+        os.execv(sys.executable, [sys.executable, str(Path(__file__).resolve()),
+                                 "--root", str(root), "--output", args.output,
+                                 "--device", args.device, "--bootstrap-samples", str(args.bootstrap_samples),
+                                 "--execute", "--mps-handoff"])
     StudyRunner(args.root, args.output, args.device, args.bootstrap_samples).run(args.mps_handoff, args.wait_existing)
 
 

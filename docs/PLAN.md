@@ -11,7 +11,7 @@ The project target is a category-specific defect detector trained from random in
 | Controlled study | Six serialized experiments running on MPS | Five-way candidate selection, chosen-config seed repeats and fixed category evaluations |
 | Supervised fallback | Fully audited data and tested training/evaluation pipeline ready | Execute if no selected MVTec category reaches the declared target |
 | Demo | Local Streamlit app runs on CPU with examples, uploads and downloads | Public URL and independent browser verification |
-| Publication | Public GitHub repository created; documentation and release assets prepared | Push, hosted CI, model release assets and final measured status |
+| Publication | Public source, clean Linux CI and checksum-pinned `v0.1.0-alpha.1` model release published | Hosted demo, final measured study status and `v0.1.0` acceptance |
 
 ## Ownership
 

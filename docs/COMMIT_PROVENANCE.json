@@ -1,0 +1,30 @@
+{
+  "reason": "Before the first public push, unpublished commit author and committer email metadata was changed to the verified GitHub noreply address. File trees, parent relationships, messages and timestamps were preserved. Existing experimental checkpoints may name original commit IDs; source hashes remain unchanged.",
+  "commits": [
+    {
+      "original_commit": "9fd1eed0f76f81425d4d8de5ca63a1c38476ccde",
+      "published_commit": "9c876205878f73363d056ac9daf8aa06ef8fb77a",
+      "tree": "6c0876abe11fbd3ca191a2f521de12f91bfd9b82"
+    },
+    {
+      "original_commit": "203d37827737f8efe469f7a155ba076151071fc2",
+      "published_commit": "53841bfeb3c07e9768bfdd4b2d9c2528a2cac4c4",
+      "tree": "a7c35169eeb5f7b86bb721beabd673bb4f7db1d6"
+    },
+    {
+      "original_commit": "b91f15f6bfe9c784115f5f53efe673e7efba1427",
+      "published_commit": "f0b60c9661d1bff714f1ccd788eda7b53fa2e862",
+      "tree": "0b3358552e39c31bcef005d0760c65297a486489"
+    },
+    {
+      "original_commit": "c4aa256a8bddfda94cc0239572a64bd8f43508fc",
+      "published_commit": "f576beecb68dce0a9ffc9b36d09ffaac6d2326f1",
+      "tree": "81b08656c5bcfd01c6967089802128451d596c9a"
+    },
+    {
+      "original_commit": "e6e37fc6cc50570c789988b0ce47608401b353c3",
+      "published_commit": "6a800dd9cf30fb9115eb554f6d86aa272de0544e",
+      "tree": "0b68685cef545161f70acf5c158222de438f3160"
+    }
+  ]
+}
