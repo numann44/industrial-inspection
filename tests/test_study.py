@@ -10,6 +10,7 @@ from scripts.run_study import (
     reconcile_queue, scheduler_lock, select_by_validation, sha256,
     validate_completed_queue,
     seed_variability,
+    freeze_selection_rule,
 )
 
 
@@ -162,6 +163,21 @@ def test_targets_require_both_rates_and_dry_plan_is_bounded():
     assert not quality_target_met({"defect_recall": None, "normal_false_alarm_rate": 0})
     assert plan()["maximum_total_training_jobs"] == 17
     assert plan()["maximum_new_jobs_after_initial_queue"] == 11
+
+
+def test_pretest_freeze_describes_the_actual_validation_supervision(tmp_path):
+    runner = StudyRunner(tmp_path, device="cpu")
+    path = tmp_path / "own.pt"
+    path.write_bytes(b"own-frozen-checkpoint")
+    own = {**candidate(sha256(path), .9), "checkpoint": path.name}
+    mvtec = runner._freeze_weights("mvtec-pretest-freeze", [own], {"metal_nut": own})
+    assert mvtec["selection_rule"] == plan()["selection"] == freeze_selection_rule()
+    supervised = {**own, "model_kind": "supervised_segmentation"}
+    ksdd2 = runner._freeze_weights("ksdd2-pretest-freeze", [supervised], {"kolektor_surface": supervised})
+    assert ksdd2["selection_rule"] == freeze_selection_rule(supervised=True)
+    assert "real-defect validation" in ksdd2["selection_rule"] and "synthetic" not in ksdd2["selection_rule"]
+    with pytest.raises(ValueError, match="supervision task"):
+        runner._freeze_weights("ksdd2-pretest-freeze", [own], {"kolektor_surface": own})
 
 
 def test_seed_variability_reports_all_seeds_without_choosing_the_best_test_run():

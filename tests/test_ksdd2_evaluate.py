@@ -57,7 +57,12 @@ def test_full_wrapper_uses_frozen_threshold_and_native_geometry(tmp_path):
         engine = InspectionEngine(checkpoint_path, device="cpu")
         original = manifest["splits"]["test"][0]
         inspected = engine.inspect(original["image"])
-        assert inspected["summary"]["score"] == metrics["predictions"][0]["score"]
+        # CPU kernels can round batched evaluation and single-image inference
+        # differently by a few float32 ULPs. The score contract remains the same.
+        assert inspected["summary"]["score"] == pytest.approx(
+            metrics["predictions"][0]["score"], rel=1e-6, abs=1e-8)
+        assert inspected["summary"]["predicted_defective"] == (
+            metrics["predictions"][0]["score"] >= metrics["threshold"])
         with Image.open(original["image"]) as image:
             assert inspected["native_map"].shape == (image.height, image.width)
     finally:

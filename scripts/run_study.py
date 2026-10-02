@@ -223,6 +223,13 @@ def plan():
     }
 
 
+def freeze_selection_rule(supervised=False):
+    if supervised:
+        return ("real-defect validation harmonic mean of image AUROC and model-space pixel AP; "
+                "ties within 1e-12 use idle CPU p50, then checkpoint SHA256; never choose a test-winning seed")
+    return plan()["selection"]
+
+
 class StudyRunner:
     def __init__(self, root, output="outputs/study-v2", device="mps", bootstrap_samples=1000):
         self.root = Path(root).resolve()
@@ -376,8 +383,13 @@ class StudyRunner:
         return manifest_path, bank_path
 
     def _freeze_weights(self, name, candidates, selections):
+        if not candidates or name not in {"mvtec-pretest-freeze", "ksdd2-pretest-freeze"}:
+            raise ValueError("A declared task and nonempty candidate set are required for freezing weights")
+        supervised = name == "ksdd2-pretest-freeze"
+        if any((item["model_kind"] == "supervised_segmentation") != supervised for item in candidates):
+            raise ValueError("Frozen model kinds differ from the declared supervision task")
         value = {"protocol": "study-v2", "checkpoints": candidates, "deployments": selections,
-                 "selection_rule": plan()["selection"], "test_selection": False}
+                 "selection_rule": freeze_selection_rule(supervised), "test_selection": False}
         ensure_immutable_json(self.output / f"{name}.json", value)
         for candidate in candidates:
             if sha256(self.path(candidate["checkpoint"])) != candidate["checkpoint_sha256"]:

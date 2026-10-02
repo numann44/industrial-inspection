@@ -24,5 +24,15 @@
   },
   "malformed_upload_error": "Cannot decode this image; upload a valid PNG, JPEG or WebP",
   "oversized_upload_error": "Error: File must be 10.0MB or smaller.",
-  "verification_scope": "Hosted CPU service opened in an unauthenticated independent browser session; not a separate physical client device."
+  "verification_scope": "Hosted CPU service opened in an unauthenticated independent browser session; not a separate physical client device.",
+  "followup_verification": {
+    "deployment_commit": "3a578c7605b3fcd32caee681cc272b2ddfc389c3",
+    "malformed_upload_retains_performance_tab": true,
+    "performance_after_invalid_upload": {
+      "defect_recall_display": "54.8%",
+      "normal_false_alarm_display": "4.5%",
+      "native_pixel_ap_display": "0.148"
+    },
+    "example_mode_restored": true
+  }
 }

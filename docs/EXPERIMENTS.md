@@ -60,3 +60,23 @@ After primary evaluation, run paired mild blur, exposure and JPEG stress tests w
 ## Completion evidence
 
 A successful release needs reproducible configs and checkpoints, saved selection decisions made before test access, results from every declared run, failure analysis, a working public CPU demo, a clean installation and passing hosted CI. If measured quality misses the target, the release remains explicitly experimental and the model-quality objective remains unmet.
+
+### Run the bounded study
+
+From the repository root, inspect the declared work before execution:
+
+```bash
+python scripts/run_study.py
+python scripts/run_study.py --execute --mps-handoff --wait-existing
+```
+
+The second command waits for the original six-run queue when present, acquires exclusive study ownership, and resumes only compatible saved experiments. Do not start another training process alongside it. It selects the main variant using validation, trains the remaining category seeds, freezes weights and thresholds before test evaluation, and runs the conditional supervised track only when its declared trigger is met. Progress is recorded in `outputs/study-v2/waiting-status.json` before handoff and `outputs/study-v2/status.json` during execution. An interrupted study can use the same command after the previous process has stopped; source, configuration and data identities must still match.
+
+After the study records genuine completion:
+
+```bash
+python scripts/report_study.py
+python scripts/package_study.py
+```
+
+The reporter checks every declared candidate, pretest selections, weight hashes, calibration, all-seed evaluations, uncertainty, stress tests, timing and gallery attribution before creating the English report in `docs/results`. The packager prepares `outputs/release-v0.1.0` with the exact selected weights, model summaries, examples, galleries and `SHA256SUMS`. It refuses an existing destination. These commands do not publish a GitHub release or replace the active demo registry; final publication uses the verified bundle and a new hosted smoke test.
