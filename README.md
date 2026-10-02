@@ -2,13 +2,17 @@
 
 **Learning to detect defective parts — with reproducible experiments, visible failure cases, and models trained from random initialization.**
 
-[Experiment evidence](docs/results/EXPERIMENT_REPORT.md) · [Training protocol](docs/EXPERIMENTS.md) · [Data provenance](docs/DATA.md) · [Model card](docs/MODEL_CARD.md)
+[Live inspection demo](https://numan-industrial-inspection.streamlit.app/) · [Experiment evidence](docs/results/EXPERIMENT_REPORT.md) · [Training protocol](docs/EXPERIMENTS.md) · [Data provenance](docs/DATA.md) · [Model card](docs/MODEL_CARD.md)
 
 [![Source checks](https://github.com/numann44/industrial-inspection/actions/workflows/checks.yml/badge.svg)](https://github.com/numann44/industrial-inspection/actions/workflows/checks.yml)
 
 This project connects the full inspection workflow: audited industrial images, controlled training, independent threshold calibration, native-resolution evaluation, and an interactive image inspection app. It starts with metal nuts, then tests the same procedure on screws and transistors using separate category models. A separately documented supervised surface-defect track uses KolektorSDD2.
 
 > **Current status:** three exploratory metal-nut models are trained and measured. The controlled experiment study is running. The latest exploratory model detects **51 of 93 defective images**, with **1 false alarm among 22 normal images**. It does **not** meet the project target of ≥90% defect recall and ≤10% normal false alarms. The demo exposes these limitations and includes failure examples.
+
+[![Hosted inspection app showing an original metal nut, model activation overlay and frozen decision threshold](docs/images/live-inspection.png)](https://numan-industrial-inspection.streamlit.app/)
+
+Real CPU inference in the hosted app. The red overlay is model activation, not a confirmed defect boundary. [Deployment verification](docs/DEPLOYMENT.md) · [Screenshot attribution](docs/images/ATTRIBUTION.md).
 
 ## What has been built
 

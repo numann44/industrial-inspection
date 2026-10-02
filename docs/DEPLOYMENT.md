@@ -2,6 +2,10 @@
 
 The tested entrypoint is `app.py`, served by Streamlit. The deployed app needs the small checksum-pinned model release and attributed sample images; it does not need either training dataset or the pretrained reference model.
 
+**Live URL:** https://numan-industrial-inspection.streamlit.app/
+
+The hosted CPU service was verified from an independent browser session without a Streamlit/GitHub login. Example inference, image upload, all four exports, malformed-image rejection and size-limit rejection passed. The cloud/local normal-example score difference was `3.64e-12`; the uploaded failure example's map difference was below `2e-10`. See [portable deployment evidence](results/DEPLOYMENT_VERIFICATION.json). This verifies a remote Linux service and a separate browser session, not a second physical client device.
+
 ## Community Cloud configuration
 
 | Field | Value |
@@ -12,7 +16,7 @@ The tested entrypoint is `app.py`, served by Streamlit. The deployed app needs t
 | Python | `3.12` |
 | Secrets | None |
 
-After signing in to Community Cloud, create an app from the repository and set Python 3.12 in Advanced settings. The root `requirements.txt` installs CPU PyTorch on Linux. Follow the [official deployment instructions](https://docs.streamlit.io/deploy/streamlit-community-cloud/deploy-your-app/deploy) for the hosting controls. No public app URL is claimed until a deployment has been opened and tested independently.
+After signing in to Community Cloud, create an app from the repository and set Python 3.12 in Advanced settings. The root `requirements.txt` installs CPU PyTorch on Linux. Follow the [official deployment instructions](https://docs.streamlit.io/deploy/streamlit-community-cloud/deploy-your-app/deploy) for the hosting controls.
 
 ## Artifacts and privacy
 

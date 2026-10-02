@@ -89,35 +89,35 @@ def main():
                     result = engine.inspect(image, entry["category"])
             except (ValueError, OSError, RuntimeError) as exc:
                 st.error(str(exc))
-                return
-            summary = result["summary"]
-            left, right = st.columns(2, gap="large")
-            with left:
-                st.markdown("#### Original image")
-                st.image(result["image"], width="stretch")
-            with right:
-                st.markdown("#### Anomaly overlay")
-                st.image(result["overlay"], width="stretch")
-            st.markdown(f'<div class="decision">{"Flagged for review" if summary["predicted_defective"] else "Below the defect threshold"}</div>', unsafe_allow_html=True)
-            score, threshold, duration = st.columns(3)
-            score.metric("Anomaly score", f'{summary["score"]:.6g}')
-            threshold.metric("Frozen decision threshold", f'{summary["threshold"]:.6g}')
-            duration.metric("Model inference · CPU", f'{summary["inference_ms"]:.0f} ms')
-            st.caption("The score is not a defect probability. Red regions show model activations, not confirmed defect boundaries. Color scale is fixed for this checkpoint.")
-            if example:
-                actual = "Defective" if example["defective"] else "Normal"
-                matches = example["defective"] == summary["predicted_defective"]
-                st.info(f'Dataset ground truth: {actual} · {"Correct decision" if matches else "Model error — retained as a failure example"}.')
-                st.caption(example["attribution"])
-            a, b, c, d = st.columns(4)
-            a.download_button("Download result JSON", json.dumps(summary, indent=2), "inspection.json", "application/json", use_container_width=True)
-            b.download_button("Download overlay", png_bytes(result["overlay"]), "overlay.png", "image/png", use_container_width=True)
-            raw = io.BytesIO()
-            np.savez_compressed(raw, model=result["raw_map"], original=result["native_map"])
-            c.download_button("Download raw map", raw.getvalue(), "anomaly-map.npz", "application/octet-stream", use_container_width=True)
-            d.download_button("Download heatmap", png_bytes(result["heatmap"]), "heatmap.png", "image/png", use_container_width=True)
-            with st.expander("Inspection record"):
-                st.json(summary)
+            else:
+                summary = result["summary"]
+                left, right = st.columns(2, gap="large")
+                with left:
+                    st.markdown("#### Original image")
+                    st.image(result["image"], width="stretch")
+                with right:
+                    st.markdown("#### Anomaly overlay")
+                    st.image(result["overlay"], width="stretch")
+                st.markdown(f'<div class="decision">{"Flagged for review" if summary["predicted_defective"] else "Below the defect threshold"}</div>', unsafe_allow_html=True)
+                score, threshold, duration = st.columns(3)
+                score.metric("Anomaly score", f'{summary["score"]:.6g}')
+                threshold.metric("Frozen decision threshold", f'{summary["threshold"]:.6g}')
+                duration.metric("Model inference · CPU", f'{summary["inference_ms"]:.0f} ms')
+                st.caption("The score is not a defect probability. Red regions show model activations, not confirmed defect boundaries. Color scale is fixed for this checkpoint.")
+                if example:
+                    actual = "Defective" if example["defective"] else "Normal"
+                    matches = example["defective"] == summary["predicted_defective"]
+                    st.info(f'Dataset ground truth: {actual} · {"Correct decision" if matches else "Model error — retained as a failure example"}.')
+                    st.caption(example["attribution"])
+                a, b, c, d = st.columns(4)
+                a.download_button("Download result JSON", json.dumps(summary, indent=2), "inspection.json", "application/json", use_container_width=True, on_click="ignore")
+                b.download_button("Download overlay", png_bytes(result["overlay"]), "overlay.png", "image/png", use_container_width=True, on_click="ignore")
+                raw = io.BytesIO()
+                np.savez_compressed(raw, model=result["raw_map"], original=result["native_map"])
+                c.download_button("Download raw map", raw.getvalue(), "anomaly-map.npz", "application/octet-stream", use_container_width=True, on_click="ignore")
+                d.download_button("Download heatmap", png_bytes(result["heatmap"]), "heatmap.png", "image/png", use_container_width=True, on_click="ignore")
+                with st.expander("Inspection record"):
+                    st.json(summary)
 
     with evidence_tab:
         st.subheader("Performance with the threshold fixed in advance")

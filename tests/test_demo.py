@@ -94,3 +94,19 @@ def test_missing_example_shows_error_and_retains_evidence(monkeypatch, registere
     assert any("example image is unavailable" in item.value for item in app.error)
     assert not app.json
     assert {metric.label for metric in app.metric} >= {"Defect recall", "Normal false alarms"}
+
+
+def test_inspection_error_retains_performance_and_method_tabs(monkeypatch, registered_pilot):
+    from inspection.engine import InspectionEngine
+
+    def invalid_image(self, *args, **kwargs):
+        raise ValueError("Cannot decode this image; upload a valid PNG, JPEG or WebP")
+
+    monkeypatch.setattr(InspectionEngine, "inspect", invalid_image)
+    app = AppTest.from_file(ROOT / "app.py", default_timeout=45).run()
+    assert not app.exception
+    assert any("Cannot decode" in item.value for item in app.error)
+    assert not app.json
+    assert not app.get("download_button")
+    assert {metric.label for metric in app.metric} >= {"Defect recall", "Normal false alarms"}
+    assert any("From a photograph to a review decision" in item.value for item in app.subheader)
