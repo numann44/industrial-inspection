@@ -1,0 +1,38 @@
+{
+  "url": "https://numan-industrial-inspection.streamlit.app/",
+  "deployment_commit": "c8beb4790a21c3eda3aacd49f5e17c76c613a55b",
+  "checkpoint_sha256": "2af135ddc52038aa32b31a2545d923459a0072bde1173a57583ce88d62136f71",
+  "normal_example_cloud_score": 2.3424126993631944e-05,
+  "local_score": 2.342413063161075e-05,
+  "absolute_score_difference": 3.637978807091713e-12,
+  "threshold": 2.8040850884281093e-05,
+  "decision": "good",
+  "upload": {
+    "source": "assets/examples/metal_nut_bent_000.png",
+    "cloud_score": 2.3898222934803925e-05,
+    "local_score": 2.3898237486719154e-05,
+    "decision": "good",
+    "note": "Known defect missed by the exploratory pilot; retained to expose failure behavior.",
+    "model_map_max_abs_difference": 1.964508555829525e-10,
+    "native_map_max_abs_difference": 1.964508555829525e-10,
+    "downloads_verified": [
+      "inspection.json",
+      "overlay.png",
+      "anomaly-map.npz",
+      "heatmap.png"
+    ]
+  },
+  "malformed_upload_error": "Cannot decode this image; upload a valid PNG, JPEG or WebP",
+  "oversized_upload_error": "Error: File must be 10.0MB or smaller.",
+  "verification_scope": "Hosted CPU service opened in an unauthenticated independent browser session; not a separate physical client device.",
+  "followup_verification": {
+    "deployment_commit": "3a578c7605b3fcd32caee681cc272b2ddfc389c3",
+    "malformed_upload_retains_performance_tab": true,
+    "performance_after_invalid_upload": {
+      "defect_recall_display": "54.8%",
+      "normal_false_alarm_display": "4.5%",
+      "native_pixel_ap_display": "0.148"
+    },
+    "example_mode_restored": true
+  }
+}

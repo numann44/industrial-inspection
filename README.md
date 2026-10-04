@@ -10,6 +10,12 @@ This project connects audited industrial images, reproducible training, separate
 
 > **Measured outcome:** the selected KolektorSDD2 surface model detects **105/110 defects (95.45%)**, with **89/894 normal false alarms (9.955%)** and **0.8155 native pixel AP**. This meets the declared dataset point-estimate target. **All three selected MVTec category models fail the target.** KolektorSDD2 uses real defect labels in a separate task; it does not demonstrate success on nuts, screws or transistors. Confidence intervals and robustness tests limit the passing result.
 
+**Published:** [v0.1.0](https://github.com/numann44/industrial-inspection/releases/tag/v0.1.0) includes four checksum-verified selected models. The [hosted demo](https://numan-industrial-inspection.streamlit.app/) serves all four tasks; example inference, a real surface-image upload and all four result downloads have been checked against the local engine. [Deployment evidence](docs/DEPLOYMENT.md) records the scope and numerical tolerances.
+
+[![Actual hosted v0.1.0 app showing the selected surface model, measured counts and limitations](docs/images/live-study-v0.1.0.png)](https://numan-industrial-inspection.streamlit.app/)
+
+Actual hosted app, captured October 4, 2026. The displayed 10.0% false-alarm rate is rounded from **89/894 = 9.955%**; the page retains the exact counts, uncertainty and robustness limitations.
+
 ## Results at frozen thresholds
 
 Configuration, checkpoint and deployment seed are selected using validation evidence before test evaluation. The threshold is the 90th percentile of separate normal calibration scores; it is never adjusted to make a test result pass. The target requires both ≥90% defect recall and ≤10% normal false alarms.
@@ -79,7 +85,7 @@ python -m pytest
 streamlit run app.py
 ```
 
-`artifacts/models.json` is authoritative for the active demo selection and checksum-pinned download URLs. The full datasets are not required to serve the demo. `requirements.lock.txt` records the local experiment environment; deployment requirements use CPU PyTorch wheels on Linux. [Deployment evidence](docs/DEPLOYMENT.md) identifies which hosted model and behaviors were actually verified; completing the offline study alone does not verify a new hosted deployment.
+`artifacts/models.json` is authoritative for the four active demo models and their checksum-pinned v0.1.0 download URLs. The full datasets are not required to serve the demo. `requirements.lock.txt` records the local experiment environment; deployment requirements use CPU PyTorch wheels on Linux. The release and main-branch Linux checks passed, and the current local suite passes 137 tests. [Deployment evidence](docs/DEPLOYMENT.md) records actual hosted example/upload/export checks separately from offline evaluation.
 
 ### Reproduce normal-only training
 
@@ -114,7 +120,7 @@ python -m inspection.predict --checkpoint runs/my-ksdd2-seed44/checkpoint.pt \
   --image /path/to/surface.png --output outputs/my-inspection --device cpu
 ```
 
-Exports include JSON, an original-size overlay, a display heatmap and a compressed **float32** map. The color scale is fixed per checkpoint. The score is not a defect probability, and highlighted pixels are not certified boundaries. Users select the matching task; the app does not automatically recognize arbitrary parts. Uploaded images are processed in memory by the application.
+Exports include JSON, an original-size overlay, a display heatmap and a compressed **float32** map. The color scale is fixed per checkpoint and can saturate for the surface model’s very low display range; exported float32 maps retain the underlying values. The score is not a defect probability, and highlighted pixels are not certified boundaries. Users select the matching task; the app does not automatically recognize arbitrary parts. Uploaded images are processed in memory by the application.
 
 ## Earlier experiments and pretrained reference
 
@@ -141,7 +147,13 @@ python -m inspection.patchcore_baseline --manifest data/manifest.json \
 | `app.py`, `artifacts`, `assets` | CPU demo, model registry and attributed examples |
 | `data`, `runs`, `outputs` | Local datasets, weights and generated artifacts; excluded from Git |
 
-The [delivery checklist](docs/PLAN.md) separates measured quality from engineering and publication. Any new method informed by these test results must label their reuse exploratory; a new independent success claim needs an untouched holdout. The completed study is retained even when subsequent experiments improve the method.
+## Bounded follow-up: study v3
+
+A new [three-run synthesis screen](experiments/study_v3/README.md) is active, with its source and protocol frozen at `b158f56`. A freshly trained unchanged control is compared with subtler normal-donor defects (A), then the same change plus boundary-crossing deformation (B). The runs execute sequentially with equal training budgets and one immutable validation bank. They do not read real test pixels.
+
+A candidate must improve family-macro validation H by at least 0.01 while losing no more than 0.02 on the old-family mean. If neither passes, the cycle stops. If one passes, at most six declared continuation runs are permitted, for **nine new runs total**; the continuation executor still requires implementation and review. No v3 model replaces the published v0.1.0 models at this stage.
+
+The metal-nut, screw and transistor test sets are **development-inspected / exploratory for v3**, because their v2 failures informed this follow-up. Cable is only a prospective separate-category comparison and requires an audit of prior test exposure before independent evaluation. No new independent same-category holdout is currently available. The [delivery checklist](docs/PLAN.md) keeps these quality limits separate from completed release engineering; all v2 evidence remains intact.
 
 ## Sources and licenses
 

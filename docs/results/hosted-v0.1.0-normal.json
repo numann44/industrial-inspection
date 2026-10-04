@@ -1,0 +1,48 @@
+{
+  "schema_version": 2,
+  "category": "kolektor_surface",
+  "model_kind": "supervised_segmentation",
+  "category_source": "user-selected checkpoint; no automatic category recognition",
+  "score": 8.444174426358586e-08,
+  "score_definition": "mean of highest 1% sigmoid pixel activations; excludes padding; not a calibrated defect probability",
+  "threshold": 2.276815479262951e-07,
+  "decision_rule": "score >= threshold",
+  "decision": "good",
+  "predicted_defective": false,
+  "checkpoint_sha256": "0c2222771ac7b9719eede442f20f120d81790eba1e20b435b706ebc142f0eed8",
+  "model_sha256": "8ace82f3cd14ffed05250904d1f62943c0dae858a34f75ce0e11f128c9f545ca",
+  "model_image_size": [
+    256,
+    640
+  ],
+  "original_image_size": [
+    231,
+    636
+  ],
+  "preprocess": {
+    "mode": "letterbox",
+    "height": 640,
+    "width": 256
+  },
+  "device": "cpu",
+  "warmup_forwards": 3,
+  "inference_ms": 233.0034130718559,
+  "inference_scope": "warm model forward and scoring; excludes preprocessing, transfer and rendering",
+  "inspection_ms": 252.21668183803558,
+  "inspection_scope": "decode, prepare, infer, transfer and render; first call includes warmup; excludes model loading",
+  "heatmap": "heatmap.png",
+  "overlay": "overlay.png",
+  "raw_map": "anomaly-map.npz",
+  "display_scale": {
+    "minimum": 0.0,
+    "maximum": 4.553630958525902e-07,
+    "definition": "fixed checkpoint display range; saturation is not a pixel decision"
+  },
+  "heatmap_encoding": "8-bit display only; float32 activations are in anomaly-map.npz",
+  "smoke_checkpoint": false,
+  "limitations": [
+    "Use photographs matching the selected category and dataset imaging conditions.",
+    "Anomaly scores are not probabilities; colored regions are not confirmed defect boundaries.",
+    "Dataset results do not establish reliability on a new production line."
+  ]
+}

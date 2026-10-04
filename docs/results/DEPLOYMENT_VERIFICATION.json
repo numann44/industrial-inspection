@@ -1,20 +1,128 @@
 {
+  "verified_at_utc": "2026-10-04T01:35:58.591538+00:00",
   "url": "https://numan-industrial-inspection.streamlit.app/",
-  "deployment_commit": "c8beb4790a21c3eda3aacd49f5e17c76c613a55b",
-  "checkpoint_sha256": "2af135ddc52038aa32b31a2545d923459a0072bde1173a57583ce88d62136f71",
-  "normal_example_cloud_score": 2.3424126993631944e-05,
-  "local_score": 2.342413063161075e-05,
-  "absolute_score_difference": 3.637978807091713e-12,
-  "threshold": 2.8040850884281093e-05,
-  "decision": "good",
+  "deployment_commit": "e76ff78207beea5f68e43353a3ca392ceedea9f9",
+  "release": "v0.1.0",
+  "release_url": "https://github.com/numann44/industrial-inspection/releases/tag/v0.1.0",
+  "default_model": "kolektor_surface",
+  "remote_model_assets": {
+    "verified_at_utc": "2026-10-04T01:19:12.169974+00:00",
+    "assets": [
+      {
+        "id": "kolektor-surface-study-v2-seed44",
+        "url": "https://github.com/numann44/industrial-inspection/releases/download/v0.1.0/kolektor_surface-seed44.pt",
+        "bytes": 1990325,
+        "sha256": "0c2222771ac7b9719eede442f20f120d81790eba1e20b435b706ebc142f0eed8",
+        "verified": true
+      },
+      {
+        "id": "metal-nut-study-v2-seed44",
+        "url": "https://github.com/numann44/industrial-inspection/releases/download/v0.1.0/metal_nut-seed44.pt",
+        "bytes": 3977559,
+        "sha256": "fe91c610d89dd168bbed8ae4fb87cc2eb41b0cc6ab6aaaff1ec15195da4d494e",
+        "verified": true
+      },
+      {
+        "id": "screw-study-v2-seed42",
+        "url": "https://github.com/numann44/industrial-inspection/releases/download/v0.1.0/screw-seed42.pt",
+        "bytes": 3977815,
+        "sha256": "2aa62b9471b519ad65079079e010d17f177d88253dd0c3f6c439b5d480fc3178",
+        "verified": true
+      },
+      {
+        "id": "transistor-study-v2-seed42",
+        "url": "https://github.com/numann44/industrial-inspection/releases/download/v0.1.0/transistor-seed42.pt",
+        "bytes": 3977687,
+        "sha256": "a50c4747b7c1fc86d31333d6fa8c5326e3fd6809e3ff65a97681e4023d829613",
+        "verified": true
+      }
+    ]
+  },
+  "examples": [
+    {
+      "category": "kolektor_surface",
+      "source": "assets/examples/kolektor_surface_00_good.png",
+      "checkpoint_sha256": "0c2222771ac7b9719eede442f20f120d81790eba1e20b435b706ebc142f0eed8",
+      "cloud_score": 8.444174426358586e-08,
+      "local_score": 8.444165899845757e-08,
+      "absolute_score_difference": 8.526512829121202e-14,
+      "threshold": 2.276815479262951e-07,
+      "decision": "good",
+      "decision_matches_recorded_evaluation": true,
+      "record_source": "downloaded JSON"
+    },
+    {
+      "category": "metal_nut",
+      "source": "assets/examples/metal_nut_00_good.png",
+      "checkpoint_sha256": "fe91c610d89dd168bbed8ae4fb87cc2eb41b0cc6ab6aaaff1ec15195da4d494e",
+      "cloud_score": 0.00019666568550746888,
+      "local_score": 0.0001966656418517232,
+      "absolute_score_difference": 4.3655745685100555e-11,
+      "threshold": 0.0002463794779032469,
+      "decision": "good",
+      "decision_matches_recorded_evaluation": true,
+      "record_source": "visible hosted Inspection record"
+    },
+    {
+      "category": "screw",
+      "source": "assets/examples/screw_00_good.png",
+      "checkpoint_sha256": "2aa62b9471b519ad65079079e010d17f177d88253dd0c3f6c439b5d480fc3178",
+      "cloud_score": 2.277923522342462e-05,
+      "local_score": 2.2779247956350446e-05,
+      "absolute_score_difference": 1.2732925824820995e-11,
+      "threshold": 0.0002723882294958477,
+      "decision": "good",
+      "decision_matches_recorded_evaluation": true,
+      "record_source": "visible hosted Inspection record"
+    },
+    {
+      "category": "transistor",
+      "source": "assets/examples/transistor_00_good.png",
+      "checkpoint_sha256": "a50c4747b7c1fc86d31333d6fa8c5326e3fd6809e3ff65a97681e4023d829613",
+      "cloud_score": 0.000489065598230809,
+      "local_score": 0.0004890657146461308,
+      "absolute_score_difference": 1.1641532182693481e-10,
+      "threshold": 0.02778025316074495,
+      "decision": "good",
+      "decision_matches_recorded_evaluation": true,
+      "record_source": "visible hosted Inspection record"
+    }
+  ],
   "upload": {
-    "source": "assets/examples/metal_nut_bent_000.png",
-    "cloud_score": 2.3898222934803925e-05,
-    "local_score": 2.3898237486719154e-05,
-    "decision": "good",
-    "note": "Known defect missed by the exploratory pilot; retained to expose failure behavior.",
-    "model_map_max_abs_difference": 1.964508555829525e-10,
-    "native_map_max_abs_difference": 1.964508555829525e-10,
+    "source": "assets/examples/kolektor_surface_01_defective.png",
+    "category": "kolektor_surface",
+    "checkpoint_sha256": "0c2222771ac7b9719eede442f20f120d81790eba1e20b435b706ebc142f0eed8",
+    "decision": "defective",
+    "threshold": 2.276815479262951e-07,
+    "cloud_score": 0.9999679327011108,
+    "local_score": 0.9999679327011108,
+    "score_absolute_difference": 0.0,
+    "same_decision": true,
+    "same_threshold": true,
+    "same_checkpoint": true,
+    "model_map_shape": [
+      640,
+      256
+    ],
+    "native_map_shape": [
+      624,
+      227
+    ],
+    "model_map_dtype": "float32",
+    "native_map_dtype": "float32",
+    "model_map_max_abs_difference": 1.5497207641601562e-06,
+    "native_map_max_abs_difference": 1.4901161193847656e-06,
+    "heatmap_shape": [
+      640,
+      256
+    ],
+    "heatmap_max_uint8_difference": 0,
+    "overlay_shape": [
+      624,
+      227,
+      3
+    ],
+    "overlay_max_uint8_difference": 0,
     "downloads_verified": [
       "inspection.json",
       "overlay.png",
@@ -24,15 +132,46 @@
   },
   "malformed_upload_error": "Cannot decode this image; upload a valid PNG, JPEG or WebP",
   "oversized_upload_error": "Error: File must be 10.0MB or smaller.",
-  "verification_scope": "Hosted CPU service opened in an unauthenticated independent browser session; not a separate physical client device.",
-  "followup_verification": {
-    "deployment_commit": "3a578c7605b3fcd32caee681cc272b2ddfc389c3",
-    "malformed_upload_retains_performance_tab": true,
-    "performance_after_invalid_upload": {
-      "defect_recall_display": "54.8%",
-      "normal_false_alarm_display": "4.5%",
-      "native_pixel_ap_display": "0.148"
+  "performance_panel": {
+    "defect_recall_display": "95.5%",
+    "false_alarm_display": "10.0%",
+    "native_pixel_ap_display": "0.815",
+    "counts": {
+      "true_positive": 105,
+      "false_negative": 5,
+      "false_positive": 89,
+      "true_negative": 805
     },
-    "example_mode_restored": true
-  }
+    "explicit_point_estimate_and_robustness_caveats": true
+  },
+  "local_tests": {
+    "passed": 137,
+    "includes_v3_screen_tests": true
+  },
+  "all_packaged_examples_local_parity": {
+    "count": 18,
+    "all_decisions_match_recorded_evaluation": true
+  },
+  "linux_ci": [
+    {
+      "run_id": 37167626497,
+      "attempt": 1,
+      "conclusion": "success",
+      "url": "https://github.com/numann44/industrial-inspection/actions/runs/37167626497"
+    },
+    {
+      "run_id": 37167492944,
+      "attempt": 2,
+      "conclusion": "success",
+      "url": "https://github.com/numann44/industrial-inspection/actions/runs/37167492944",
+      "prior_attempt": "Tag CI started before release assets existed; rerun after publication passed."
+    }
+  ],
+  "verification_scope": "Actual hosted Linux CPU service. Model examples and malformed/oversize cases in unauthenticated Codex in-app browser; real file upload and four downloaded artifacts in a separate Chrome session. This is not a second physical client device. IAB download-event capture timed out; actual Chrome downloads succeeded and their file contents were verified.",
+  "screenshot": "docs/images/live-study-v0.1.0.png",
+  "limitations": [
+    "Point estimates meet the target only for the separate supervised KolektorSDD2 scenario. All three normal-only MVTec selected models fail the recall target.",
+    "The frozen checkpoint display maximum is twice the calibration threshold. Very small thresholds can saturate colors; exported float32 maps, not binary-looking display colors, support numeric localization analysis."
+  ],
+  "prior_pilot_evidence": "DEPLOYMENT_VERIFICATION_ALPHA.json"
 }
