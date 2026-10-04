@@ -159,7 +159,7 @@ The metal-nut, screw and transistor tests are **development-inspected / explorat
 
 A [validation-only diagnostic](docs/results/KSDD2_VALIDATION_STRESS_PLANNING.json) reproduced the surface model's brightness/JPEG sensitivity. The [next protocol](docs/KSDD2_ROBUSTNESS_SCREEN.md) compares exactly two fresh seed-42 trainings: unchanged supervised training and a mixture of original, brightness-varied and JPEG-compressed images. Both use one frozen, grouped four-condition validation bank; the augmented candidate must pass a predeclared improvement gate before calibration or exploratory test evaluation.
 
-The implementation is isolated from preserved experiments. No improvement result is available yet, and the published weights remain v0.1.0. Any reused KSDD2 test results for the new method will be **development-inspected / exploratory**, because earlier test failures motivated the change. No new independent same-category holdout is currently available. The [delivery checklist](docs/PLAN.md) separates completed release engineering from unresolved quality goals.
+The isolated implementation passed 155 local tests and a separate review. Its [frozen two-run screen launched](docs/results/KSDD2_ROBUSTNESS_LAUNCH.json) on October 4, 2026 at 03:36 UTC. No improvement result is available yet, and the published weights remain v0.1.0. Any reused KSDD2 test results for the new method will be **development-inspected / exploratory**, because earlier test failures motivated the change. No new independent same-category holdout is currently available. The [delivery checklist](docs/PLAN.md) separates completed release engineering from unresolved quality goals.
 
 ## Sources and licenses
 

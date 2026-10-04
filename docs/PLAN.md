@@ -13,7 +13,7 @@ The project target is a category-specific defect detector trained from random in
 | Demo | All four v0.1.0 models observed; surface upload and four exports verified; malformed and oversized uploads rejected correctly | Separate physical-client check remains unperformed |
 | Publication | Public v0.1.0 release at e76ff78; four remote weights match local checksums; main/tag Linux checks pass | Retain honest measured limits while quality work continues |
 | Follow-up study v3 | Three 100-epoch runs complete; both candidates fail the validation gate; no model promoted and no conditional runs started | Closed; preserve negative evidence |
-| Surface acquisition screen | Validation-only diagnostic confirms brightness/JPEG score shifts; exactly two matched runs declared | Validate implementation, freeze provenance, execute bounded screen and honor its gate |
+| Surface acquisition screen | 155 local tests passed; independently reviewed two-run implementation frozen and launched October 4 at 03:36 UTC | Finish bounded screen and honor its validation-only gate before any calibration |
 
 The [completed study](results/CONTROLLED_STUDY.md) records all candidates and seeds, including failed targets. The [model card](MODEL_CARD.md) separates the passing supervised surface task from the failing normal-only MVTec tasks. Source checks and hosted publication are engineering gates, not evidence of model quality.
 
