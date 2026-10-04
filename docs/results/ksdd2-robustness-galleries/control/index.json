@@ -1,0 +1,153 @@
+{
+  "candidate": "control",
+  "checkpoint_sha256": "74637c07e33f1426be71fcdba42368c9ccab10f56b332930df9abbaefd397681",
+  "experimental_status": "exploratory",
+  "evaluation_freeze_digest": "951bd25a329a7ebb3b244eaf64c2ae94ad5aa899cc79ec48ad2f84fc893bbab6",
+  "renderer_sha256": "1cf0b50d6fe4027f6746b9d3e73fd407629acae84c9c06c95b40bf296bfad009",
+  "display_range": [
+    0,
+    1
+  ],
+  "selection": "Highest-scoring FP; lowest-scoring FN; evenly spaced TP/TN score ranks; up to3 each",
+  "map_scope": "Same fixed weights, single-image native map; captions/decisions use frozen batched evaluation scores",
+  "groups": {
+    "FP": 3,
+    "FN": 3,
+    "TP": 3,
+    "TN": 3
+  },
+  "items": [
+    {
+      "file": "FP_0186.png",
+      "sha256": "4902bbeef625eb12950b7dd8911dee81d88156f9a19bfd9696805d4dc3732681",
+      "group": "FP",
+      "source": "test/20186.png",
+      "source_sha256": "3d003d2768bbf3e290c8a0b4dad2356fb987d793f2a14b8b4256b75cf636acbe",
+      "score": 0.9863851070404053,
+      "threshold": 4.15221046523584e-07,
+      "label": 0,
+      "map_single_image_score": 0.9863851070404053
+    },
+    {
+      "file": "FP_0358.png",
+      "sha256": "28c08258176186938590bd2e67c7563220ea8bf2d568ac9db71033919672d369",
+      "group": "FP",
+      "source": "test/20358.png",
+      "source_sha256": "f1eebfa3588aacb8249fc184ce601461e4fe0d507283a3bd11cdfc9b712bd7b2",
+      "score": 0.9744914770126343,
+      "threshold": 4.15221046523584e-07,
+      "label": 0,
+      "map_single_image_score": 0.9744914770126343
+    },
+    {
+      "file": "FP_0321.png",
+      "sha256": "14508d65e1d961a51739723b6b6a1b6b31c7b63e0338389b85224b73bf56a49b",
+      "group": "FP",
+      "source": "test/20321.png",
+      "source_sha256": "14fc29ecb97092896bb19f7f5e6035cdc5dd4825d84276148c8e1cfd9ca6ffc2",
+      "score": 0.9721572399139404,
+      "threshold": 4.15221046523584e-07,
+      "label": 0,
+      "map_single_image_score": 0.9721572399139404
+    },
+    {
+      "file": "FN_0544.png",
+      "sha256": "2a1f621c81eebdf16819ef1b7f1b60f837b944ec8788552ae50f427b8f60f568",
+      "group": "FN",
+      "source": "test/20544.png",
+      "source_sha256": "32e1d2ffc91cf16ffb42f5932e30372908661d4eb5b42404c16fc7ae3ac530ab",
+      "score": 1.77280512048128e-07,
+      "threshold": 4.15221046523584e-07,
+      "label": 1,
+      "map_single_image_score": 1.77280512048128e-07
+    },
+    {
+      "file": "FN_0744.png",
+      "sha256": "bf5f3ae2ae0dd52b39ece5ed71a6eaf5a449e29d58ed4877f99902349afa939c",
+      "group": "FN",
+      "source": "test/20744.png",
+      "source_sha256": "e6a436b287e379aad17d80e9245c80136295d335409247f0725ce020fd698afb",
+      "score": 1.8071632723604125e-07,
+      "threshold": 4.15221046523584e-07,
+      "label": 1,
+      "map_single_image_score": 1.8071632723604125e-07
+    },
+    {
+      "file": "FN_0236.png",
+      "sha256": "8881c1c0bd6486e23abbe6181b8c7e503da93db45cabebdb774165795fa7fd35",
+      "group": "FN",
+      "source": "test/20236.png",
+      "source_sha256": "f6ea0442fe7253b8d609d6e6622c0bfc3b32e565259fd45da3b8a043fbf9fd69",
+      "score": 2.2570021940282459e-07,
+      "threshold": 4.15221046523584e-07,
+      "label": 1,
+      "map_single_image_score": 2.2570021940282459e-07
+    },
+    {
+      "file": "TP_0816.png",
+      "sha256": "5b53e200ba6c62503a71403d16e8750a50e5615be3a6d6650321f50d653ee2c7",
+      "group": "TP",
+      "source": "test/20816.png",
+      "source_sha256": "6a877d297ef6e47ca679677aea1d440cb23a41ce6efe6f02f39fd4f861d7cfb5",
+      "score": 8.144510843521857e-07,
+      "threshold": 4.15221046523584e-07,
+      "label": 1,
+      "map_single_image_score": 8.144510843521857e-07
+    },
+    {
+      "file": "TP_0624.png",
+      "sha256": "7c2fe6c3a28b34f20c1cee094c8fda6a5e565dd4c07aff828030859c8101dd9f",
+      "group": "TP",
+      "source": "test/20624.png",
+      "source_sha256": "2966bac1dc16c5ae56d7219f243fdc5744593d3fe307839fef46ac8fa935457f",
+      "score": 0.9990223050117493,
+      "threshold": 4.15221046523584e-07,
+      "label": 1,
+      "map_single_image_score": 0.9990223050117493
+    },
+    {
+      "file": "TP_0434.png",
+      "sha256": "04563a7f05d3bdf0d4b7ea629b794603683ff9bd4da816b32c5b13b499afed05",
+      "group": "TP",
+      "source": "test/20434.png",
+      "source_sha256": "7483210a9e5fa92bd7e52abf536e2367cb45929b20477b27d46bd3fc4ce79b71",
+      "score": 0.9999973177909851,
+      "threshold": 4.15221046523584e-07,
+      "label": 1,
+      "map_single_image_score": 0.9999973177909851
+    },
+    {
+      "file": "TN_0980.png",
+      "sha256": "838a963d94cab2858915cf8dda08bae1ebb83f89c7145f483dddd330717804f8",
+      "group": "TN",
+      "source": "test/20980.png",
+      "source_sha256": "b9d3188883375b6e33e9c894ba16a337018050490bc5ec4f7c0582fe1a01b8b5",
+      "score": 5.1565105962936286e-08,
+      "threshold": 4.15221046523584e-07,
+      "label": 0,
+      "map_single_image_score": 5.1565105962936286e-08
+    },
+    {
+      "file": "TN_0778.png",
+      "sha256": "c6b7cc0dbac16d888f05e19d2c881525500c6b3cf5fb6110cf55ddacd76b7059",
+      "group": "TN",
+      "source": "test/20778.png",
+      "source_sha256": "3127b60e56f055a701036ffd607802564cc127605cb7a7f1c52c6e01998e0875",
+      "score": 1.2941491434048658e-07,
+      "threshold": 4.15221046523584e-07,
+      "label": 0,
+      "map_single_image_score": 1.2941491434048658e-07
+    },
+    {
+      "file": "TN_0279.png",
+      "sha256": "5f67f8505dd916615b4308d7027e0484ad3d3b4958111edb05719c10692f915a",
+      "group": "TN",
+      "source": "test/20279.png",
+      "source_sha256": "c8446a77e2b2084d55c5e32d362d33c5d1091462bec7e5f0323f7f887a198a78",
+      "score": 4.141648162203637e-07,
+      "threshold": 4.15221046523584e-07,
+      "label": 0,
+      "map_single_image_score": 4.141648162203637e-07
+    }
+  ]
+}

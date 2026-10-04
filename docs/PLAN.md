@@ -6,14 +6,15 @@ The project target is a category-specific defect detector trained from random in
 | --- | --- | --- |
 | Data | Full MVTec AD and KolektorSDD2 decoded, hashed and audited | Preserve frozen partitions during all experiments |
 | Legacy evidence | Three measured exploratory runs, curves, native galleries and confidence intervals | Retain results unchanged |
-| Training reliability | All 17 declared runs completed; interrupted training recovered from compatible atomic checkpoints | Preserve checkpoint/source provenance |
+| Training reliability | All 17 study-v2 runs completed; interrupted training recovered from compatible atomic checkpoints | Preserve checkpoint/source provenance for separate follow-ups |
 | Shared inference | Four published weights verified by SHA; hosted example categories/identities/decisions checked; real upload and four exports agree with local engine | Preserve the inference contract and expose display saturation limits |
 | Controlled study | All 14 MVTec runs and frozen evaluations complete; five-way eligible selection and all category seed repeats reported | Selected models fail the recall target; further methods need a new declared experiment |
 | Supervised fallback | Three KSDD2 runs complete; validation-selected seed 44 detects 105/110 defects with 89/894 false alarms | Point estimates pass; uncertainty crosses targets and brightness/JPEG robustness fails |
 | Demo | All four v0.1.0 models observed; surface upload and four exports verified; malformed and oversized uploads rejected correctly | Separate physical-client check remains unperformed |
 | Publication | Public v0.1.0 release at e76ff78; four remote weights match local checksums; main/tag Linux checks pass | Retain honest measured limits while quality work continues |
 | Follow-up study v3 | Three 100-epoch runs complete; both candidates fail the validation gate; no model promoted and no conditional runs started | Closed; preserve negative evidence |
-| Surface acquisition screen | 155 local tests passed; independently reviewed two-run implementation frozen and launched October 4 at 03:36 UTC | Finish bounded screen and honor its validation-only gate before any calibration |
+| Surface acquisition screen | Both runs and exploratory evaluation complete; validation gate passed; control 104/110 detections with 98/894 false alarms, augmentation 106/110 with 115/894 | Both original-test false-alarm targets fail; preserve mixed robustness evidence, no promotion |
+| Learned image-decision experiment | Exactly two-run direction planned; isolated implementation in progress | Review and freeze the protocol before launch; no training or result yet |
 
 The [completed study](results/CONTROLLED_STUDY.md) records all candidates and seeds, including failed targets. The [model card](MODEL_CARD.md) separates the passing supervised surface task from the failing normal-only MVTec tasks. Source checks and hosted publication are engineering gates, not evidence of model quality.
 
@@ -38,12 +39,18 @@ Code and analysis can proceed in parallel. Heavy MPS jobs are serialized. Traini
 
 Detailed methods are in [EXPERIMENTS.md](EXPERIMENTS.md), [DATA.md](DATA.md) and [SUPERVISED_PROTOCOL.md](SUPERVISED_PROTOCOL.md). The result report is evidence; a planned or running experiment is not reported as completed.
 
-## Completed bounded screen and next diagnosis
+## Completed bounded experiments and next direction
 
 The frozen v2 study and [v0.1.0 release](https://github.com/numann44/industrial-inspection/releases/tag/v0.1.0) are complete and preserved. This does not mean every category meets its quality target. The [v3 screen](results/STUDY_V3_SCREEN.md) has also completed: fresh control/A/B each trained for 100 epochs, with source/protocol frozen at `b158f56`, identical budgets and one immutable synthetic validation bank.
 
 Family-macro H was 0.8971445541893278 for control, 0.7626782874899303 for A and 0.7425017629318905 for B. Neither candidate achieved the required ≥0.01 gain and ≤0.02 old-family regression. The cycle stopped at its gate: **three new runs completed, zero of the six conditional continuation runs started, no candidate selected**. The published registry remains on v0.1.0. [Portable evidence](results/study-v3-screen.json) retains all outcomes and provenance; the screen read no real test images.
 
-The separate [surface acquisition screen](KSDD2_ROBUSTNESS_SCREEN.md) follows a validation-only diagnosis of brightness/JPEG score shifts. Exactly two fresh seed-42 runs compare unchanged training with one combined acquisition-augmentation policy. This does not extend the failed v3 budget. Its validation gate is frozen before any calibration; failure closes the screen, and passing allows fixed-threshold exploratory evaluation. Preparation is not a reported quality improvement.
+The separate [surface acquisition screen](KSDD2_ROBUSTNESS_SCREEN.md) has completed its two fresh seed-42 runs and fixed-threshold exploratory evaluation. Control stopped at epoch 45 (selected 30); augmentation stopped at epoch 50 (selected 35). Pooled validation H improved from 0.823098 to 0.848836 and passed the frozen gate. Only then were both thresholds set once from the same 313 clean normal calibration sources. This did not extend the failed v3 budget.
+
+The [completed comparison](results/KSDD2_ROBUSTNESS_RESULTS.md) records **104/110 detections and 98/894 false alarms for control**, versus **106/110 and 115/894 for augmentation**, with native pixel AP 0.800701 and 0.811400. **Neither meets the original-test joint target.** Brightness ×1.2 false alarms improved from 207 to 131, but JPEG-quality-60 false alarms worsened from 153 to 185, each out of 894 normal images. The paired validation AUROC interval crosses zero. [Portable evidence](results/KSDD2_ROBUSTNESS_RESULTS.json) and [24 attributed examples](results/KSDD2_ROBUSTNESS_RESULTS.md#auditable-examples-and-errors) preserve the favorable and unfavorable outcomes. These reused KSDD2 results are exploratory. The [launch record](results/KSDD2_ROBUSTNESS_LAUNCH.json) remains a dated historical snapshot, not the current state.
+
+The evaluation source at `05d6660487fe4891bd3432a35925b98c59c6c194` passed 164 local tests and [Linux CI](https://github.com/numann44/industrial-inspection/actions/runs/37185709663). No new checkpoint was promoted; the demo registry remains on v0.1.0.
+
+The next planned direction is a bounded [**exactly two-run learned image-decision experiment**](KSDD2_DECISION_SCREEN.md), informed by a [saved-validation-score diagnostic](results/KSDD2_DECISION_PLANNING.json) and being implemented separately under `experiments/ksdd2_decision`. A direct image-classification objective and a decision head fed detached features would replace strongest-1%-pixel aggregation; low-false-alarm partial AUROC would guide selection. This is a project adaptation inspired by the official ViCoS mixed segmentation/decision approach, not a reproduction. The protocol still needs its final review and freeze. No run has launched and no improvement is claimed. The original study, negative v3 screen and mixed acquisition results remain intact.
 
 The original metal-nut, screw and transistor tests remain development-inspected/exploratory for v3. Repartitioning these images cannot restore independence. Cable remained prospective, with no continuation run or test evaluation; a future comparison would require a prior-test-exposure audit and frozen models/thresholds before its test is read. No new independent same-category holdout is available. Broader success claims require genuinely untouched holdouts and robustness evidence.

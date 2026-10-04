@@ -15,6 +15,8 @@ The completed `study-v2` trained 14 normal-only MVTec models and three real-defe
 
 See [the complete controlled study](results/CONTROLLED_STUDY.md) and [portable evidence](results/controlled-study.json). Full category summaries preserve exact hashes, provenance, thresholds, metrics and training-seed variation: [surface](model-cards/kolektor_surface.json), [metal nut](model-cards/metal_nut.json), [screw](model-cards/screw.json), [transistor](model-cards/transistor.json).
 
+These are the published v0.1.0 models. The completed acquisition-robustness follow-up below contains experimental weights only; it does not replace this table, the active registry or the historical measurements.
+
 ## Selected surface model
 
 The surface model is a single U-Net with **488,705 parameters** and 16 base channels, trained from random initialization using Adam at learning rate 0.0003, batch size 8 and positive-weighted BCE (weight 3) plus Dice. Batches sample four normal and four defective images with replacement. This initial configuration has no geometric or appearance augmentation.
@@ -67,13 +69,28 @@ All selected MVTec categories fail the target. Synthetic validation is a proxy t
 
 The [PatchCore reference](results/PATCHCORE_REFERENCE.md) uses ImageNet-pretrained features and a normal-image feature memory. It is not one of our randomly initialized networks and does not supply their weights. The earlier metal-nut models retain their original thresholds and [exploratory results](results/EXPERIMENT_REPORT.md), including the alpha demo's 51/93 defect detections and 1/22 false alarms.
 
+## Experimental acquisition-robustness models
+
+The [completed two-run follow-up](results/KSDD2_ROBUSTNESS_RESULTS.md) compares a fresh seed-42 control with acquisition augmentation under the same supervised training budget and frozen splits. Control selected epoch 30 and stopped at 45; augmentation selected epoch 35 and stopped at 50. Augmentation passed the validation-only gate, increasing pooled image-AUROC/pixel-AP harmonic mean from 0.823098 to 0.848836. Its paired validation AUROC difference has a 95% interval of **−0.000708 to +0.016731**, crossing zero. This interval is descriptive, not an independent significance claim or an interval for pixel AP.
+
+| Experimental model | Recall | Normal false alarms | Native pixel AP | Original-test point target |
+| --- | --- | --- | --- | --- |
+| Fresh control | 104/110 = 94.545% | 98/894 = 10.962% | 0.800701 | Not met |
+| Acquisition augmentation | 106/110 = 96.364% | 115/894 = 12.864% | 0.811400 | Not met |
+
+Both use real defect masks, random initialization and seed 42; this comparison does not measure training-seed variation. Each threshold was calibrated once from the same 313 clean normal calibration sources, after the two checkpoints and validation gate were frozen. The thresholds are **4.15221046523584e-7** for control and **1.857622180523322e-7** for augmentation. No test outcome changed them.
+
+Passing validation did not satisfy the joint quality target: both original-test false-alarm rates exceed 10%. Augmentation reduced brightness ×1.2 false alarms from **207/894 to 131/894**, but increased JPEG-quality-60 false alarms from **153/894 to 185/894**. All four augmented-model misses occupy less than 1% of the native image; the sole sub-0.1% defect remains missed. The [full report](results/KSDD2_ROBUSTNESS_RESULTS.md) retains all five conditions, Wilson/bootstrap intervals, image AP, defect-area groups and CPU/MPS timings. [Portable evidence](results/KSDD2_ROBUSTNESS_RESULTS.json) and [24 attributed examples](results/KSDD2_ROBUSTNESS_RESULTS.md#auditable-examples-and-errors) preserve both errors and correct decisions.
+
+All these reused-test results are **development-inspected / exploratory**, because earlier surface-test failures motivated the intervention. They neither establish new independent reliability nor improve the normal-only MVTec result. Neither weight is promoted; v0.1.0 remains deployed. A separate [exactly two-run learned image-decision experiment](KSDD2_DECISION_SCREEN.md) is planned and under implementation, with no launched run or measured result. Its direct classification objective, a decision head fed detached features, and low-false-alarm partial-AUROC selection are a project adaptation inspired by the official ViCoS mixed segmentation/decision approach, not a reproduction.
+
 ## Evaluation discipline and limits
 
 The KolektorSDD2 fallback was triggered by frozen MVTec target outcomes. It is a separate scenario with real-defect supervision, not an improvement measurement on MVTec or a fair direct supervision-matched comparison. Model and seed selection within the fallback stayed validation-only.
 
 Metal-nut tests were inspected during development and remain exploratory. Screw, transistor and KolektorSDD2 were evaluated after the study's methods, weights, selections and thresholds were frozen. Any future method changes informed by these results must treat reused tests as development-inspected/exploratory; fresh independent success claims require an untouched holdout. Dataset providers do not supply all physical product/acquisition-group identities, so pixel-duplicate checks cannot prove production-batch independence.
 
-The subsequent [acquisition-robustness screen](KSDD2_ROBUSTNESS_SCREEN.md) is motivated by these surface-test failures and a validation-only diagnostic. Consequently, any reused KolektorSDD2 test evaluation of its new weights is exploratory. This does not alter the historical frozen v0.1.0 measurements or the current deployed weights.
+The subsequent [acquisition-robustness screen](KSDD2_ROBUSTNESS_SCREEN.md) was motivated by these surface-test failures and a validation-only diagnostic. Its completed reused-test evaluation is exploratory. This does not alter the historical frozen v0.1.0 measurements or the current deployed weights.
 
 Original-resolution ground-truth masks are preserved for final pixel AP; predictions are restored to native geometry. Resizing can remove detail that interpolation cannot recover. Image-bootstrap and Wilson intervals assume image-level sampling and do not quantify domain shift or independent-pixel uncertainty. Precision depends on prevalence and will change outside this test mixture.
 
@@ -81,7 +98,7 @@ Original-resolution ground-truth masks are preserved for final pixel AP; predict
 
 The registry `artifacts/models.json` is authoritative for the active demo's checkpoint identity, checksum, examples and results. The model summaries here document the completed study; [deployment verification](DEPLOYMENT.md) records the separately verified hosted state.
 
-RGB, gray and RGBA inputs are converted to oriented RGB. Invalid or oversized uploads are rejected. CLI, evaluation and demo share preprocessing and scoring. Overlay colors use a fixed per-checkpoint display range; raw float32 maps are exported separately from 8-bit previews. Scores this small should be read in scientific notation or directly from JSON, not inferred from rounded gallery headings.
+RGB, gray and RGBA inputs are converted to oriented RGB. Invalid or oversized uploads are rejected. CLI, evaluation and demo share preprocessing and scoring. The hosted supervised preview uses a fixed 0–1 activation scale; the original checkpoint scale remains recorded and normal-only previews retain it. This display-only change does not alter weights, scores, thresholds or raw float32 maps, which are exported separately from 8-bit previews. Scores this small should be read in scientific notation or directly from JSON, not inferred from rounded gallery headings.
 
 Checkpoints carry model kind, preprocessing, score definition, calibration, split identity and source/environment provenance. Training snapshots also retain optimizer/random states. Exact CPU resume is tested in the same environment; accelerator kernels may differ. Users cannot upload executable checkpoint files, and project release weights are SHA-256 verified.
 

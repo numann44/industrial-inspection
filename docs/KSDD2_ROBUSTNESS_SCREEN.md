@@ -1,5 +1,7 @@
 # Bounded acquisition-robustness screen
 
+**Completed:** both training runs, gated calibration and the separately frozen exploratory evaluation finished on October 4, 2026. The validation gate passed; **neither model meets the original-test false-alarm target**. The [full results](results/KSDD2_ROBUSTNESS_RESULTS.md), [portable evidence](results/KSDD2_ROBUSTNESS_RESULTS.json) and [24 attributed examples](results/KSDD2_ROBUSTNESS_RESULTS.md#auditable-examples-and-errors) retain all outcomes. The v0.1.0 model registry and live demo are unchanged.
+
 ## Motivation and scope
 
 The frozen v0.1.0 surface model meets the original KolektorSDD2 test's recall and false-alarm point targets, but fails brightness and JPEG stress tests. A [validation-only diagnostic](results/KSDD2_VALIDATION_STRESS_PLANNING.json) reproduced the mechanism: on 313 normal validation sources, false alarms were 37 for clean images, 53 at brightness ×1.2 and 102 at JPEG quality 60, using the existing threshold unchanged. This is reused validation evidence, not another independent test.
@@ -43,4 +45,21 @@ Before launch, the complete local suite passed **155 tests**, including 16 focus
 
 The active model registry stays on v0.1.0 until a new model has measured evidence sufficient for a documented promotion. Finishing the two-run budget is not itself evidence that the quality target has been achieved.
 
-The two-run screen launched locally on October 4, 2026 at 03:36 UTC from commit `60ceddf`. The control's first epoch completed and its resumable snapshot was written. The [launch record](results/KSDD2_ROBUSTNESS_LAUNCH.json) preserves source/configuration/split/bank identities and a dated running-state snapshot. This is execution evidence; no model-quality improvement has been measured yet.
+The two-run screen launched locally on October 4, 2026 at 03:36 UTC from commit `60ceddf`. The [launch record](results/KSDD2_ROBUSTNESS_LAUNCH.json) preserves source/configuration/split/bank identities and the dated first-epoch running snapshot. It is historical execution evidence, not a current-status file.
+
+## Completed outcome
+
+Control stopped after 45 epochs and selected epoch 30; augmentation stopped after 50 epochs and selected epoch 35. Pooled validation H increased from **0.823098 to 0.848836**, a gain of **0.025737772**, with no per-condition H regression beyond the allowed 0.01. The gate passed before either model was calibrated. The grouped validation AUROC difference's 95% interval **[−0.000708, +0.016731] crosses zero**; it does not establish an independent significant improvement or quantify uncertainty in H or pixel AP.
+
+Both frozen models were then calibrated once on the same 313 clean normal calibration sources. The separate evaluation completed at **07:28 UTC**, with unchanged thresholds and every reused-test result explicitly marked **development-inspected / exploratory**.
+
+| Model | Detected / defective | False alarms / normal | Native pixel AP | Original-test point target |
+| --- | ---: | ---: | ---: | --- |
+| Fresh control | 104/110 (94.545%) | 98/894 (10.962%) | 0.800701 | Not met |
+| Acquisition augmentation | 106/110 (96.364%) | 115/894 (12.864%) | 0.811400 | Not met |
+
+The acquisition policy has a mixed result. At unchanged thresholds, brightness ×1.2 false alarms fell from **207/894 to 131/894**, while JPEG-quality-60 false alarms rose from **153/894 to 185/894**. Passing the validation selection rule did not satisfy the operational point target. The full report includes original-resolution localization, image AP, all five stress conditions, sample counts and intervals, native defect-size groups and sequential CPU/MPS timing. The 24 attributed examples use a common 0–1 display range and retain both false alarms and missed defects.
+
+The isolated evaluation source at `05d6660487fe4891bd3432a35925b98c59c6c194` passed **164 local tests** and [Linux CI](https://github.com/numann44/industrial-inspection/actions/runs/37185709663). This later count does not replace the 155-test historical launch check. The original training source remains frozen; native pixel AP was computed by a separate memory-bounded evaluator.
+
+No checkpoint was promoted and this exactly two-run budget is complete. A separate [exactly two-run learned image-decision direction](KSDD2_DECISION_SCREEN.md), informed by a [saved-validation-score diagnostic](results/KSDD2_DECISION_PLANNING.json), is planned and under implementation: a direct image-classification objective with a decision head fed detached features, replacing strongest-1%-pixel aggregation, selected using partial AUROC in the low-false-alarm region. It is a project adaptation inspired by the official ViCoS mixed segmentation/decision approach, not a reproduction. It has not launched or produced a result. The completed acquisition evidence and historical v0.1.0 evidence remain preserved separately.

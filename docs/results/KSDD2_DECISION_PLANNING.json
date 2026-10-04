@@ -1,0 +1,96 @@
+{
+  "schema_version": 1,
+  "purpose": "Post-screen validation diagnostic motivating one bounded decision-head experiment; not an independent result or a score-selection sweep.",
+  "source": "outputs/ksdd2-robustness/screen-result.json",
+  "source_sha256": "13b11cd160651f09711593d70c754ef205e9f9e8146f196e20c6c7413e5a6468",
+  "generator_sha256": "6b0d7f9976669809e07edf9928bc6d62f6a041785bf5e01458359d05c37e94e9",
+  "split_digest": "30d06172a747eeaae3d12d3dd4e0b42a1f7dcb7f90759a5ecd4d6610df9a3b75",
+  "bank_digest": "0f8507628eea094a925e9fc4631806e400bc47aae2b455ac3f3c44e598c31a1d",
+  "original_validation_sources": 350,
+  "normal_sources": 313,
+  "defective_sources": 37,
+  "conditions": [
+    "clean",
+    "brightness_0.8",
+    "brightness_1.2",
+    "jpeg_quality_60"
+  ],
+  "correlated_variants": 1400,
+  "new_image_reads": 0,
+  "calibration_reads": 0,
+  "new_test_reads": 0,
+  "model_selection_used_for_these_existing_scores": "Earlier pooled image-AUROC/pixel-AP harmonic mean; diagnostic partial AUROC does not reselect previous checkpoints.",
+  "models": {
+    "control": {
+      "selected_checkpoint_sha256": "4e3192d0b40a6d04bc78295b0a560b4f4abb7da3729e5c788b26ebeaa0f8bee9",
+      "selected_epoch": 30,
+      "conditions": {
+        "clean": {
+          "image_auroc": 0.9713323547189362,
+          "standardized_partial_auroc_fpr_0_to_0_1": 0.9327846427224266,
+          "pixel_ap": 0.7418453195346318
+        },
+        "brightness_0.8": {
+          "image_auroc": 0.9596753302823591,
+          "standardized_partial_auroc_fpr_0_to_0_1": 0.9383745608732998,
+          "pixel_ap": 0.7035720417910459
+        },
+        "brightness_1.2": {
+          "image_auroc": 0.9651152750194284,
+          "standardized_partial_auroc_fpr_0_to_0_1": 0.912333722658256,
+          "pixel_ap": 0.7078020452037407
+        },
+        "jpeg_quality_60": {
+          "image_auroc": 0.9607978585614368,
+          "standardized_partial_auroc_fpr_0_to_0_1": 0.9377837565158904,
+          "pixel_ap": 0.7212474045981645
+        }
+      },
+      "pooled_image_auroc": 0.9636203695708488,
+      "pooled_standardized_partial_auroc_fpr_0_to_0_1": 0.9317280118524442,
+      "pooled_pixel_ap": 0.7183440756908044,
+      "normal_jpeg_scores_above_twice_clean": 58,
+      "normal_sources": 313
+    },
+    "acquisition_aug": {
+      "selected_checkpoint_sha256": "b3488f51f3b94b96c0d4d4e47fa0978d4f9573621557b3286720cecd996a593c",
+      "selected_epoch": 35,
+      "conditions": {
+        "clean": {
+          "image_auroc": 0.9769449961143252,
+          "standardized_partial_auroc_fpr_0_to_0_1": 0.9406468853248742,
+          "pixel_ap": 0.7629057085429459
+        },
+        "brightness_0.8": {
+          "image_auroc": 0.9708142647439773,
+          "standardized_partial_auroc_fpr_0_to_0_1": 0.9479183235699127,
+          "pixel_ap": 0.7583926304084624
+        },
+        "brightness_1.2": {
+          "image_auroc": 0.9761678611518867,
+          "standardized_partial_auroc_fpr_0_to_0_1": 0.9335572330359618,
+          "pixel_ap": 0.7610314291413238
+        },
+        "jpeg_quality_60": {
+          "image_auroc": 0.9565667904326052,
+          "standardized_partial_auroc_fpr_0_to_0_1": 0.9321938383650171,
+          "pixel_ap": 0.7356363549532388
+        }
+      },
+      "pooled_image_auroc": 0.9705660132976427,
+      "pooled_standardized_partial_auroc_fpr_0_to_0_1": 0.9374088229813805,
+      "pooled_pixel_ap": 0.7542381967426763,
+      "normal_jpeg_scores_above_twice_clean": 37,
+      "normal_sources": 313
+    }
+  },
+  "hypothesis": "A detached decision head can learn image-level evidence beyond the fixed highest-1%-pixel average while preserving the segmentation objective.",
+  "not_established": "No claim that these scores identify a specific causal false-alarm mechanism, that the head will pass q90 operating targets, or that reused validation/test sources are independent.",
+  "bounded_next_action": "Exactly two fresh seed-42 trainings with matched acquisition augmentation: control top-1% scoring and detached image-decision head. Select by pooled low-FPR partial AUROC, guard each condition and pixel AP, freeze before clean-normal q90 calibration. No additional seeds or epochs beyond declared caps.",
+  "stop_rule": "If this new head fails its frozen gate, stop this architecture search. New independent acquisition data is required for new independent reliability claims in every outcome.",
+  "primary_references": [
+    "https://arxiv.org/html/2104.06064",
+    "https://github.com/vicoslab/mixed-segdec-net-comind2021/blob/master/models.py",
+    "https://scikit-learn.org/stable/modules/generated/sklearn.metrics.roc_auc_score.html"
+  ]
+}

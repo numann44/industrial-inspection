@@ -27,6 +27,8 @@ The release-tag and main-branch Linux workflows passed:
 
 The first release-tag attempt ran before its model assets were available; the successful retry verifies the published assets. The preview follow-up passed **139 local tests** and [its Linux workflow](https://github.com/numann44/industrial-inspection/actions/runs/37173629613). That count is not attributed retroactively to the earlier release-tag workflow.
 
+The separate acquisition-evaluation source at `05d6660487fe4891bd3432a35925b98c59c6c194` passed **164 local tests** and [Linux CI](https://github.com/numann44/industrial-inspection/actions/runs/37185709663). These verify the later evaluation and artifact code; they do not change the four deployed checkpoint identities or establish a model-quality improvement.
+
 ## Community Cloud configuration
 
 | Field | Value |
@@ -59,3 +61,7 @@ Users explicitly choose the matching task; the application does not identify arb
 The [v0.1.0-alpha.1 release](https://github.com/numann44/industrial-inspection/releases/tag/v0.1.0-alpha.1) and its exploratory metal-nut pilot remain historical evidence. Its earlier hosted normal-example score difference was `3.64e-12`, and its uploaded failure-example map difference was below `2e-10`. Those numbers belong to the alpha checkpoint, not the new surface model; the original [alpha deployment record](results/DEPLOYMENT_VERIFICATION_ALPHA.json) is retained. Historical screenshots `live-inspection.png` and `live-demo.png` are identified in [their attribution](images/ATTRIBUTION.md).
 
 The completed v0.1.0 publication does not mark all quality goals complete. The surface model passes dataset point estimates only; the three selected MVTec models fail the target. The bounded [v3 synthesis screen](results/STUDY_V3_SCREEN.md) completed three runs and failed its validation-only gate. No conditional continuation jobs were started. Published model weights remain those of v0.1.0.
+
+The [two-run acquisition-robustness comparison](results/KSDD2_ROBUSTNESS_RESULTS.md) is also complete. Control detects **104/110** defects with **98/894** normal false alarms and native pixel AP **0.800701**; augmentation detects **106/110** with **115/894** false alarms and pixel AP **0.811400**. Its validation gate passed, but **both original-test false-alarm targets failed**. Brightness ×1.2 false alarms improved from 207 to 131, while JPEG-quality-60 false alarms worsened from 153 to 185, each out of 894 normals. These results are exploratory reused-test evidence. [Portable records](results/KSDD2_ROBUSTNESS_RESULTS.json) and [24 attributed examples](results/KSDD2_ROBUSTNESS_RESULTS.md#auditable-examples-and-errors) document the comparison; neither new model is in the active registry or live demo.
+
+A separate [exactly two-run learned image-decision direction](KSDD2_DECISION_SCREEN.md) is planned and under implementation. It has not launched and does not change the serving contract or published weights. New evaluation code, completed training and published reports are distinct from a documented model-promotion decision.

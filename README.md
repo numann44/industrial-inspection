@@ -6,17 +6,19 @@
 
 [![Source checks](https://github.com/numann44/industrial-inspection/actions/workflows/checks.yml/badge.svg)](https://github.com/numann44/industrial-inspection/actions/workflows/checks.yml)
 
-This project connects audited industrial images, reproducible training, separate threshold calibration, original-resolution evaluation and an interactive CPU inspection app. The completed study contains **17 training runs**: 14 normal-only MVTec experiments and three supervised KolektorSDD2 experiments. Every project model starts from random weights; the pretrained PatchCore reference is documented separately.
+This project connects audited industrial images, reproducible training, separate threshold calibration, original-resolution evaluation and an interactive CPU inspection app. The completed `study-v2` contains **17 training runs**: 14 normal-only MVTec experiments and three supervised KolektorSDD2 experiments. Subsequent bounded experiments are reported separately below. Every project model starts from random weights; the pretrained PatchCore reference is documented separately.
 
 > **Measured outcome:** the selected KolektorSDD2 surface model detects **105/110 defects (95.45%)**, with **89/894 normal false alarms (9.955%)** and **0.8155 native pixel AP**. This meets the declared dataset point-estimate target. **All three selected MVTec category models fail the target.** KolektorSDD2 uses real defect labels in a separate task; it does not demonstrate success on nuts, screws or transistors. Confidence intervals and robustness tests limit the passing result.
 
 **Published:** [v0.1.0](https://github.com/numann44/industrial-inspection/releases/tag/v0.1.0) includes four checksum-verified selected models. The [hosted demo](https://numan-industrial-inspection.streamlit.app/) serves all four tasks; example inference, a real surface-image upload and all four result downloads have been checked against the local engine. [Deployment evidence](docs/DEPLOYMENT.md) records the scope and numerical tolerances.
 
+**Latest completed follow-up:** the [two-run acquisition-robustness comparison](docs/results/KSDD2_ROBUSTNESS_RESULTS.md) passed its validation gate but **both models failed the original-test false-alarm target**. Its reused-test results are exploratory, and neither model replaces the published v0.1.0 weights.
+
 [![Actual hosted v0.1.0 app showing the selected surface model, measured counts and limitations](docs/images/live-study-v0.1.0.png)](https://numan-industrial-inspection.streamlit.app/)
 
 Actual hosted app, captured October 4, 2026. The displayed 10.0% false-alarm rate is rounded from **89/894 = 9.955%**; the page retains the exact counts, uncertainty and robustness limitations.
 
-## Results at frozen thresholds
+## Published v0.1.0 results at frozen thresholds
 
 Configuration, checkpoint and deployment seed are selected using validation evidence before test evaluation. The threshold is the 90th percentile of separate normal calibration scores; it is never adjusted to make a test result pass. The target requires both ≥90% defect recall and ≤10% normal false alarms.
 
@@ -27,7 +29,7 @@ Configuration, checkpoint and deployment seed are selected using validation evid
 | Screw / 42 | Normal images + synthetic defects | 50/119 (42.0%) | 2/41 (4.9%) | 0.8660 | 0.1470 | Not met |
 | Transistor / 42 | Normal images + synthetic defects | 8/40 (20.0%) | 6/60 (10.0%) | 0.4408 | 0.0817 | Not met |
 
-Metal-nut results are **development-inspected / exploratory**. Screw, transistor and KolektorSDD2 retain the completed study's frozen held-out evaluation status. Each category has its own weights. Training separate models is not evidence that one model generalizes across these parts.
+Metal-nut results are **development-inspected / exploratory**. Screw, transistor and KolektorSDD2 retain the original study's historical frozen held-out evaluation status for these weights. Subsequent methods informed by their failures use exploratory labels for reused tests. Each category has its own weights. Training separate models is not evidence that one model generalizes across these parts.
 
 For the selected surface model, the 95% Wilson intervals are **89.8–98.0% recall** and **8.16–12.09% false alarms**. They cross the target boundaries, so the test does not establish those population-level guarantees. At the test set's approximately 11% defect prevalence, only **54.1% of alerts are true defects**. The official split also lacks product/batch identifiers, so image-level separation does not establish batch independence.
 
@@ -85,7 +87,7 @@ python -m pytest
 streamlit run app.py
 ```
 
-`artifacts/models.json` is authoritative for the four active demo models and their checksum-pinned v0.1.0 download URLs. The full datasets are not required to serve the demo. `requirements.lock.txt` records the local experiment environment; deployment requirements use CPU PyTorch wheels on Linux. The release and main-branch Linux checks passed; the preview follow-up passed 139 local tests. [Deployment evidence](docs/DEPLOYMENT.md) records actual hosted example/upload/export checks separately from offline evaluation.
+`artifacts/models.json` is authoritative for the four active demo models and their checksum-pinned v0.1.0 download URLs. The full datasets are not required to serve the demo. `requirements.lock.txt` records the local experiment environment; deployment requirements use CPU PyTorch wheels on Linux. The acquisition-evaluation source at `05d6660` passed **164 local tests** and [Linux CI](https://github.com/numann44/industrial-inspection/actions/runs/37185709663). [Deployment evidence](docs/DEPLOYMENT.md) preserves the earlier release checks and actual hosted example/upload/export checks separately from offline evaluation.
 
 ### Reproduce normal-only training
 
@@ -155,11 +157,20 @@ Neither candidate met the predeclared +0.01 improvement and ≤0.02 old-family-r
 
 The metal-nut, screw and transistor tests are **development-inspected / exploratory for v3**, because their v2 failures informed this follow-up. Cable remained a prospective comparison, with no continuation run or test evaluation. All v2 evidence remains intact.
 
-## Next bounded experiment: acquisition robustness
+## Completed follow-up: acquisition robustness
 
-A [validation-only diagnostic](docs/results/KSDD2_VALIDATION_STRESS_PLANNING.json) reproduced the surface model's brightness/JPEG sensitivity. The [next protocol](docs/KSDD2_ROBUSTNESS_SCREEN.md) compares exactly two fresh seed-42 trainings: unchanged supervised training and a mixture of original, brightness-varied and JPEG-compressed images. Both use one frozen, grouped four-condition validation bank; the augmented candidate must pass a predeclared improvement gate before calibration or exploratory test evaluation.
+A [validation-only diagnostic](docs/results/KSDD2_VALIDATION_STRESS_PLANNING.json) reproduced the surface model's brightness/JPEG sensitivity. The [bounded protocol](docs/KSDD2_ROBUSTNESS_SCREEN.md) completed exactly two fresh seed-42 trainings: unchanged supervised training and a mixture of original, brightness-varied and JPEG-compressed images. Control stopped at epoch 45 and selected epoch 30; augmentation stopped at epoch 50 and selected epoch 35. Pooled validation H increased from **0.823098 to 0.848836**, passing the predeclared gate before either model was calibrated.
 
-The isolated implementation passed 155 local tests and a separate review. Its [frozen two-run screen launched](docs/results/KSDD2_ROBUSTNESS_LAUNCH.json) on October 4, 2026 at 03:36 UTC. No improvement result is available yet, and the published weights remain v0.1.0. Any reused KSDD2 test results for the new method will be **development-inspected / exploratory**, because earlier test failures motivated the change. No new independent same-category holdout is currently available. The [delivery checklist](docs/PLAN.md) separates completed release engineering from unresolved quality goals.
+| Exploratory model | Defects detected | Normal false alarms | Native pixel AP | Original-test target |
+| --- | ---: | ---: | ---: | --- |
+| Fresh control | 104/110 (94.545%) | 98/894 (10.962%) | 0.800701 | Not met |
+| Acquisition augmentation | 106/110 (96.364%) | 115/894 (12.864%) | 0.811400 | Not met |
+
+**Passing the validation gate did not deliver the quality target.** At unchanged thresholds, augmentation reduced brightness ×1.2 false alarms from **207 to 131 of 894**, but increased JPEG-quality-60 false alarms from **153 to 185 of 894**. The paired validation AUROC improvement's 95% interval crosses zero. These are single-seed comparisons with real-defect supervision and **development-inspected / exploratory** reused-test evidence; they do not establish new independent reliability or improve the normal-only MVTec result.
+
+The [complete results](docs/results/KSDD2_ROBUSTNESS_RESULTS.md) include uncertainty, all five stress conditions, defect-size groups, local CPU/MPS timings and [24 attributed examples](docs/results/KSDD2_ROBUSTNESS_RESULTS.md#auditable-examples-and-errors). [Portable evidence](docs/results/KSDD2_ROBUSTNESS_RESULTS.json) retains predictions, frozen thresholds and source/model identities. The [launch snapshot](docs/results/KSDD2_ROBUSTNESS_LAUNCH.json) remains historical; both training and evaluation are now complete. The registry and live demo still use v0.1.0.
+
+The next planned direction is an [**exactly two-run learned image-decision experiment**](docs/KSDD2_DECISION_SCREEN.md), currently being implemented after a [saved-validation-score diagnostic](docs/results/KSDD2_DECISION_PLANNING.json). It will test a direct image-classification objective with a decision head fed detached features, replacing strongest-1%-pixel aggregation, and selection using partial AUROC in the low-false-alarm region. This is a project adaptation inspired by the official ViCoS mixed segmentation/decision approach, not a reproduction. It has not launched and has no measured result. No new independent same-category holdout is available; the [delivery checklist](docs/PLAN.md) separates completed engineering from unresolved quality goals.
 
 ## Sources and licenses
 
