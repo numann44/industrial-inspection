@@ -1,0 +1,177 @@
+{
+  "schema_version": 1,
+  "verified_at_utc": "2026-10-04T10:31:16.367455+00:00",
+  "study": "ksdd2-detached-decision-screen-1",
+  "experimental_status": "development-inspected/exploratory",
+  "training_source_commit": "7d324fe6bf0e27edb8be1b64ff443a3ebce686c1",
+  "evaluation_source_commit": "81306f4edf1034a2feb3aa11a849c42a5e1ad4f6",
+  "local_tests": {
+    "passed": 198,
+    "runtime_seconds": 15.75,
+    "environment_threads": {
+      "OMP_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1"
+    }
+  },
+  "linux_ci": {
+    "run_id": 37195205957,
+    "conclusion": "success",
+    "url": "https://github.com/numann44/industrial-inspection/actions/runs/37195205957"
+  },
+  "evaluation_freeze_digest": "b0fbfbd56be39b11eebda3f072468b105a2c6bd8f1cdcdbb177a8c2ef9b73464",
+  "portable_evidence_digest": "8a5a35349a746fa23dd10146e37b667b5f465cfdc35d0fab867521ffb5d155fb",
+  "report_sha256": "04ba4c15eeec9a4fc99c299f7a0aac7f99f94e7598ef16e17ef56ac4cd4674cc",
+  "markdown_sha256": "169cbb7778aaad4361a9599bcd127811e0d7d4bfa259c61391aa43b6b4004804",
+  "evaluation_finished_at_utc": "2026-10-04T10:27:36.491197+00:00",
+  "review": {
+    "metadata_and_tensor_audit": "Source/config/environment/split/bank identities; earliest validation-selected checkpoint; unchanged selected-to-calibrated tensors; exact one-time q90 on 313 normal sources; both hashes/gate fixed before calibration",
+    "metadata_report_review": "Independent reviewer verified all 12,048 native+stress saved prediction records, ranking metrics/confusions/Wilson intervals/flip counts and report serialization without rerunning inference",
+    "gallery_checks": "All 24 panel bytes match their recorded SHA-256; renderer checked selected native image/mask bytes, frozen code and single-image decision parity",
+    "visual_inspection": [
+      "decision_head/FP_0358.png",
+      "decision_head/FN_0159.png",
+      "decision_head/TP_0599.png"
+    ],
+    "limitations": "Visual inspection covered 3 representative panels; all 24 received structural/hash checks. No new independent data and no new hosted model checks."
+  },
+  "gallery_files": [
+    {
+      "file": "docs/results/ksdd2-decision-galleries/control/FP_0022.png",
+      "sha256": "4f9e660f83fb3c436fbea9a9c44e44911f8b23710e35cbc22c42a6f291928d27"
+    },
+    {
+      "file": "docs/results/ksdd2-decision-galleries/control/FP_0136.png",
+      "sha256": "b764e5988f56c671ad5064a6a85bd95b3a9e042c6f5a4352b96ca0e8a244b5c0"
+    },
+    {
+      "file": "docs/results/ksdd2-decision-galleries/control/FP_0650.png",
+      "sha256": "15e3ba655ad3a1590568866318ade3578320f2dbf4317a03caf3da0fabf29671"
+    },
+    {
+      "file": "docs/results/ksdd2-decision-galleries/control/FN_0744.png",
+      "sha256": "8455d681fe44df4b7783df8326b13e925d1732aadfc655dd9098f42cbe0e6d08"
+    },
+    {
+      "file": "docs/results/ksdd2-decision-galleries/control/FN_0544.png",
+      "sha256": "0288c901553247b34be9d99854cd02753e9dbd6c829a6ec0fcbc1baf9bb9c59d"
+    },
+    {
+      "file": "docs/results/ksdd2-decision-galleries/control/FN_0281.png",
+      "sha256": "19de0dc6fd8c28acfc3abfc4b003410179156ec16a1f3f10c12ea1417728ca10"
+    },
+    {
+      "file": "docs/results/ksdd2-decision-galleries/control/TP_0754.png",
+      "sha256": "98c13819ca887b672813129db6f878fd6a1bfe2d7ad430f03c91db515bebe9ba"
+    },
+    {
+      "file": "docs/results/ksdd2-decision-galleries/control/TP_0264.png",
+      "sha256": "73b1238d6e6aa0e3794870c6762d55a883526b9b248ab7e5490344049f0864aa"
+    },
+    {
+      "file": "docs/results/ksdd2-decision-galleries/control/TP_0561.png",
+      "sha256": "72550947e110d6893e5067ee8d327266b828001a79b2b78b0485a896829a9348"
+    },
+    {
+      "file": "docs/results/ksdd2-decision-galleries/control/TN_0427.png",
+      "sha256": "bb541918e8d6efbeb2b458b28ca8310c33c99a961e73b6ba5b163c3982a62584"
+    },
+    {
+      "file": "docs/results/ksdd2-decision-galleries/control/TN_0365.png",
+      "sha256": "7f08fd965f7baabc36fedff5f2696c3cd7ad110645f9623053330e0d9243e0f0"
+    },
+    {
+      "file": "docs/results/ksdd2-decision-galleries/control/TN_0894.png",
+      "sha256": "ce57f35b6c33c8035ed24612bf7a202b344ba4cb8491a321c55df80a699eb18f"
+    },
+    {
+      "file": "docs/results/ksdd2-decision-galleries/decision_head/FP_0358.png",
+      "sha256": "1cd120a2462b47e7abaab9ef2bdb35708d7f2f1c7ea727eff06c9234d4b2bacc"
+    },
+    {
+      "file": "docs/results/ksdd2-decision-galleries/decision_head/FP_0013.png",
+      "sha256": "6457cd570baafe860a9622fd9cc09d19cd78db54dfed1a55cc3b2f0e5446a045"
+    },
+    {
+      "file": "docs/results/ksdd2-decision-galleries/decision_head/FP_0719.png",
+      "sha256": "9bb7afbad1a78f32cc3dd79cc3d59dead5ee654b91bb3b7f4fd7d49a4b896977"
+    },
+    {
+      "file": "docs/results/ksdd2-decision-galleries/decision_head/FN_0159.png",
+      "sha256": "1cf02c9c1bbcc002aecb244b9f8b61085f1e85032a259c725aeb399e0293992c"
+    },
+    {
+      "file": "docs/results/ksdd2-decision-galleries/decision_head/FN_0969.png",
+      "sha256": "3aad734371485bbd5254e2b411557e271990b852c68251495f9695738dc3dfca"
+    },
+    {
+      "file": "docs/results/ksdd2-decision-galleries/decision_head/FN_0744.png",
+      "sha256": "614cead5fd42051ee8fb15fd1df863b60ca70c9ace0872f386a60fda34737cb2"
+    },
+    {
+      "file": "docs/results/ksdd2-decision-galleries/decision_head/TP_0544.png",
+      "sha256": "f53949079da61afc529015cd5f747d2c91d2e6fef64c554f8adf1c72c0907eab"
+    },
+    {
+      "file": "docs/results/ksdd2-decision-galleries/decision_head/TP_0599.png",
+      "sha256": "602f4619249f8da40b8940966e95a7bafbc0ce6f87f8516aa46a1e878cde2af9"
+    },
+    {
+      "file": "docs/results/ksdd2-decision-galleries/decision_head/TP_0724.png",
+      "sha256": "2d9df6abceb9a0fd0c94c50a7020c9e4e27de74a96c642becd2f002e462f0f57"
+    },
+    {
+      "file": "docs/results/ksdd2-decision-galleries/decision_head/TN_0570.png",
+      "sha256": "371152437ab40bf878be949a74651642f8ec60ec8c981adc3e792e6caf08a1ee"
+    },
+    {
+      "file": "docs/results/ksdd2-decision-galleries/decision_head/TN_0232.png",
+      "sha256": "a9cffc2ce6b4f5406f663b09ee7ba811271bce34e498e96459bb62fb348c5743"
+    },
+    {
+      "file": "docs/results/ksdd2-decision-galleries/decision_head/TN_0055.png",
+      "sha256": "880d42d3138c02b33ccbe9ae33df5ef5290ae8306e0bb44152e1c25342f26468"
+    }
+  ],
+  "outcome": {
+    "control": {
+      "tp": 97,
+      "defects": 110,
+      "fp": 81,
+      "normals": 894,
+      "native_pixel_ap": 0.64922478054722,
+      "original_point_target_met": false
+    },
+    "decision_head": {
+      "tp": 104,
+      "defects": 110,
+      "fp": 102,
+      "normals": 894,
+      "native_pixel_ap": 0.8347042492957517,
+      "original_point_target_met": false
+    },
+    "head_passing_stress_point_conditions": [
+      "gaussian_blur_radius_1",
+      "brightness_0.8"
+    ],
+    "head_failing_conditions": [
+      "original",
+      "brightness_1.2",
+      "jpeg_quality_60"
+    ],
+    "thresholds_retuned": false,
+    "additional_training_scheduled": false,
+    "bounded_architecture_search": "closed"
+  },
+  "deployment": {
+    "decision": "no promotion",
+    "active_release": "v0.1.0",
+    "registry_sha256": "e93b3e88244af817c386ec74ad4ae90ce9c9d0633740be40144b93bfb227469c",
+    "registry_unchanged_from_commit": "0f2de55b426cc6dbdcc43903905cbf79d5ac60fa",
+    "new_weights_deployed": false,
+    "prior_hosted_checks": [
+      "docs/results/DEPLOYMENT_VERIFICATION.json",
+      "docs/results/PREVIEW_VERIFICATION.json"
+    ]
+  },
+  "next_gate": "New independent same-surface acquisition data with both normal and defective examples and documented physical-item/session grouping; see docs/PLAN.md#next-data-gate"
+}

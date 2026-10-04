@@ -82,7 +82,22 @@ Both use real defect masks, random initialization and seed 42; this comparison d
 
 Passing validation did not satisfy the joint quality target: both original-test false-alarm rates exceed 10%. Augmentation reduced brightness ×1.2 false alarms from **207/894 to 131/894**, but increased JPEG-quality-60 false alarms from **153/894 to 185/894**. All four augmented-model misses occupy less than 1% of the native image; the sole sub-0.1% defect remains missed. The [full report](results/KSDD2_ROBUSTNESS_RESULTS.md) retains all five conditions, Wilson/bootstrap intervals, image AP, defect-area groups and CPU/MPS timings. [Portable evidence](results/KSDD2_ROBUSTNESS_RESULTS.json) and [24 attributed examples](results/KSDD2_ROBUSTNESS_RESULTS.md#auditable-examples-and-errors) preserve both errors and correct decisions.
 
-All these reused-test results are **development-inspected / exploratory**, because earlier surface-test failures motivated the intervention. They neither establish new independent reliability nor improve the normal-only MVTec result. Neither weight is promoted; v0.1.0 remains deployed. A separate [exactly two-run learned image-decision experiment](KSDD2_DECISION_SCREEN.md) is running under a frozen protocol after 180 local tests, separate review and passing Linux CI. Its [launch record](results/KSDD2_DECISION_LAUNCH.json) verifies execution; no quality result exists yet. Its direct classification objective, a decision head fed detached features, and low-false-alarm partial-AUROC selection are a project adaptation inspired by the official ViCoS mixed segmentation/decision approach, not a reproduction.
+All these reused-test results are **development-inspected / exploratory**, because earlier surface-test failures motivated the intervention. They neither establish new independent reliability nor improve the normal-only MVTec result. Neither weight is promoted; v0.1.0 remains deployed. The subsequent learned image-decision comparison is complete and reported below; its dated [launch record](results/KSDD2_DECISION_LAUNCH.json) is preserved.
+
+## Experimental learned image-decision models
+
+The [completed two-run comparison](results/KSDD2_DECISION_RESULTS.md) uses acquisition augmentation and partial image AUROC over FPR 0–0.1 for validation selection. The detached 25,747-parameter classifier brings the candidate total to 514,452 parameters. Its image-label loss cannot update the 488,705-parameter segmentation backbone. The validation gate passed at 0.855588 → 0.948094; the grouped validation interval is descriptive and does not establish independent improvement.
+
+| Experimental model | Recall | Normal false alarms | Native pixel AP | Frozen threshold |
+| --- | --- | --- | --- | --- |
+| Pixel-aggregation control | 97/110 = 88.182% | 81/894 = 9.060% | 0.649225 | 0.4319568395614626 |
+| Detached decision head | 104/110 = 94.545% | 102/894 = 11.409% | 0.834704 | −3.6046463489532465 |
+
+**Neither meets the joint original-test target.** The head's recall interval is 88.608–97.476%; its false-alarm interval is 9.488–13.661% (95% Wilson). Under blur and dimming, point targets pass; original images, brightness ×1.2 (105/110, 116/894) and JPEG 60 (101/110, 94/894) fail. All these observations reuse development-inspected test sources. One seed per candidate does not quantify training variability.
+
+The raw head logit is not a calibrated probability. Its spatial map remains a separate sigmoid segmentation response, not a causal attribution of its image decision. Control selected epoch 5 and stopped at 20; the head selected 25 and stopped at 40. Localization differences therefore include checkpoint-selection effects. This is a compact adaptation inspired by ViCoS mixed segmentation/decision work, not a reproduction or a same-epoch head-only ablation.
+
+[Portable evidence](results/KSDD2_DECISION_RESULTS.json) and [24 attributed examples](results/KSDD2_DECISION_RESULTS.md#auditable-examples-and-errors) retain all failures, frozen calibrations and source identities. The isolated score-aware adapter/evaluator passed 198 local tests and Linux CI. No weight is promoted and no threshold changed. The bounded architecture search is closed; a [new acquisition-data gate](PLAN.md#next-data-gate) governs future independent quality claims.
 
 ## Evaluation discipline and limits
 

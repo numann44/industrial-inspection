@@ -12,7 +12,7 @@ This project connects audited industrial images, reproducible training, separate
 
 **Published:** [v0.1.0](https://github.com/numann44/industrial-inspection/releases/tag/v0.1.0) includes four checksum-verified selected models. The [hosted demo](https://numan-industrial-inspection.streamlit.app/) serves all four tasks; example inference, a real surface-image upload and all four result downloads have been checked against the local engine. [Deployment evidence](docs/DEPLOYMENT.md) records the scope and numerical tolerances.
 
-**Latest completed follow-up:** the [two-run acquisition-robustness comparison](docs/results/KSDD2_ROBUSTNESS_RESULTS.md) passed its validation gate but **both models failed the original-test false-alarm target**. Its reused-test results are exploratory, and neither model replaces the published v0.1.0 weights.
+**Latest completed follow-up:** the [two-run learned image-decision comparison](docs/results/KSDD2_DECISION_RESULTS.md) detects **104/110 defects**, with **102/894 normal false alarms** and **0.8347 native pixel AP**. Its validation gate passed, but the original-test false-alarm target still failed. These reused-test results are exploratory; neither new weight replaces v0.1.0. The bounded architecture search is closed, and further independent reliability claims need new acquisition data.
 
 [![Actual hosted v0.1.0 app showing the selected surface model, measured counts and limitations](docs/images/live-study-v0.1.0.png)](https://numan-industrial-inspection.streamlit.app/)
 
@@ -87,7 +87,7 @@ python -m pytest
 streamlit run app.py
 ```
 
-`artifacts/models.json` is authoritative for the four active demo models and their checksum-pinned v0.1.0 download URLs. The full datasets are not required to serve the demo. `requirements.lock.txt` records the local experiment environment; deployment requirements use CPU PyTorch wheels on Linux. The acquisition-evaluation source at `05d6660` passed **164 local tests** and [Linux CI](https://github.com/numann44/industrial-inspection/actions/runs/37185709663). [Deployment evidence](docs/DEPLOYMENT.md) preserves the earlier release checks and actual hosted example/upload/export checks separately from offline evaluation.
+`artifacts/models.json` is authoritative for the four active demo models and their checksum-pinned v0.1.0 download URLs. The full datasets are not required to serve the demo. `requirements.lock.txt` records the local experiment environment; deployment requirements use CPU PyTorch wheels on Linux. The decision-evaluation source at `81306f4` passed **198 local tests** and [Linux CI](https://github.com/numann44/industrial-inspection/actions/runs/37195205957). [Deployment evidence](docs/DEPLOYMENT.md) preserves the earlier release checks and actual hosted example/upload/export checks separately from offline evaluation.
 
 ### Reproduce normal-only training
 
@@ -170,7 +170,20 @@ A [validation-only diagnostic](docs/results/KSDD2_VALIDATION_STRESS_PLANNING.jso
 
 The [complete results](docs/results/KSDD2_ROBUSTNESS_RESULTS.md) include uncertainty, all five stress conditions, defect-size groups, local CPU/MPS timings and [24 attributed examples](docs/results/KSDD2_ROBUSTNESS_RESULTS.md#auditable-examples-and-errors). [Portable evidence](docs/results/KSDD2_ROBUSTNESS_RESULTS.json) retains predictions, frozen thresholds and source/model identities. The [launch snapshot](docs/results/KSDD2_ROBUSTNESS_LAUNCH.json) remains historical; both training and evaluation are now complete. The registry and live demo still use v0.1.0.
 
-The next [**exactly two-run learned image-decision experiment**](docs/KSDD2_DECISION_SCREEN.md) launched on October 4 at 07:56 UTC after a [saved-validation-score diagnostic](docs/results/KSDD2_DECISION_PLANNING.json), separate code review, **180 passing local tests** and [passing Linux CI](https://github.com/numann44/industrial-inspection/actions/runs/37187260126). It tests a direct image-classification objective with a detached decision head against strongest-1%-pixel aggregation, using low-false-alarm partial AUROC for selection. This is a project adaptation inspired by the official ViCoS mixed segmentation/decision approach, not a reproduction. The [frozen launch record](docs/results/KSDD2_DECISION_LAUNCH.json) verifies the first resumable checkpoint; no quality result is available yet. No new independent same-category holdout is available; the [delivery checklist](docs/PLAN.md) separates completed engineering from unresolved quality goals.
+## Completed follow-up: learned image decision
+
+The [final two-run comparison](docs/results/KSDD2_DECISION_RESULTS.md) adds a small classifier fed detached segmentation features. Both models start from random initialization, use the same acquisition augmentation and select by validation partial AUROC over false-positive rates 0–0.1. The frozen gate passed: pooled validation partial AUROC increased from **0.855588 to 0.948094**. Each threshold was then calibrated once from the same 313 separate clean normal images.
+
+| Exploratory model | Defects detected | Normal false alarms | Native pixel AP | Original-test target |
+| --- | ---: | ---: | ---: | --- |
+| Pixel-aggregation control | 97/110 (88.182%) | 81/894 (9.060%) | 0.649225 | Not met |
+| Detached decision head | 104/110 (94.545%) | 102/894 (11.409%) | 0.834704 | Not met |
+
+The head's 95% Wilson intervals are **88.608–97.476% recall** and **9.488–13.661% false alarms**. It meets the point targets under blur and reduced brightness, but fails on original images, increased brightness and JPEG quality 60. Its raw image logit and negative threshold **−3.60464634895** are valid ranking quantities, not probabilities. The spatial map remains a separate segmentation response, not a causal explanation of the classifier.
+
+Control selected epoch 5 and stopped at 20; the head selected epoch 25 and stopped at 40. Classification gradients cannot change the segmentation backbone, so localization differences include checkpoint-selection effects. This is a compact adaptation inspired by ViCoS mixed segmentation/decision work, not a reproduction or a matched same-epoch head-only ablation.
+
+[Full results](docs/results/KSDD2_DECISION_RESULTS.md), [portable predictions and identities](docs/results/KSDD2_DECISION_RESULTS.json) and [24 attributed examples](docs/results/KSDD2_DECISION_RESULTS.md#auditable-examples-and-errors) preserve the complete comparison. All reused KSDD2 results are **development-inspected / exploratory**. No new weight is promoted, no threshold is retuned and no extra seed/epoch search is opened. The [delivery checklist](docs/PLAN.md#next-data-gate) specifies the new data needed for further independent reliability work.
 
 ## Sources and licenses
 
