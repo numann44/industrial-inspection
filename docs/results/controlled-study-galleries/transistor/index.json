@@ -1,0 +1,137 @@
+{
+  "selection": "highest-scoring FP; lowest-scoring FN; evenly spaced successful-case score ranks",
+  "groups": {
+    "FP": 3,
+    "FN": 3,
+    "TP": 3,
+    "TN": 3
+  },
+  "items": [
+    {
+      "file": "FP_0071_transistor_good.png",
+      "group": "FP",
+      "category": "transistor",
+      "defect": "good",
+      "source": "transistor/test/good/041.png",
+      "label": 0,
+      "score": 0.23524974286556244,
+      "predicted_defective": true
+    },
+    {
+      "file": "FP_0051_transistor_good.png",
+      "group": "FP",
+      "category": "transistor",
+      "defect": "good",
+      "source": "transistor/test/good/021.png",
+      "label": 0,
+      "score": 0.05628299340605736,
+      "predicted_defective": true
+    },
+    {
+      "file": "FP_0074_transistor_good.png",
+      "group": "FP",
+      "category": "transistor",
+      "defect": "good",
+      "source": "transistor/test/good/044.png",
+      "label": 0,
+      "score": 0.04425406455993652,
+      "predicted_defective": true
+    },
+    {
+      "file": "FN_0003_transistor_bent_lead.png",
+      "group": "FN",
+      "category": "transistor",
+      "defect": "bent_lead",
+      "source": "transistor/test/bent_lead/003.png",
+      "label": 1,
+      "score": 0.0004626577137969434,
+      "predicted_defective": false
+    },
+    {
+      "file": "FN_0022_transistor_damaged_case.png",
+      "group": "FN",
+      "category": "transistor",
+      "defect": "damaged_case",
+      "source": "transistor/test/damaged_case/002.png",
+      "label": 1,
+      "score": 0.0004629985196515918,
+      "predicted_defective": false
+    },
+    {
+      "file": "FN_0020_transistor_damaged_case.png",
+      "group": "FN",
+      "category": "transistor",
+      "defect": "damaged_case",
+      "source": "transistor/test/damaged_case/000.png",
+      "label": 1,
+      "score": 0.0004735575057566166,
+      "predicted_defective": false
+    },
+    {
+      "file": "TP_0029_transistor_damaged_case.png",
+      "group": "TP",
+      "category": "transistor",
+      "defect": "damaged_case",
+      "source": "transistor/test/damaged_case/009.png",
+      "label": 1,
+      "score": 0.07017476856708527,
+      "predicted_defective": true
+    },
+    {
+      "file": "TP_0096_transistor_misplaced.png",
+      "group": "TP",
+      "category": "transistor",
+      "defect": "misplaced",
+      "source": "transistor/test/misplaced/006.png",
+      "label": 1,
+      "score": 0.1114581972360611,
+      "predicted_defective": true
+    },
+    {
+      "file": "TP_0021_transistor_damaged_case.png",
+      "group": "TP",
+      "category": "transistor",
+      "defect": "damaged_case",
+      "source": "transistor/test/damaged_case/001.png",
+      "label": 1,
+      "score": 0.789725661277771,
+      "predicted_defective": true
+    },
+    {
+      "file": "TN_0031_transistor_good.png",
+      "group": "TN",
+      "category": "transistor",
+      "defect": "good",
+      "source": "transistor/test/good/001.png",
+      "label": 0,
+      "score": 0.00048079327098093927,
+      "predicted_defective": false
+    },
+    {
+      "file": "TN_0078_transistor_good.png",
+      "group": "TN",
+      "category": "transistor",
+      "defect": "good",
+      "source": "transistor/test/good/048.png",
+      "label": 0,
+      "score": 0.0006514157867059112,
+      "predicted_defective": false
+    },
+    {
+      "file": "TN_0032_transistor_good.png",
+      "group": "TN",
+      "category": "transistor",
+      "defect": "good",
+      "source": "transistor/test/good/002.png",
+      "label": 0,
+      "score": 0.02261405624449253,
+      "predicted_defective": false
+    }
+  ],
+  "threshold": 0.02778025316074495,
+  "display_max": 0.0555605063214899,
+  "display_rule": "fixed per-checkpoint range, never per-image min/max; saturation is not a pixel decision",
+  "dataset": "MVTec AD",
+  "source_url": "https://www.mvtec.com/research-teaching/datasets/mvtec-ad",
+  "license": "MVTec AD derivatives: CC BY-NC-SA 4.0"
+}

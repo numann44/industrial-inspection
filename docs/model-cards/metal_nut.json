@@ -1,0 +1,300 @@
+{
+  "best_epoch": 95,
+  "calibration": {
+    "calibration_exceedances": 4,
+    "count": 33,
+    "decision_rule": ">=",
+    "quantile": 0.9,
+    "quantile_method": "linear",
+    "score_std": 4.549770317848965e-05,
+    "scores": [
+      0.0002217829751316458,
+      0.0002249872195534408,
+      0.00022505599190481007,
+      0.00020351327839307487,
+      0.00020300864707678556,
+      0.00021013160585425794,
+      0.0004442752688191831,
+      0.00020088530436623842,
+      0.0002487337333150208,
+      0.0001908580306917429,
+      0.0002066289453068748,
+      0.00019926647655665874,
+      0.0002112226648023352,
+      0.00019908959802705795,
+      0.00027017315733246505,
+      0.0001905202807392925,
+      0.0002571858058217913,
+      0.00020497919467743486,
+      0.0001809370587579906,
+      0.00018478445417713374,
+      0.00022655822976958007,
+      0.00020275198039598763,
+      0.00019549086573533714,
+      0.00019590572628658265,
+      0.0002369624562561512,
+      0.00019940522906836122,
+      0.0001825885847210884,
+      0.00019843701738864183,
+      0.00019730161875486374,
+      0.00020333840802777559,
+      0.000187443831237033,
+      0.0001958773791557178,
+      0.00019395755953155458
+    ],
+    "split": "calibration",
+    "threshold": 0.0002463794779032469,
+    "warning": "Empirical normal quantile; finite calibration sets do not guarantee future false-alarm rates."
+  },
+  "category": "metal_nut",
+  "checkpoint_sha256": "fe91c610d89dd168bbed8ae4fb87cc2eb41b0cc6ab6aaaff1ec15195da4d494e",
+  "config": {
+    "base_channels": 16,
+    "batch_size": 8,
+    "cache_images": true,
+    "category": "metal_nut",
+    "cpu_threads": 1,
+    "data_seed": 42,
+    "device": "mps",
+    "epochs": 100,
+    "image_size": 256,
+    "learning_rate": 0.0003,
+    "model_kind": "joint_reconstruction_segmentation",
+    "normal_probability": 0.25,
+    "require_bank": true,
+    "restrict_foreground": true,
+    "scratch_enabled": true,
+    "selection_every": 5,
+    "synthesis": "foreground",
+    "threshold_quantile": 0.9,
+    "training_seed": 44
+  },
+  "decision_rule": ">=",
+  "experimental_status": "exploratory",
+  "initialization": "random; no pretrained weights",
+  "limits": "Dataset point estimates only. Metal-nut development is exploratory. Small calibration sets, training-seed variability and domain shift limit generalization; this is not production approval.",
+  "measured_quality_target_met": false,
+  "metrics": {
+    "confusion": {
+      "false_negative": 57,
+      "false_positive": 3,
+      "true_negative": 19,
+      "true_positive": 36
+    },
+    "defect_area_groups": {
+      "area_definition": "fraction of original image pixels with nonzero ground-truth mask",
+      "boundaries": [
+        0.001,
+        0.01,
+        0.05
+      ],
+      "groups": {
+        "large_at_least_5_percent": {
+          "detected": 12,
+          "images": 36,
+          "missed": 24,
+          "recall": 0.3333333333333333,
+          "recall_interval": [
+            0.2021461882430531,
+            0.4966600212884348
+          ]
+        },
+        "medium_1_to_5_percent": {
+          "detected": 24,
+          "images": 50,
+          "missed": 26,
+          "recall": 0.48,
+          "recall_interval": [
+            0.34797135286578046,
+            0.6148825510995539
+          ]
+        },
+        "small_0.1_to_1_percent": {
+          "detected": 0,
+          "images": 7,
+          "missed": 7,
+          "recall": 0.0,
+          "recall_interval": [
+            5.551115123125783e-17,
+            0.35433043506668743
+          ]
+        },
+        "tiny_below_0.1_percent": {
+          "detected": 0,
+          "images": 0,
+          "missed": 0,
+          "recall": null,
+          "recall_interval": null
+        }
+      }
+    },
+    "defect_recall": 0.3870967741935484,
+    "image_auroc": 0.727761485826002,
+    "image_average_precision": 0.9188179246292315,
+    "normal_false_alarm_rate": 0.13636363636363635,
+    "pixel_average_precision": 0.16720437852947104,
+    "precision": 0.9230769230769231,
+    "recall_by_defect": {
+      "metal_nut/bent": {
+        "detected": 13,
+        "images": 25,
+        "recall": 0.52
+      },
+      "metal_nut/color": {
+        "detected": 11,
+        "images": 22,
+        "recall": 0.5
+      },
+      "metal_nut/flip": {
+        "detected": 10,
+        "images": 23,
+        "recall": 0.43478260869565216
+      },
+      "metal_nut/scratch": {
+        "detected": 2,
+        "images": 23,
+        "recall": 0.08695652173913043
+      }
+    },
+    "uncertainty": {
+      "auroc_method": "percentile stratified bootstrap of independent test images",
+      "bootstrap_samples": 1000,
+      "bootstrap_seed": 42,
+      "confidence_level": 0.95,
+      "defect_recall_interval": [
+        0.29446055347923916,
+        0.48869017291695915
+      ],
+      "defective_images": 93,
+      "image_auroc_interval": [
+        0.6070381231671554,
+        0.8465542521994135
+      ],
+      "limitations": "Intervals describe finite-image sampling uncertainty, not training-seed variability, domain shift or independent-pixel uncertainty.",
+      "normal_false_alarm_rate_interval": [
+        0.04749003714055253,
+        0.33334987166571717
+      ],
+      "normal_images": 22,
+      "precision_interval": [
+        0.7967892883204503,
+        0.9734926046962203
+      ],
+      "rate_method": "Wilson score interval"
+    }
+  },
+  "model_kind": "joint_reconstruction_segmentation",
+  "model_selection": "pretest validation harmonic mean; CPU latency tie-break; never test-winning seed",
+  "parameters": 977876,
+  "pixel_metric_space": "original",
+  "preprocess": {
+    "height": 256,
+    "mode": "square",
+    "width": 256
+  },
+  "provenance": {
+    "bank_digest": "032a8148af58b23ca2f2757ab80c075782cae4f18606968fac3980cfe22f5aaf",
+    "config_digest": "fa2c3cbbe3887132d530669bef6d5c292f5919e91b5a5c57c8e09619d50dbb6e",
+    "cpu_threads": 1,
+    "created_at_utc": "2026-10-02T14:24:14.593767+00:00",
+    "data_seed": 42,
+    "dataset_provenance": {
+      "archive_sha256": "cf4313b13603bec67abb49ca959488f7eedce2a9f7795ec54446c649ac98cd3d",
+      "dataset": "MVTec AD"
+    },
+    "deterministic_algorithms": false,
+    "git_dirty": false,
+    "git_revision": "e74fe62e5b1484d97b678842875b79a3b47883ef",
+    "packages": {
+      "Pillow": "12.3.0",
+      "numpy": "2.5.3",
+      "scikit-learn": "1.9.1",
+      "scipy": "1.18.1",
+      "torch": "2.14.1"
+    },
+    "platform": "macOS-27.0.1-arm64-arm-64bit",
+    "python": "3.12.14 (main, Aug 25 2026, 13:50:33) [Clang 22.1.3 ]",
+    "reproducibility_note": "Exact CPU resume is tested in one fixed environment; accelerator kernels may be nondeterministic.",
+    "source_files": {
+      "baseline.py": "2b3c4d9f80d963a831f7897f5ed2db0d62ecb559f74b762fa83b434fc2b8df48",
+      "checkpointing.py": "32fb507f67ecb3ccca18ec6f68f93e083d64d89ae999dd11e5bcc472b5ab2f8c",
+      "data.py": "a32a241782d5e108ae940118d594d4e588ecdd602f90b34247c743bc1a21b382",
+      "losses.py": "1df225f277ea942a41a6ab61925c49d9694958088d4fe4f3fc3ce064a8d660dd",
+      "model.py": "b9c4f0755512518d52d290131d051f6395c336a16ed08aefe934ffcfbc5b4768",
+      "preprocessing.py": "af0175422fa02fadbdb3b61a6c08929808b1bffeb3d0b20f4efdd975df284d69",
+      "synthesis.py": "f955a92beb6c613ea9d10c986fa0ec057ed1b80642802cdf96970137bd37bce3",
+      "train.py": "8d90324fce4908e95eadace0534157e607112d791072a4488a5097083e5480f0",
+      "validation_bank.py": "d758693bad36743c4c0290effc34ba0d255d8c77aefdf4e7b3572beca649398c"
+    },
+    "split_digest": "2df9587b2f8d3f7f389a7ef2a1e9e13cf21ea6b6738a1d9023e7daf1d59de5ad",
+    "training_seed": 44
+  },
+  "quality_target": {
+    "defect_recall_minimum": 0.9,
+    "normal_false_alarm_rate_maximum": 0.1
+  },
+  "score_definition": "mean of highest 1% sigmoid anomaly-map pixels; not a calibrated probability",
+  "split_digest": "2df9587b2f8d3f7f389a7ef2a1e9e13cf21ea6b6738a1d9023e7daf1d59de5ad",
+  "supervision": "normal images and procedural corruption masks",
+  "threshold": 0.0002463794779032469,
+  "training_seed": 44,
+  "training_seed_variability": {
+    "metrics": {
+      "defect_recall": {
+        "count": 3,
+        "maximum": 0.6236559139784946,
+        "mean": 0.5268817204301075,
+        "minimum": 0.3870967741935484,
+        "sample_standard_deviation": 0.12400604940506234,
+        "values": [
+          0.5698924731182796,
+          0.6236559139784946,
+          0.3870967741935484
+        ]
+      },
+      "image_auroc": {
+        "count": 3,
+        "maximum": 0.7883675464320625,
+        "mean": 0.7618116650374714,
+        "minimum": 0.727761485826002,
+        "sample_standard_deviation": 0.03099027299609384,
+        "values": [
+          0.7693059628543499,
+          0.7883675464320625,
+          0.727761485826002
+        ]
+      },
+      "normal_false_alarm_rate": {
+        "count": 3,
+        "maximum": 0.13636363636363635,
+        "mean": 0.10606060606060606,
+        "minimum": 0.09090909090909091,
+        "sample_standard_deviation": 0.026243194054073892,
+        "values": [
+          0.09090909090909091,
+          0.09090909090909091,
+          0.13636363636363635
+        ]
+      },
+      "pixel_average_precision": {
+        "count": 3,
+        "maximum": 0.20301099903176434,
+        "mean": 0.17288331795677384,
+        "minimum": 0.14843457630908613,
+        "sample_standard_deviation": 0.027727860430717465,
+        "values": [
+          0.14843457630908613,
+          0.20301099903176434,
+          0.16720437852947104
+        ]
+      }
+    },
+    "scope": "same audited split and configuration; variation across model training seeds, not a confidence interval",
+    "seeds": [
+      42,
+      43,
+      44
+    ]
+  },
+  "validation_score": 0.9510808532802915
+}

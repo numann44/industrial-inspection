@@ -1,0 +1,127 @@
+{
+  "selection": "highest-scoring FP; lowest-scoring FN; evenly spaced successful-case score ranks",
+  "groups": {
+    "FP": 2,
+    "FN": 3,
+    "TP": 3,
+    "TN": 3
+  },
+  "items": [
+    {
+      "file": "FP_0010_screw_good.png",
+      "group": "FP",
+      "category": "screw",
+      "defect": "good",
+      "source": "screw/test/good/010.png",
+      "label": 0,
+      "score": 0.10728111863136292,
+      "predicted_defective": true
+    },
+    {
+      "file": "FP_0023_screw_good.png",
+      "group": "FP",
+      "category": "screw",
+      "defect": "good",
+      "source": "screw/test/good/023.png",
+      "label": 0,
+      "score": 0.004982984159141779,
+      "predicted_defective": true
+    },
+    {
+      "file": "FN_0135_screw_thread_side.png",
+      "group": "FN",
+      "category": "screw",
+      "defect": "thread_side",
+      "source": "screw/test/thread_side/021.png",
+      "label": 1,
+      "score": 2.151266744476743e-05,
+      "predicted_defective": false
+    },
+    {
+      "file": "FN_0054_screw_manipulated_front.png",
+      "group": "FN",
+      "category": "screw",
+      "defect": "manipulated_front",
+      "source": "screw/test/manipulated_front/013.png",
+      "label": 1,
+      "score": 2.2023919882485643e-05,
+      "predicted_defective": false
+    },
+    {
+      "file": "FN_0044_screw_manipulated_front.png",
+      "group": "FN",
+      "category": "screw",
+      "defect": "manipulated_front",
+      "source": "screw/test/manipulated_front/003.png",
+      "label": 1,
+      "score": 2.2343512682709843e-05,
+      "predicted_defective": false
+    },
+    {
+      "file": "TP_0069_screw_scratch_head.png",
+      "group": "TP",
+      "category": "screw",
+      "defect": "scratch_head",
+      "source": "screw/test/scratch_head/004.png",
+      "label": 1,
+      "score": 0.000273590354481712,
+      "predicted_defective": true
+    },
+    {
+      "file": "TP_0113_screw_scratch_neck.png",
+      "group": "TP",
+      "category": "screw",
+      "defect": "scratch_neck",
+      "source": "screw/test/scratch_neck/024.png",
+      "label": 1,
+      "score": 0.14544107019901276,
+      "predicted_defective": true
+    },
+    {
+      "file": "TP_0144_screw_thread_top.png",
+      "group": "TP",
+      "category": "screw",
+      "defect": "thread_top",
+      "source": "screw/test/thread_top/007.png",
+      "label": 1,
+      "score": 0.9817773103713989,
+      "predicted_defective": true
+    },
+    {
+      "file": "TN_0001_screw_good.png",
+      "group": "TN",
+      "category": "screw",
+      "defect": "good",
+      "source": "screw/test/good/001.png",
+      "label": 0,
+      "score": 2.0361847418826073e-05,
+      "predicted_defective": false
+    },
+    {
+      "file": "TN_0008_screw_good.png",
+      "group": "TN",
+      "category": "screw",
+      "defect": "good",
+      "source": "screw/test/good/008.png",
+      "label": 0,
+      "score": 2.285004848090466e-05,
+      "predicted_defective": false
+    },
+    {
+      "file": "TN_0013_screw_good.png",
+      "group": "TN",
+      "category": "screw",
+      "defect": "good",
+      "source": "screw/test/good/013.png",
+      "label": 0,
+      "score": 7.160345558077097e-05,
+      "predicted_defective": false
+    }
+  ],
+  "threshold": 0.0002723882294958477,
+  "display_max": 0.0005447764589916954,
+  "display_rule": "fixed per-checkpoint range, never per-image min/max; saturation is not a pixel decision",
+  "dataset": "MVTec AD",
+  "source_url": "https://www.mvtec.com/research-teaching/datasets/mvtec-ad",
+  "license": "MVTec AD derivatives: CC BY-NC-SA 4.0"
+}

@@ -1,66 +1,69 @@
 # Industrial Inspection
 
-**Learning to detect defective parts — with reproducible experiments, visible failure cases, and models trained from random initialization.**
+**Industrial defect detection from random initialization — with controlled experiments, calibrated decisions, and visible failure cases.**
 
-[Live inspection demo](https://numan-industrial-inspection.streamlit.app/) · [Experiment evidence](docs/results/EXPERIMENT_REPORT.md) · [Training protocol](docs/EXPERIMENTS.md) · [Data provenance](docs/DATA.md) · [Model card](docs/MODEL_CARD.md)
+[Live inspection demo](https://numan-industrial-inspection.streamlit.app/) · [Controlled study](docs/results/CONTROLLED_STUDY.md) · [Model card](docs/MODEL_CARD.md) · [Training protocol](docs/EXPERIMENTS.md) · [Data provenance](docs/DATA.md)
 
 [![Source checks](https://github.com/numann44/industrial-inspection/actions/workflows/checks.yml/badge.svg)](https://github.com/numann44/industrial-inspection/actions/workflows/checks.yml)
 
-This project connects the full inspection workflow: audited industrial images, controlled training, independent threshold calibration, native-resolution evaluation, and an interactive image inspection app. It starts with metal nuts, then tests the same procedure on screws and transistors using separate category models. A separately documented supervised surface-defect track uses KolektorSDD2.
+This project connects audited industrial images, reproducible training, separate threshold calibration, original-resolution evaluation and an interactive CPU inspection app. The completed study contains **17 training runs**: 14 normal-only MVTec experiments and three supervised KolektorSDD2 experiments. Every project model starts from random weights; the pretrained PatchCore reference is documented separately.
 
-> **Current status:** three exploratory metal-nut models are trained and measured. The controlled experiment study is running. The latest exploratory model detects **51 of 93 defective images**, with **1 false alarm among 22 normal images**. It does **not** meet the project target of ≥90% defect recall and ≤10% normal false alarms. The demo exposes these limitations and includes failure examples.
+> **Measured outcome:** the selected KolektorSDD2 surface model detects **105/110 defects (95.45%)**, with **89/894 normal false alarms (9.955%)** and **0.8155 native pixel AP**. This meets the declared dataset point-estimate target. **All three selected MVTec category models fail the target.** KolektorSDD2 uses real defect labels in a separate task; it does not demonstrate success on nuts, screws or transistors. Confidence intervals and robustness tests limit the passing result.
 
-[![Hosted inspection app showing an original metal nut, model activation overlay and frozen decision threshold](docs/images/live-inspection.png)](https://numan-industrial-inspection.streamlit.app/)
+## Results at frozen thresholds
 
-Real CPU inference in the hosted app. The red overlay is model activation, not a confirmed defect boundary. [Deployment verification](docs/DEPLOYMENT.md) · [Screenshot attribution](docs/images/ATTRIBUTION.md).
+Configuration, checkpoint and deployment seed are selected using validation evidence before test evaluation. The threshold is the 90th percentile of separate normal calibration scores; it is never adjusted to make a test result pass. The target requires both ≥90% defect recall and ≤10% normal false alarms.
 
-## What has been built
+| Task / selected seed | Training supervision | Defects detected | Normal false alarms | Image AUROC | Native pixel AP | Dataset target |
+| --- | --- | ---: | ---: | ---: | ---: | --- |
+| KolektorSDD2 surface / 44 | Real images and defect masks | **105/110 (95.45%)** | **89/894 (9.955%)** | **0.9754** | **0.8155** | Met as point estimates |
+| Metal nut / 44 | Normal images + synthetic defects | 36/93 (38.7%) | 3/22 (13.6%) | 0.7278 | 0.1672 | Not met |
+| Screw / 42 | Normal images + synthetic defects | 50/119 (42.0%) | 2/41 (4.9%) | 0.8660 | 0.1470 | Not met |
+| Transistor / 42 | Normal images + synthetic defects | 8/40 (20.0%) | 6/60 (10.0%) | 0.4408 | 0.0817 | Not met |
 
-- **Audited data:** complete MVTec AD and KolektorSDD2 downloads, content hashes, image/mask checks, explicit duplicate handling and immutable data partitions.
-- **From-scratch learning:** compact reconstruction and segmentation networks with controlled procedural defects; a separate real-defect supervised segmentation pipeline.
-- **Resumable experiments:** atomic epoch checkpoints, optimizer and random-state recovery, strict compatibility checks, saved code/environment provenance.
-- **Comparable model selection:** one frozen synthetic validation bank shared across candidates, with real test images excluded from training and selection.
-- **Measured inspection:** calibrated image decisions, native-mask pixel AP, confidence intervals, defect-size analysis, and separate false-positive/false-negative galleries.
-- **Shared inference:** the CLI, evaluator and Streamlit app load the same model contract and preserve float32 maps, preprocessing and checkpoint identity.
+Metal-nut results are **development-inspected / exploratory**. Screw, transistor and KolektorSDD2 retain the completed study's frozen held-out evaluation status. Each category has its own weights. Training separate models is not evidence that one model generalizes across these parts.
 
-## Measured exploratory results
+For the selected surface model, the 95% Wilson intervals are **89.8–98.0% recall** and **8.16–12.09% false alarms**. They cross the target boundaries, so the test does not establish those population-level guarantees. At the test set's approximately 11% defect prevalence, only **54.1% of alerts are true defects**. The official split also lacks product/batch identifiers, so image-level separation does not establish batch independence.
 
-These runs all use the original metal-nut test set: **93 defective and 22 normal images**. The test has been inspected during development, so these are exploratory results. Each legacy checkpoint retains its original 95th-percentile calibration threshold.
+All five missed surface defects occupy less than 1% of their original image. The model's false-alarm rate rises to **15.5% under +20% brightness** and **31.4% under JPEG quality 60**, without threshold changes. New imaging conditions require independent evaluation. See the [full study](docs/results/CONTROLLED_STUDY.md) for all seeds, ablations, native defect-size groups, uncertainty and perturbations.
 
-| Model | Image AUROC | Native pixel AP | Defects detected | Defects missed | Normal false alarms |
-| --- | ---: | ---: | ---: | ---: | ---: |
-| Initial joint model, 128 px | 0.655 | 0.213 | 37 / 93 | 56 | 2 / 22 |
-| Denoising reconstruction, 128 px | 0.626 | 0.217 | 10 / 93 | 83 | 1 / 22 |
-| Foreground synthesis, 256 px | 0.769 | 0.148 | 51 / 93 | 42 | 1 / 22 |
-| PatchCore reference, ImageNet features | 0.9995 | 0.885 | 93 / 93 | 0 | 4 / 22 |
+![A correctly detected KolektorSDD2 surface defect, shown with original image, predicted activation and ground-truth annotation](docs/results/controlled-study-galleries/kolektor_surface/TP_0816_kolektor_surface_defective.png)
 
-The foreground model improves image decisions but localizes defects less effectively. It catches only **2 of 23 scratches**. Resolution, learning rate, training duration and corruption generation changed together in that run; the results do not isolate the contribution of foreground masking. The next study changes one factor at a time.
+Real test evidence, not a generated mockup. The three panels separate the original image, fixed-scale model activation and ground truth. Scores this small require scientific notation; the exact values are retained in the [gallery index](docs/results/controlled-study-galleries/kolektor_surface/index.json). [Dataset attribution and derivative-image license](docs/results/controlled-study-galleries/kolektor_surface/ATTRIBUTION.md).
 
-The separately fitted [PatchCore reference](docs/results/PATCHCORE_REFERENCE.md) uses pretrained ImageNet features and the declared 90th-percentile normal calibration threshold. It detects every defect in this exploratory set but raises **18.2% false alarms**, exceeding the 10% target. Its threshold is not retuned on test images, and its results do not select the from-scratch model.
+## What the project demonstrates
 
-![Measured exploratory decisions and ranking](docs/results/experiment-ranking-and-decisions.png)
+- **Audited data:** complete MVTec AD and KolektorSDD2 downloads, content hashes, image/mask checks, duplicate handling and frozen partitions.
+- **Controlled learning:** foreground restriction, scratch synthesis, resolution and reconstruction-assistance comparisons; separate real-defect supervision after the declared fallback trigger.
+- **Recoverable training:** atomic best/last checkpoints, optimizer and random-state recovery, saved code/environment provenance and protection against accidental run replacement.
+- **Honest selection:** one shared synthetic validation bank for MVTec candidates; real validation masks for KolektorSDD2; test-winning seeds never replace the frozen selection.
+- **Measured failures:** false-positive/false-negative galleries, native-mask pixel AP, image-level uncertainty, defect-size analysis and perturbation tests.
+- **One inference contract:** the CLI, evaluator and Streamlit app load the same preprocessing, category, scoring, threshold and checkpoint identity, retaining float32 maps.
 
-See the [full report](docs/results/EXPERIMENT_REPORT.md) for confidence intervals, learning curves, per-defect recall and representative mistakes. Precision is reported with the dataset's class balance; it is not presented as overall accuracy.
-
-## Architecture
+## Two learning pipelines
 
 ```mermaid
 flowchart LR
-    A[Audited normal training images] --> B[Procedural corruption and known masks]
-    B --> C[Randomly initialized reconstruction U-Net]
-    B --> D[Randomly initialized segmentation U-Net]
+    A[MVTec normal training images] --> B[Procedural defects and known masks]
+    B --> C[Random reconstruction U-Net]
+    B --> D[Random segmentation U-Net]
     C --> D
-    D --> E[Spatial anomaly map]
-    E --> F[Top 1% activation score]
-    G[Separate normal calibration images] --> H[Frozen decision threshold]
-    F --> I[Good / defective decision]
-    H --> I
-    E --> J[Original-resolution overlay and raw map]
+    E[KolektorSDD2 normal and real defective images] --> F[Separate random U-Net]
+    G[Real pixel masks] --> F
+    D --> H[Spatial activation map]
+    F --> H
+    H --> I[Mean of strongest 1% valid pixels]
+    J[Separate normal calibration images] --> K[Frozen 90th-percentile threshold]
+    I --> L[Good / defective decision]
+    K --> L
+    H --> M[Native-size map and overlay]
 ```
 
-The main joint model contains **977,876 trainable parameters** at 16 base channels. It is a compact DRAEM-inspired experiment, not a reproduction or a claimed new research algorithm. Model-selection comparisons include foreground restriction, thin-scratch synthesis, 128/256 resolution and segmentation without reconstruction. A normal-image reconstruction model and an ImageNet-pretrained PatchCore reference provide separate baselines.
+The MVTec joint model has **977,876 parameters** at 16 base channels and 256×256 input. It is a compact DRAEM-inspired experiment, not a reproduction or a claimed new research algorithm. The best eligible configuration by synthetic validation was the joint 256-pixel model, but strong synthetic validation did not transfer to real defects. The selected metal-nut model detects only **2 of 23 scratches**.
 
-The [supervised track](docs/SUPERVISED_PROTOCOL.md) trains a separate U-Net on real defective/normal surface images and pixel labels. Its results are not mixed with the normal-only MVTec task.
+The [supervised surface model](docs/SUPERVISED_PROTOCOL.md) has **488,705 parameters**. It preserves aspect ratio inside a **640-pixel-high × 256-pixel-wide** letterbox; padding is excluded from the loss, score and restored map. Training combines positive-weighted BCE and Dice, with balanced sampling of normal and defective examples. Three seeds use the same audited split, a 100-epoch limit and 15-epoch early-stopping patience. Seed 44's epoch-60 weights were selected by validation; later test outcomes did not select them.
+
+On the local Apple M4, the surface model's warm forward-and-score median is **98.94 ms on CPU** and **13.74 ms on MPS**. These measurements exclude model loading, decoding, preprocessing, transfers, rendering and hosting overhead; they are not end-to-end cloud response times.
 
 ## Run locally
 
@@ -76,9 +79,9 @@ python -m pytest
 streamlit run app.py
 ```
 
-The model registry in `artifacts/models.json` verifies weight checksums. It uses local trained checkpoints when present and the [published experimental model](https://github.com/numann44/industrial-inspection/releases/tag/v0.1.0-alpha.1) otherwise. The full datasets are not needed to serve the demo. `requirements.lock.txt` records the local experiment environment; the deployment requirements use CPU PyTorch wheels on Linux.
+`artifacts/models.json` is authoritative for the active demo selection and checksum-pinned download URLs. The full datasets are not required to serve the demo. `requirements.lock.txt` records the local experiment environment; deployment requirements use CPU PyTorch wheels on Linux. [Deployment evidence](docs/DEPLOYMENT.md) identifies which hosted model and behaviors were actually verified; completing the offline study alone does not verify a new hosted deployment.
 
-### Reproduce the normal-only experiment
+### Reproduce normal-only training
 
 ```bash
 python scripts/prepare_dataset.py
@@ -92,23 +95,32 @@ python -m inspection.train --manifest data/manifest.json \
   --bank data/validation-bank-v2/bank.json --output runs/my-joint-256
 ```
 
-To resume an interrupted run, repeat the same command with `--resume runs/my-joint-256/last.pt`. Training settings, audited split, validation bank, source files and runtime must match. Existing nonempty runs cannot be silently replaced.
+Resume with the same command plus `--resume runs/my-joint-256/last.pt`. Configuration, audited split, validation bank, source and runtime must match. Nonempty run directories cannot be silently replaced. MVTec protocol v2 ranks checkpoints by the harmonic mean of synthetic image AUROC and pixel AP, checked every five epochs and at the final epoch.
 
-Protocol v2 selects checkpoints using the harmonic mean of synthetic image AUROC and pixel AP, measured every five epochs and at the final epoch. It calibrates the decision threshold on the **90th percentile of separate normal images**. This empirical rule does not guarantee a future 10% false-alarm rate.
-
-### Evaluate and inspect
+### Reproduce real-defect supervised training
 
 ```bash
-python -m inspection.evaluate --manifest data/manifest.json \
-  --checkpoint runs/my-joint-256/checkpoint.pt --output runs/my-joint-256/evaluation.json \
-  --overlays runs/my-joint-256/gallery --experimental-status exploratory
-python -m inspection.predict --checkpoint runs/my-joint-256/checkpoint.pt \
-  --image /path/to/metal-nut.png --output outputs/my-inspection --device cpu
+python scripts/prepare_ksdd2.py
+python -m inspection.ksdd2 --root data/ksdd2
+python -m inspection.supervised --output runs/my-ksdd2-seed44 --training-seed 44
 ```
 
-Exports include JSON, an original-size overlay, a display heatmap, and a compressed **float32** map. The color scale is fixed per checkpoint. The anomaly score is not a probability, and highlighted pixels are not certified defect boundaries.
+See the [fixed supervised protocol](docs/SUPERVISED_PROTOCOL.md) for split counts, loss, balanced sampling, calibration and recovery. Keep the official test unopened until all candidate weights and thresholds are fixed. The declared study can be reproduced with `scripts/run_study.py`; reporting and packaging verify its completed evidence before creating public artifacts.
 
-### Optional pretrained reference
+### Inspect an image
+
+```bash
+python -m inspection.predict --checkpoint runs/my-ksdd2-seed44/checkpoint.pt \
+  --image /path/to/surface.png --output outputs/my-inspection --device cpu
+```
+
+Exports include JSON, an original-size overlay, a display heatmap and a compressed **float32** map. The color scale is fixed per checkpoint. The score is not a defect probability, and highlighted pixels are not certified boundaries. Users select the matching task; the app does not automatically recognize arbitrary parts. Uploaded images are processed in memory by the application.
+
+## Earlier experiments and pretrained reference
+
+The [legacy experiment report](docs/results/EXPERIMENT_REPORT.md) preserves three earlier metal-nut runs, their original 95th-percentile thresholds, curves and failures. Its foreground pilot detected 51/93 defects with 1/22 false alarms. Those results are exploratory and are not overwritten by protocol v2.
+
+The [PatchCore comparison](docs/results/PATCHCORE_REFERENCE.md) uses ImageNet WideResNet50-2 features, a 1% coreset and the official feature aggregation/scoring implementation. It detects 93/93 metal-nut defects but falsely flags 4/22 normal images (**18.2%**), failing the false-alarm target at its frozen threshold. Our audited split, square resize and exact PyTorch squared-L2 search differ from the published benchmark. The pretrained reference neither selects nor supplies weights to the from-scratch models.
 
 ```bash
 python -m pip install -e '.[benchmark]'
@@ -116,31 +128,26 @@ python -m inspection.patchcore_baseline --manifest data/manifest.json \
   --output runs/my-patchcore
 ```
 
-This baseline uses ImageNet WideResNet50-2 features, a 1% coreset, and the official PatchCore feature aggregation and scoring. Our audited training split and square resize differ from the published benchmark. Exact PyTorch squared-L2 search replaces FAISS to avoid a duplicate OpenMP runtime on macOS. The vendored source and modification notice are in `src/patchcore`.
-
 ## Repository guide
 
 | Location | Purpose |
 | --- | --- |
 | `src/inspection` | Data audits, models, training, checkpointing, inference and evaluation |
-| `configs` | Reproducible legacy, controlled and supervised experiment settings |
-| `scripts` | Dataset preparation and evidence reporting |
+| `configs` | Reproducible legacy, controlled and supervised settings |
+| `scripts` | Dataset preparation, serialized study, evidence verification and packaging |
 | `tests` | Data isolation, resume, scoring, geometry and artifact integrity checks |
-| `docs/results` | Measured results, plots and failure evidence |
-| `app.py`, `artifacts`, `assets` | CPU demo, verified model registry and attributed examples |
+| `docs/results` | Measured reports, portable evidence and attributed failure galleries |
+| `docs/model-cards` | Exact selected-model summaries, hashes, calibration and provenance |
+| `app.py`, `artifacts`, `assets` | CPU demo, model registry and attributed examples |
 | `data`, `runs`, `outputs` | Local datasets, weights and generated artifacts; excluded from Git |
 
-## Limits and next gates
-
-The current model is category-specific and does not recognize arbitrary objects. Synthetic defects may fail to represent real scratches, deformation or appearance changes. The small normal test and calibration samples give uncertain false-alarm estimates. New production batches and cameras require independent evaluation.
-
-The [delivery checklist](docs/PLAN.md) tracks the controlled study, three-seed repeats, frozen category evaluations, conditional supervised training, public demo verification and final release. Results are never promoted to a successful inspection system solely because training completed.
+The [delivery checklist](docs/PLAN.md) separates measured quality from engineering and publication. Any new method informed by these test results must label their reuse exploratory; a new independent success claim needs an untouched holdout. The completed study is retained even when subsequent experiments improve the method.
 
 ## Sources and licenses
 
-- [MVTec AD](https://www.mvtec.com/research-teaching/datasets/mvtec-ad): images, annotations and their derivatives are CC BY-NC-SA 4.0.
-- [KolektorSDD2](https://www.vicos.si/resources/kolektorsdd2/): images, annotations and their derivatives are CC BY-NC-SA 4.0.
-- [DRAEM](https://arxiv.org/abs/2108.07610): research inspiration for reconstruction-assisted anomaly segmentation.
-- [PatchCore](https://github.com/amazon-science/patchcore-inspection): reference implementation, Apache-2.0; its license and notices are retained.
+- [MVTec AD](https://www.mvtec.com/research-teaching/datasets/mvtec-ad): images, annotations and derivatives are CC BY-NC-SA 4.0.
+- [KolektorSDD2](https://www.vicos.si/resources/kolektorsdd2/): images, annotations and derivatives are CC BY-NC-SA 4.0.
+- [DRAEM](https://arxiv.org/abs/2108.07610): inspiration for reconstruction-assisted anomaly segmentation.
+- [PatchCore](https://github.com/amazon-science/patchcore-inspection): reference implementation, Apache-2.0; retained license and notices in `src/patchcore`.
 
-Original project source is [MIT licensed](LICENSE). Dataset-derived examples retain their respective dataset license and attribution. Third-party code is covered by its own retained license.
+Original project source is [MIT licensed](LICENSE). Dataset-derived examples retain dataset attribution, noncommercial and share-alike terms. Third-party code keeps its own license. The results are a research demonstration, not production acceptance certification.

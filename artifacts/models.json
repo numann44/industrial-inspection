@@ -1,61 +1,791 @@
 {
   "schema_version": 1,
+  "version": "v0.1.0",
   "models": [
     {
-      "id": "metal-nut-foreground-pilot",
-      "label": "Metal nut \u00b7 exploratory pilot",
-      "category": "metal_nut",
-      "status_label": "EXPLORATORY MODEL \u00b7 TARGET NOT MET",
-      "description": "Compact reconstruction and segmentation model trained from random weights.",
-      "conditions": "Centered metal nuts photographed against a uniform background, matching MVTec AD.",
-      "local_path": "runs/metal_nut-foreground-001/checkpoint.pt",
-      "sha256": "2af135ddc52038aa32b31a2545d923459a0072bde1173a57583ce88d62136f71",
-      "url": "https://github.com/numann44/industrial-inspection/releases/download/v0.1.0-alpha.1/metal-nut-pilot.pt",
-      "metrics": {
-        "defect_recall": 0.5483870967741935,
-        "normal_false_alarm_rate": 0.045454545454545456,
-        "pixel_average_precision": 0.14843457630908613,
-        "image_auroc": 0.7693059628543499,
-        "confusion": {
-          "true_positive": 51,
-          "false_positive": 1,
-          "true_negative": 21,
-          "false_negative": 42
-        }
-      },
-      "evaluation_note": "Original metal_nut test: 93 defective / 22 normal images. This test has been inspected during development; these are exploratory results. This legacy pilot used a 95th-percentile threshold; protocol v2 uses the 90th percentile.",
+      "category": "kolektor_surface",
+      "conditions": "KolektorSDD2 surface images matching the dataset acquisition conditions; select this surface task explicitly.",
+      "description": "Segmentation trained from random weights on real normal and defective KolektorSDD2 images with annotated defect masks. Separate supervised surface-inspection task.",
+      "evaluation_note": "Validation selection uses real labeled defects and masks. Held-out KolektorSDD2 test results describe this separate supervised task; they are not interchangeable with normal-only MVTec results. Frozen 90th-percentile normal calibration threshold. Scores are not probabilities; dataset results do not guarantee production reliability. Confidence intervals and perturbation results are available in the controlled study report. Original-test target met by point estimates only: 105/110 defects detected and 89/894 normal images flagged (9.955%, rounded to 10.0%). The 95% intervals cross the target bounds; brighter images and JPEG compression exceed the false-alarm target.",
       "examples": [
         {
-          "label": "Normal part",
-          "path": "assets/examples/metal_nut_good_000.png",
+          "attribution": "KolektorSDD2 · test/20000.png · Kolektor Group; Jakob Božič, Domen Tabernik and Danijel Skočaj (Computers in Industry, 2021) · CC BY-NC-SA 4.0",
+          "changes": "none; byte-identical copy",
+          "dataset": "KolektorSDD2",
           "defective": false,
-          "attribution": "MVTec AD \u00b7 metal_nut/test/good/000.png \u00b7 MVTec Software GmbH \u00b7 CC BY-NC-SA 4.0"
+          "label": "Normal part",
+          "license": "CC BY-NC-SA 4.0",
+          "license_url": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+          "path": "assets/examples/kolektor_surface_00_good.png",
+          "sha256": "92534e5c45ceb4a8a43d9affb744350c2fe976d0ffde055f384381f1aec3bec4",
+          "source_path": "test/20000.png",
+          "source_split": "original test",
+          "source_url": "https://www.vicos.si/resources/kolektorsdd2/"
         },
         {
-          "label": "Bent part",
-          "path": "assets/examples/metal_nut_bent_000.png",
+          "attribution": "KolektorSDD2 · test/20042.png · Kolektor Group; Jakob Božič, Domen Tabernik and Danijel Skočaj (Computers in Industry, 2021) · CC BY-NC-SA 4.0",
+          "changes": "none; byte-identical copy",
+          "dataset": "KolektorSDD2",
           "defective": true,
-          "attribution": "MVTec AD \u00b7 metal_nut/test/bent/000.png \u00b7 MVTec Software GmbH \u00b7 CC BY-NC-SA 4.0"
-        },
-        {
-          "label": "Discolored surface",
-          "path": "assets/examples/metal_nut_color_000.png",
-          "defective": true,
-          "attribution": "MVTec AD \u00b7 metal_nut/test/color/000.png \u00b7 MVTec Software GmbH \u00b7 CC BY-NC-SA 4.0"
-        },
-        {
-          "label": "Flipped part",
-          "path": "assets/examples/metal_nut_flip_000.png",
-          "defective": true,
-          "attribution": "MVTec AD \u00b7 metal_nut/test/flip/000.png \u00b7 MVTec Software GmbH \u00b7 CC BY-NC-SA 4.0"
-        },
-        {
-          "label": "Fine scratch",
-          "path": "assets/examples/metal_nut_scratch_000.png",
-          "defective": true,
-          "attribution": "MVTec AD \u00b7 metal_nut/test/scratch/000.png \u00b7 MVTec Software GmbH \u00b7 CC BY-NC-SA 4.0"
+          "label": "Defective",
+          "license": "CC BY-NC-SA 4.0",
+          "license_url": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+          "path": "assets/examples/kolektor_surface_01_defective.png",
+          "sha256": "48c7e272a0fc3d84928efbe3259bce556dc6381b47dba1e42101885998072717",
+          "source_path": "test/20042.png",
+          "source_split": "original test",
+          "source_url": "https://www.vicos.si/resources/kolektorsdd2/"
         }
-      ]
+      ],
+      "experimental_status": "frozen-held-out",
+      "id": "kolektor-surface-study-v2-seed44",
+      "label": "KolektorSDD2 surface · real-defect supervised · held-out",
+      "local_path": "runs/study-v2-ksdd2-seed44/checkpoint.pt",
+      "metrics": {
+        "confusion": {
+          "false_negative": 5,
+          "false_positive": 89,
+          "true_negative": 805,
+          "true_positive": 105
+        },
+        "defect_area_groups": {
+          "area_definition": "fraction of original image pixels with nonzero ground-truth mask",
+          "boundaries": [
+            0.001,
+            0.01,
+            0.05
+          ],
+          "groups": {
+            "large_at_least_5_percent": {
+              "detected": 19,
+              "images": 19,
+              "missed": 0,
+              "recall": 1.0,
+              "recall_interval": [
+                0.8318207759473837,
+                1.0
+              ]
+            },
+            "medium_1_to_5_percent": {
+              "detected": 53,
+              "images": 53,
+              "missed": 0,
+              "recall": 1.0,
+              "recall_interval": [
+                0.932418011423458,
+                0.9999999999999999
+              ]
+            },
+            "small_0.1_to_1_percent": {
+              "detected": 33,
+              "images": 37,
+              "missed": 4,
+              "recall": 0.8918918918918919,
+              "recall_interval": [
+                0.7529146845587398,
+                0.9571481005958853
+              ]
+            },
+            "tiny_below_0.1_percent": {
+              "detected": 0,
+              "images": 1,
+              "missed": 1,
+              "recall": 0.0,
+              "recall_interval": [
+                0.0,
+                0.7934506856227626
+              ]
+            }
+          }
+        },
+        "defect_recall": 0.9545454545454546,
+        "image_auroc": 0.9754321740898921,
+        "image_average_precision": 0.9216614862124277,
+        "normal_false_alarm_rate": 0.09955257270693513,
+        "pixel_average_precision": 0.8154633391216187,
+        "precision": 0.5412371134020618,
+        "recall_by_defect": {
+          "kolektor_surface/defective": {
+            "detected": 105,
+            "images": 110,
+            "recall": 0.9545454545454546
+          }
+        },
+        "uncertainty": {
+          "auroc_method": "percentile stratified bootstrap of test images; independence is an assumption",
+          "bootstrap_samples": 1000,
+          "bootstrap_seed": 42,
+          "confidence_level": 0.95,
+          "defect_recall_interval": [
+            0.8979840649336309,
+            0.9804305393407652
+          ],
+          "defective_images": 110,
+          "image_auroc_interval": [
+            0.9527318486882247,
+            0.9923939902379499
+          ],
+          "limitations": "Intervals describe finite-image sampling uncertainty, not training-seed variability, domain shift or independent-pixel uncertainty. KSDD2 product/batch independence is not supplied.",
+          "normal_false_alarm_rate_interval": [
+            0.08160700008664729,
+            0.12092481333567015
+          ],
+          "normal_images": 894,
+          "precision_interval": [
+            0.4709969743450826,
+            0.6098758623968914
+          ],
+          "rate_method": "Wilson score interval"
+        }
+      },
+      "model_kind": "supervised_segmentation",
+      "preparation_note": "Preserve aspect ratio and add letterbox padding to 256 × 640 pixels (width × height); exclude padding from image scoring.",
+      "preprocess": {
+        "height": 640,
+        "mode": "letterbox",
+        "width": 256
+      },
+      "sha256": "0c2222771ac7b9719eede442f20f120d81790eba1e20b435b706ebc142f0eed8",
+      "status_label": "REAL-DEFECT SUPERVISED · HELD-OUT MODEL · DATASET TARGET MET",
+      "target_met": true,
+      "threshold": 2.276815479262951e-07,
+      "training_seed": 44,
+      "training_track": "Real-defect supervised training",
+      "url": "https://github.com/numann44/industrial-inspection/releases/download/v0.1.0/kolektor_surface-seed44.pt"
+    },
+    {
+      "category": "metal_nut",
+      "conditions": "Only metal nut images matching MVTec AD acquisition conditions; category is selected by the user, not recognized by the model.",
+      "description": "Category-specific reconstruction/segmentation trained from random weights on normal MVTec AD images and procedural corruption masks; no real-defect training images.",
+      "evaluation_note": "MVTec AD metal_nut exploratory test results. This category’s test set was inspected during development. Validation selection uses a common synthetic challenge made from separate normal images. Frozen 90th-percentile normal calibration threshold. Scores are not probabilities; dataset results do not guarantee production reliability. Confidence intervals and perturbation results are available in the controlled study report.",
+      "examples": [
+        {
+          "attribution": "MVTec AD · metal_nut/test/good/000.png · MVTec Software GmbH; Paul Bergmann, Michael Fauser, David Sattlegger and Carsten Steger (CVPR 2019) · CC BY-NC-SA 4.0",
+          "changes": "none; byte-identical copy",
+          "dataset": "MVTec AD",
+          "defective": false,
+          "label": "Normal part",
+          "license": "CC BY-NC-SA 4.0",
+          "license_url": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+          "path": "assets/examples/metal_nut_00_good.png",
+          "sha256": "d7ca543f04733fb91ac02e18d0fbf06dcff554a1b1ad754173c42d10bb026bb6",
+          "source_path": "metal_nut/test/good/000.png",
+          "source_split": "original test",
+          "source_url": "https://www.mvtec.com/research-teaching/datasets/mvtec-ad"
+        },
+        {
+          "attribution": "MVTec AD · metal_nut/test/bent/000.png · MVTec Software GmbH; Paul Bergmann, Michael Fauser, David Sattlegger and Carsten Steger (CVPR 2019) · CC BY-NC-SA 4.0",
+          "changes": "none; byte-identical copy",
+          "dataset": "MVTec AD",
+          "defective": true,
+          "label": "Bent",
+          "license": "CC BY-NC-SA 4.0",
+          "license_url": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+          "path": "assets/examples/metal_nut_01_bent.png",
+          "sha256": "602cceb099d5aa10a416f31cd6370ef9d8c810118f4ada9dbc9c28e91a889e0b",
+          "source_path": "metal_nut/test/bent/000.png",
+          "source_split": "original test",
+          "source_url": "https://www.mvtec.com/research-teaching/datasets/mvtec-ad"
+        },
+        {
+          "attribution": "MVTec AD · metal_nut/test/color/000.png · MVTec Software GmbH; Paul Bergmann, Michael Fauser, David Sattlegger and Carsten Steger (CVPR 2019) · CC BY-NC-SA 4.0",
+          "changes": "none; byte-identical copy",
+          "dataset": "MVTec AD",
+          "defective": true,
+          "label": "Color",
+          "license": "CC BY-NC-SA 4.0",
+          "license_url": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+          "path": "assets/examples/metal_nut_02_color.png",
+          "sha256": "0baf957a972988323713a48fdf85c5e93cd3f21ac3d829095c13f703e6aed14b",
+          "source_path": "metal_nut/test/color/000.png",
+          "source_split": "original test",
+          "source_url": "https://www.mvtec.com/research-teaching/datasets/mvtec-ad"
+        },
+        {
+          "attribution": "MVTec AD · metal_nut/test/flip/000.png · MVTec Software GmbH; Paul Bergmann, Michael Fauser, David Sattlegger and Carsten Steger (CVPR 2019) · CC BY-NC-SA 4.0",
+          "changes": "none; byte-identical copy",
+          "dataset": "MVTec AD",
+          "defective": true,
+          "label": "Flip",
+          "license": "CC BY-NC-SA 4.0",
+          "license_url": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+          "path": "assets/examples/metal_nut_03_flip.png",
+          "sha256": "86ee9fac2a1ea560536782de2122ce44f24dce115b3d9e7f4b5d87f57b40e773",
+          "source_path": "metal_nut/test/flip/000.png",
+          "source_split": "original test",
+          "source_url": "https://www.mvtec.com/research-teaching/datasets/mvtec-ad"
+        },
+        {
+          "attribution": "MVTec AD · metal_nut/test/scratch/000.png · MVTec Software GmbH; Paul Bergmann, Michael Fauser, David Sattlegger and Carsten Steger (CVPR 2019) · CC BY-NC-SA 4.0",
+          "changes": "none; byte-identical copy",
+          "dataset": "MVTec AD",
+          "defective": true,
+          "label": "Scratch",
+          "license": "CC BY-NC-SA 4.0",
+          "license_url": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+          "path": "assets/examples/metal_nut_04_scratch.png",
+          "sha256": "1e5637c3409d05709eae62c7254f38900afa296902b1626e5902a5a2a4095f3d",
+          "source_path": "metal_nut/test/scratch/000.png",
+          "source_split": "original test",
+          "source_url": "https://www.mvtec.com/research-teaching/datasets/mvtec-ad"
+        }
+      ],
+      "experimental_status": "exploratory",
+      "id": "metal-nut-study-v2-seed44",
+      "label": "Metal Nut · normal-only · exploratory",
+      "local_path": "runs/study-v2-metal_nut-seed44/checkpoint.pt",
+      "metrics": {
+        "confusion": {
+          "false_negative": 57,
+          "false_positive": 3,
+          "true_negative": 19,
+          "true_positive": 36
+        },
+        "defect_area_groups": {
+          "area_definition": "fraction of original image pixels with nonzero ground-truth mask",
+          "boundaries": [
+            0.001,
+            0.01,
+            0.05
+          ],
+          "groups": {
+            "large_at_least_5_percent": {
+              "detected": 12,
+              "images": 36,
+              "missed": 24,
+              "recall": 0.3333333333333333,
+              "recall_interval": [
+                0.2021461882430531,
+                0.4966600212884348
+              ]
+            },
+            "medium_1_to_5_percent": {
+              "detected": 24,
+              "images": 50,
+              "missed": 26,
+              "recall": 0.48,
+              "recall_interval": [
+                0.34797135286578046,
+                0.6148825510995539
+              ]
+            },
+            "small_0.1_to_1_percent": {
+              "detected": 0,
+              "images": 7,
+              "missed": 7,
+              "recall": 0.0,
+              "recall_interval": [
+                5.551115123125783e-17,
+                0.35433043506668743
+              ]
+            },
+            "tiny_below_0.1_percent": {
+              "detected": 0,
+              "images": 0,
+              "missed": 0,
+              "recall": null,
+              "recall_interval": null
+            }
+          }
+        },
+        "defect_recall": 0.3870967741935484,
+        "image_auroc": 0.727761485826002,
+        "image_average_precision": 0.9188179246292315,
+        "normal_false_alarm_rate": 0.13636363636363635,
+        "pixel_average_precision": 0.16720437852947104,
+        "precision": 0.9230769230769231,
+        "recall_by_defect": {
+          "metal_nut/bent": {
+            "detected": 13,
+            "images": 25,
+            "recall": 0.52
+          },
+          "metal_nut/color": {
+            "detected": 11,
+            "images": 22,
+            "recall": 0.5
+          },
+          "metal_nut/flip": {
+            "detected": 10,
+            "images": 23,
+            "recall": 0.43478260869565216
+          },
+          "metal_nut/scratch": {
+            "detected": 2,
+            "images": 23,
+            "recall": 0.08695652173913043
+          }
+        },
+        "uncertainty": {
+          "auroc_method": "percentile stratified bootstrap of independent test images",
+          "bootstrap_samples": 1000,
+          "bootstrap_seed": 42,
+          "confidence_level": 0.95,
+          "defect_recall_interval": [
+            0.29446055347923916,
+            0.48869017291695915
+          ],
+          "defective_images": 93,
+          "image_auroc_interval": [
+            0.6070381231671554,
+            0.8465542521994135
+          ],
+          "limitations": "Intervals describe finite-image sampling uncertainty, not training-seed variability, domain shift or independent-pixel uncertainty.",
+          "normal_false_alarm_rate_interval": [
+            0.04749003714055253,
+            0.33334987166571717
+          ],
+          "normal_images": 22,
+          "precision_interval": [
+            0.7967892883204503,
+            0.9734926046962203
+          ],
+          "rate_method": "Wilson score interval"
+        }
+      },
+      "model_kind": "joint_reconstruction_segmentation",
+      "preparation_note": "Resize to 256 × 256 pixels (width × height) with the checkpoint’s square preparation.",
+      "preprocess": {
+        "height": 256,
+        "mode": "square",
+        "width": 256
+      },
+      "sha256": "fe91c610d89dd168bbed8ae4fb87cc2eb41b0cc6ab6aaaff1ec15195da4d494e",
+      "status_label": "NORMAL-ONLY · EXPLORATORY MODEL · DATASET TARGET NOT MET",
+      "target_met": false,
+      "threshold": 0.0002463794779032469,
+      "training_seed": 44,
+      "training_track": "Normal-only training with synthetic defects",
+      "url": "https://github.com/numann44/industrial-inspection/releases/download/v0.1.0/metal_nut-seed44.pt"
+    },
+    {
+      "category": "screw",
+      "conditions": "Only screw images matching MVTec AD acquisition conditions; category is selected by the user, not recognized by the model.",
+      "description": "Category-specific reconstruction/segmentation trained from random weights on normal MVTec AD images and procedural corruption masks; no real-defect training images.",
+      "evaluation_note": "MVTec AD screw held-out test results. Weights and model/seed selections were frozen before held-out testing. Validation selection uses a common synthetic challenge made from separate normal images. Frozen 90th-percentile normal calibration threshold. Scores are not probabilities; dataset results do not guarantee production reliability. Confidence intervals and perturbation results are available in the controlled study report.",
+      "examples": [
+        {
+          "attribution": "MVTec AD · screw/test/good/000.png · MVTec Software GmbH; Paul Bergmann, Michael Fauser, David Sattlegger and Carsten Steger (CVPR 2019) · CC BY-NC-SA 4.0",
+          "changes": "none; byte-identical copy",
+          "dataset": "MVTec AD",
+          "defective": false,
+          "label": "Normal part",
+          "license": "CC BY-NC-SA 4.0",
+          "license_url": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+          "path": "assets/examples/screw_00_good.png",
+          "sha256": "805be6dc5dc41dfc85869aec67b4a9e4141bd88b85b352c978355bc807e93159",
+          "source_path": "screw/test/good/000.png",
+          "source_split": "original test",
+          "source_url": "https://www.mvtec.com/research-teaching/datasets/mvtec-ad"
+        },
+        {
+          "attribution": "MVTec AD · screw/test/manipulated_front/000.png · MVTec Software GmbH; Paul Bergmann, Michael Fauser, David Sattlegger and Carsten Steger (CVPR 2019) · CC BY-NC-SA 4.0",
+          "changes": "none; byte-identical copy",
+          "dataset": "MVTec AD",
+          "defective": true,
+          "label": "Manipulated front",
+          "license": "CC BY-NC-SA 4.0",
+          "license_url": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+          "path": "assets/examples/screw_01_manipulated_front.png",
+          "sha256": "e9bdcdd0ef90d82b13a97a0b6b2ab0e0bf0c894408a9bc4dbb8c4b6503186eab",
+          "source_path": "screw/test/manipulated_front/000.png",
+          "source_split": "original test",
+          "source_url": "https://www.mvtec.com/research-teaching/datasets/mvtec-ad"
+        },
+        {
+          "attribution": "MVTec AD · screw/test/scratch_head/000.png · MVTec Software GmbH; Paul Bergmann, Michael Fauser, David Sattlegger and Carsten Steger (CVPR 2019) · CC BY-NC-SA 4.0",
+          "changes": "none; byte-identical copy",
+          "dataset": "MVTec AD",
+          "defective": true,
+          "label": "Scratch head",
+          "license": "CC BY-NC-SA 4.0",
+          "license_url": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+          "path": "assets/examples/screw_02_scratch_head.png",
+          "sha256": "712bcbfce3d682aa27ecc0513c0d00fde8fba5b235a8daa990b9f1a4cc4d8352",
+          "source_path": "screw/test/scratch_head/000.png",
+          "source_split": "original test",
+          "source_url": "https://www.mvtec.com/research-teaching/datasets/mvtec-ad"
+        },
+        {
+          "attribution": "MVTec AD · screw/test/scratch_neck/000.png · MVTec Software GmbH; Paul Bergmann, Michael Fauser, David Sattlegger and Carsten Steger (CVPR 2019) · CC BY-NC-SA 4.0",
+          "changes": "none; byte-identical copy",
+          "dataset": "MVTec AD",
+          "defective": true,
+          "label": "Scratch neck",
+          "license": "CC BY-NC-SA 4.0",
+          "license_url": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+          "path": "assets/examples/screw_03_scratch_neck.png",
+          "sha256": "608a17e6067b8b990f44169bab76de407bddece19d0a396acaa4d00f71eb19ba",
+          "source_path": "screw/test/scratch_neck/000.png",
+          "source_split": "original test",
+          "source_url": "https://www.mvtec.com/research-teaching/datasets/mvtec-ad"
+        },
+        {
+          "attribution": "MVTec AD · screw/test/thread_side/000.png · MVTec Software GmbH; Paul Bergmann, Michael Fauser, David Sattlegger and Carsten Steger (CVPR 2019) · CC BY-NC-SA 4.0",
+          "changes": "none; byte-identical copy",
+          "dataset": "MVTec AD",
+          "defective": true,
+          "label": "Thread side",
+          "license": "CC BY-NC-SA 4.0",
+          "license_url": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+          "path": "assets/examples/screw_04_thread_side.png",
+          "sha256": "5c647f0782864e6a95a3345b4b5094c6c7f0f442fd340267155a5f2794a2ee61",
+          "source_path": "screw/test/thread_side/000.png",
+          "source_split": "original test",
+          "source_url": "https://www.mvtec.com/research-teaching/datasets/mvtec-ad"
+        },
+        {
+          "attribution": "MVTec AD · screw/test/thread_top/000.png · MVTec Software GmbH; Paul Bergmann, Michael Fauser, David Sattlegger and Carsten Steger (CVPR 2019) · CC BY-NC-SA 4.0",
+          "changes": "none; byte-identical copy",
+          "dataset": "MVTec AD",
+          "defective": true,
+          "label": "Thread top",
+          "license": "CC BY-NC-SA 4.0",
+          "license_url": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+          "path": "assets/examples/screw_05_thread_top.png",
+          "sha256": "dd7bb501371a66958e36379baab1a77d3b39e52bcd0c2772ec2e779588ec845f",
+          "source_path": "screw/test/thread_top/000.png",
+          "source_split": "original test",
+          "source_url": "https://www.mvtec.com/research-teaching/datasets/mvtec-ad"
+        }
+      ],
+      "experimental_status": "frozen-held-out",
+      "id": "screw-study-v2-seed42",
+      "label": "Screw · normal-only · held-out",
+      "local_path": "runs/study-v2-screw-seed42/checkpoint.pt",
+      "metrics": {
+        "confusion": {
+          "false_negative": 69,
+          "false_positive": 2,
+          "true_negative": 39,
+          "true_positive": 50
+        },
+        "defect_area_groups": {
+          "area_definition": "fraction of original image pixels with nonzero ground-truth mask",
+          "boundaries": [
+            0.001,
+            0.01,
+            0.05
+          ],
+          "groups": {
+            "large_at_least_5_percent": {
+              "detected": 0,
+              "images": 0,
+              "missed": 0,
+              "recall": null,
+              "recall_interval": null
+            },
+            "medium_1_to_5_percent": {
+              "detected": 1,
+              "images": 1,
+              "missed": 0,
+              "recall": 1.0,
+              "recall_interval": [
+                0.20654931437723745,
+                1.0
+              ]
+            },
+            "small_0.1_to_1_percent": {
+              "detected": 48,
+              "images": 117,
+              "missed": 69,
+              "recall": 0.41025641025641024,
+              "recall_interval": [
+                0.32536293772432145,
+                0.5008556448305281
+              ]
+            },
+            "tiny_below_0.1_percent": {
+              "detected": 1,
+              "images": 1,
+              "missed": 0,
+              "recall": 1.0,
+              "recall_interval": [
+                0.20654931437723745,
+                1.0
+              ]
+            }
+          }
+        },
+        "defect_recall": 0.42016806722689076,
+        "image_auroc": 0.8659561385529823,
+        "image_average_precision": 0.9438666609651736,
+        "normal_false_alarm_rate": 0.04878048780487805,
+        "pixel_average_precision": 0.14704610249941336,
+        "precision": 0.9615384615384616,
+        "recall_by_defect": {
+          "screw/manipulated_front": {
+            "detected": 3,
+            "images": 24,
+            "recall": 0.125
+          },
+          "screw/scratch_head": {
+            "detected": 13,
+            "images": 24,
+            "recall": 0.5416666666666666
+          },
+          "screw/scratch_neck": {
+            "detected": 12,
+            "images": 25,
+            "recall": 0.48
+          },
+          "screw/thread_side": {
+            "detected": 7,
+            "images": 23,
+            "recall": 0.30434782608695654
+          },
+          "screw/thread_top": {
+            "detected": 15,
+            "images": 23,
+            "recall": 0.6521739130434783
+          }
+        },
+        "uncertainty": {
+          "auroc_method": "percentile stratified bootstrap of independent test images",
+          "bootstrap_samples": 1000,
+          "bootstrap_seed": 42,
+          "confidence_level": 0.95,
+          "defect_recall_interval": [
+            0.3353441373563325,
+            0.5099849544470025
+          ],
+          "defective_images": 119,
+          "image_auroc_interval": [
+            0.7929493748718999,
+            0.9254099200655872
+          ],
+          "limitations": "Intervals describe finite-image sampling uncertainty, not training-seed variability, domain shift or independent-pixel uncertainty.",
+          "normal_false_alarm_rate_interval": [
+            0.013480945365169042,
+            0.16138978870370846
+          ],
+          "normal_images": 41,
+          "precision_interval": [
+            0.8701881084254424,
+            0.9893882889986847
+          ],
+          "rate_method": "Wilson score interval"
+        }
+      },
+      "model_kind": "joint_reconstruction_segmentation",
+      "preparation_note": "Resize to 256 × 256 pixels (width × height) with the checkpoint’s square preparation.",
+      "preprocess": {
+        "height": 256,
+        "mode": "square",
+        "width": 256
+      },
+      "sha256": "2aa62b9471b519ad65079079e010d17f177d88253dd0c3f6c439b5d480fc3178",
+      "status_label": "NORMAL-ONLY · HELD-OUT MODEL · DATASET TARGET NOT MET",
+      "target_met": false,
+      "threshold": 0.0002723882294958477,
+      "training_seed": 42,
+      "training_track": "Normal-only training with synthetic defects",
+      "url": "https://github.com/numann44/industrial-inspection/releases/download/v0.1.0/screw-seed42.pt"
+    },
+    {
+      "category": "transistor",
+      "conditions": "Only transistor images matching MVTec AD acquisition conditions; category is selected by the user, not recognized by the model.",
+      "description": "Category-specific reconstruction/segmentation trained from random weights on normal MVTec AD images and procedural corruption masks; no real-defect training images.",
+      "evaluation_note": "MVTec AD transistor held-out test results. Weights and model/seed selections were frozen before held-out testing. Validation selection uses a common synthetic challenge made from separate normal images. Frozen 90th-percentile normal calibration threshold. Scores are not probabilities; dataset results do not guarantee production reliability. Confidence intervals and perturbation results are available in the controlled study report.",
+      "examples": [
+        {
+          "attribution": "MVTec AD · transistor/test/good/000.png · MVTec Software GmbH; Paul Bergmann, Michael Fauser, David Sattlegger and Carsten Steger (CVPR 2019) · CC BY-NC-SA 4.0",
+          "changes": "none; byte-identical copy",
+          "dataset": "MVTec AD",
+          "defective": false,
+          "label": "Normal part",
+          "license": "CC BY-NC-SA 4.0",
+          "license_url": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+          "path": "assets/examples/transistor_00_good.png",
+          "sha256": "b343892f2c2c79017885445e1594c52cba12d939e7c50d3cae083ff2ca33478b",
+          "source_path": "transistor/test/good/000.png",
+          "source_split": "original test",
+          "source_url": "https://www.mvtec.com/research-teaching/datasets/mvtec-ad"
+        },
+        {
+          "attribution": "MVTec AD · transistor/test/bent_lead/000.png · MVTec Software GmbH; Paul Bergmann, Michael Fauser, David Sattlegger and Carsten Steger (CVPR 2019) · CC BY-NC-SA 4.0",
+          "changes": "none; byte-identical copy",
+          "dataset": "MVTec AD",
+          "defective": true,
+          "label": "Bent lead",
+          "license": "CC BY-NC-SA 4.0",
+          "license_url": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+          "path": "assets/examples/transistor_01_bent_lead.png",
+          "sha256": "82bf661fb868a80558fc45f4fc356c96888bf26827005a57aea6aa707e13483a",
+          "source_path": "transistor/test/bent_lead/000.png",
+          "source_split": "original test",
+          "source_url": "https://www.mvtec.com/research-teaching/datasets/mvtec-ad"
+        },
+        {
+          "attribution": "MVTec AD · transistor/test/cut_lead/000.png · MVTec Software GmbH; Paul Bergmann, Michael Fauser, David Sattlegger and Carsten Steger (CVPR 2019) · CC BY-NC-SA 4.0",
+          "changes": "none; byte-identical copy",
+          "dataset": "MVTec AD",
+          "defective": true,
+          "label": "Cut lead",
+          "license": "CC BY-NC-SA 4.0",
+          "license_url": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+          "path": "assets/examples/transistor_02_cut_lead.png",
+          "sha256": "f4ab373b9ffe8a94b0bf4586c17c610b84c5e8e374b90c1bc082a07a7a7b7d8b",
+          "source_path": "transistor/test/cut_lead/000.png",
+          "source_split": "original test",
+          "source_url": "https://www.mvtec.com/research-teaching/datasets/mvtec-ad"
+        },
+        {
+          "attribution": "MVTec AD · transistor/test/damaged_case/000.png · MVTec Software GmbH; Paul Bergmann, Michael Fauser, David Sattlegger and Carsten Steger (CVPR 2019) · CC BY-NC-SA 4.0",
+          "changes": "none; byte-identical copy",
+          "dataset": "MVTec AD",
+          "defective": true,
+          "label": "Damaged case",
+          "license": "CC BY-NC-SA 4.0",
+          "license_url": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+          "path": "assets/examples/transistor_03_damaged_case.png",
+          "sha256": "29b14f810c60417fb81d595ed198f9fb9ff4a7bbdb413f278e21d03dbcc70643",
+          "source_path": "transistor/test/damaged_case/000.png",
+          "source_split": "original test",
+          "source_url": "https://www.mvtec.com/research-teaching/datasets/mvtec-ad"
+        },
+        {
+          "attribution": "MVTec AD · transistor/test/misplaced/000.png · MVTec Software GmbH; Paul Bergmann, Michael Fauser, David Sattlegger and Carsten Steger (CVPR 2019) · CC BY-NC-SA 4.0",
+          "changes": "none; byte-identical copy",
+          "dataset": "MVTec AD",
+          "defective": true,
+          "label": "Misplaced",
+          "license": "CC BY-NC-SA 4.0",
+          "license_url": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+          "path": "assets/examples/transistor_04_misplaced.png",
+          "sha256": "9ff15394285b7c54e7c7c05f668bdf5ba63a8f60fa2703b3234a918114527d10",
+          "source_path": "transistor/test/misplaced/000.png",
+          "source_split": "original test",
+          "source_url": "https://www.mvtec.com/research-teaching/datasets/mvtec-ad"
+        }
+      ],
+      "experimental_status": "frozen-held-out",
+      "id": "transistor-study-v2-seed42",
+      "label": "Transistor · normal-only · held-out",
+      "local_path": "runs/study-v2-transistor-seed42/checkpoint.pt",
+      "metrics": {
+        "confusion": {
+          "false_negative": 32,
+          "false_positive": 6,
+          "true_negative": 54,
+          "true_positive": 8
+        },
+        "defect_area_groups": {
+          "area_definition": "fraction of original image pixels with nonzero ground-truth mask",
+          "boundaries": [
+            0.001,
+            0.01,
+            0.05
+          ],
+          "groups": {
+            "large_at_least_5_percent": {
+              "detected": 5,
+              "images": 13,
+              "missed": 8,
+              "recall": 0.38461538461538464,
+              "recall_interval": [
+                0.17709707797762575,
+                0.6447710848733431
+              ]
+            },
+            "medium_1_to_5_percent": {
+              "detected": 3,
+              "images": 21,
+              "missed": 18,
+              "recall": 0.14285714285714285,
+              "recall_interval": [
+                0.04981012499725268,
+                0.34636060280620945
+              ]
+            },
+            "small_0.1_to_1_percent": {
+              "detected": 0,
+              "images": 6,
+              "missed": 6,
+              "recall": 0.0,
+              "recall_interval": [
+                2.7755575615628914e-17,
+                0.3903342879021653
+              ]
+            },
+            "tiny_below_0.1_percent": {
+              "detected": 0,
+              "images": 0,
+              "missed": 0,
+              "recall": null,
+              "recall_interval": null
+            }
+          }
+        },
+        "defect_recall": 0.2,
+        "image_auroc": 0.44083333333333335,
+        "image_average_precision": 0.47618985784289447,
+        "normal_false_alarm_rate": 0.1,
+        "pixel_average_precision": 0.08167142266077718,
+        "precision": 0.5714285714285714,
+        "recall_by_defect": {
+          "transistor/bent_lead": {
+            "detected": 2,
+            "images": 10,
+            "recall": 0.2
+          },
+          "transistor/cut_lead": {
+            "detected": 1,
+            "images": 10,
+            "recall": 0.1
+          },
+          "transistor/damaged_case": {
+            "detected": 2,
+            "images": 10,
+            "recall": 0.2
+          },
+          "transistor/misplaced": {
+            "detected": 3,
+            "images": 10,
+            "recall": 0.3
+          }
+        },
+        "uncertainty": {
+          "auroc_method": "percentile stratified bootstrap of independent test images",
+          "bootstrap_samples": 1000,
+          "bootstrap_seed": 42,
+          "confidence_level": 0.95,
+          "defect_recall_interval": [
+            0.10499989725437704,
+            0.347573063463995
+          ],
+          "defective_images": 40,
+          "image_auroc_interval": [
+            0.3195104166666667,
+            0.5662916666666666
+          ],
+          "limitations": "Intervals describe finite-image sampling uncertainty, not training-seed variability, domain shift or independent-pixel uncertainty.",
+          "normal_false_alarm_rate_interval": [
+            0.04664283447388416,
+            0.20149464723978772
+          ],
+          "normal_images": 60,
+          "precision_interval": [
+            0.3259064457965074,
+            0.7861920109552588
+          ],
+          "rate_method": "Wilson score interval"
+        }
+      },
+      "model_kind": "joint_reconstruction_segmentation",
+      "preparation_note": "Resize to 256 × 256 pixels (width × height) with the checkpoint’s square preparation.",
+      "preprocess": {
+        "height": 256,
+        "mode": "square",
+        "width": 256
+      },
+      "sha256": "a50c4747b7c1fc86d31333d6fa8c5326e3fd6809e3ff65a97681e4023d829613",
+      "status_label": "NORMAL-ONLY · HELD-OUT MODEL · DATASET TARGET NOT MET",
+      "target_met": false,
+      "threshold": 0.02778025316074495,
+      "training_seed": 42,
+      "training_track": "Normal-only training with synthetic defects",
+      "url": "https://github.com/numann44/industrial-inspection/releases/download/v0.1.0/transistor-seed42.pt"
     }
   ]
 }

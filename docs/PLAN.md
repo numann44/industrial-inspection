@@ -6,12 +6,14 @@ The project target is a category-specific defect detector trained from random in
 | --- | --- | --- |
 | Data | Full MVTec AD and KolektorSDD2 decoded, hashed and audited | Preserve frozen partitions during all experiments |
 | Legacy evidence | Three measured exploratory runs, curves, native galleries and confidence intervals | Retain results unchanged |
-| Training reliability | Atomic best/last checkpoints, exact CPU resume tests, provenance and nonempty-run protection | Real study runs finish or resume correctly |
+| Training reliability | All 17 declared runs completed; interrupted training recovered from compatible atomic checkpoints | Preserve checkpoint/source provenance |
 | Shared inference | CLI/evaluation/demo use the same engine; float maps and letterbox geometry tested | Published model artifacts load from clean installation |
-| Controlled study | Six serialized experiments running on MPS | Five-way candidate selection, chosen-config seed repeats and fixed category evaluations |
-| Supervised fallback | Fully audited data and tested training/evaluation pipeline ready | Execute if no selected MVTec category reaches the declared target |
+| Controlled study | All 14 MVTec runs and frozen evaluations complete; five-way eligible selection and all category seed repeats reported | Selected models fail the recall target; further methods need a new declared experiment |
+| Supervised fallback | Three KSDD2 runs complete; validation-selected seed 44 detects 105/110 defects with 89/894 false alarms | Point estimates pass; uncertainty crosses targets and brightness/JPEG robustness fails |
 | Demo | Hosted CPU app verified in an independent unsigned-in browser, including upload and all exports | Final selected models after study; separate physical-client check |
-| Publication | Public source, clean Linux CI, hosted demo and checksum-pinned `v0.1.0-alpha.1` model release published | Final measured study status and `v0.1.0` acceptance |
+| Publication | Completed controlled report, portable provenance, attributed galleries and verified local `v0.1.0` bundle | Publish selected assets and verify their actual hosted deployment |
+
+The [completed study](results/CONTROLLED_STUDY.md) records all candidates and seeds, including failed targets. The [model card](MODEL_CARD.md) separates the passing supervised surface task from the failing normal-only MVTec tasks. Source checks and hosted publication are engineering gates, not evidence of model quality.
 
 ## Ownership
 
@@ -33,3 +35,7 @@ Code and analysis can proceed in parallel. Heavy MPS jobs are serialized. Traini
 7. Publish real results, failure cases, model identity and a tested CPU demo. Keep an experimental label when quality gates remain unmet.
 
 Detailed methods are in [EXPERIMENTS.md](EXPERIMENTS.md), [DATA.md](DATA.md) and [SUPERVISED_PROTOCOL.md](SUPERVISED_PROTOCOL.md). The result report is evidence; a planned or running experiment is not reported as completed.
+
+## Further quality work
+
+The frozen study is complete and its evidence is preserved. A later cycle must state its hypothesis, controlled changes, bounded run budget and validation selection rule before training. Merely adding epochs or searching random seeds is not an improvement rationale. Any test set used to guide changes becomes development-inspected for that later cycle; it cannot substantiate a new independent success claim. New independent holdouts and robustness evidence remain necessary for broader claims.

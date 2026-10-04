@@ -1,0 +1,1 @@
+Images are derived from [MVTec AD](https://www.mvtec.com/research-teaching/datasets/mvtec-ad), MVTec Software GmbH, under [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/). Changes: model activation overlays, ground-truth overlays, panel composition and labels. These derivative images retain that license.

@@ -1,0 +1,137 @@
+{
+  "selection": "highest-scoring FP; lowest-scoring FN; evenly spaced successful-case score ranks",
+  "groups": {
+    "FP": 3,
+    "FN": 3,
+    "TP": 3,
+    "TN": 3
+  },
+  "items": [
+    {
+      "file": "FP_0057_kolektor_surface_good.png",
+      "group": "FP",
+      "category": "kolektor_surface",
+      "defect": "good",
+      "source": "test/20057.png",
+      "label": 0,
+      "score": 0.999971866607666,
+      "predicted_defective": true
+    },
+    {
+      "file": "FP_0358_kolektor_surface_good.png",
+      "group": "FP",
+      "category": "kolektor_surface",
+      "defect": "good",
+      "source": "test/20358.png",
+      "label": 0,
+      "score": 0.9997196793556213,
+      "predicted_defective": true
+    },
+    {
+      "file": "FP_0277_kolektor_surface_good.png",
+      "group": "FP",
+      "category": "kolektor_surface",
+      "defect": "good",
+      "source": "test/20277.png",
+      "label": 0,
+      "score": 0.4732888638973236,
+      "predicted_defective": true
+    },
+    {
+      "file": "FN_0159_kolektor_surface_defective.png",
+      "group": "FN",
+      "category": "kolektor_surface",
+      "defect": "defective",
+      "source": "test/20159.png",
+      "label": 1,
+      "score": 4.744897807995585e-08,
+      "predicted_defective": false
+    },
+    {
+      "file": "FN_0236_kolektor_surface_defective.png",
+      "group": "FN",
+      "category": "kolektor_surface",
+      "defect": "defective",
+      "source": "test/20236.png",
+      "label": 1,
+      "score": 6.374891370342084e-08,
+      "predicted_defective": false
+    },
+    {
+      "file": "FN_0801_kolektor_surface_defective.png",
+      "group": "FN",
+      "category": "kolektor_surface",
+      "defect": "defective",
+      "source": "test/20801.png",
+      "label": 1,
+      "score": 1.1375178843309186e-07,
+      "predicted_defective": false
+    },
+    {
+      "file": "TP_0816_kolektor_surface_defective.png",
+      "group": "TP",
+      "category": "kolektor_surface",
+      "defect": "defective",
+      "source": "test/20816.png",
+      "label": 1,
+      "score": 2.8645612815125787e-07,
+      "predicted_defective": true
+    },
+    {
+      "file": "TP_0125_kolektor_surface_defective.png",
+      "group": "TP",
+      "category": "kolektor_surface",
+      "defect": "defective",
+      "source": "test/20125.png",
+      "label": 1,
+      "score": 0.999787449836731,
+      "predicted_defective": true
+    },
+    {
+      "file": "TP_0434_kolektor_surface_defective.png",
+      "group": "TP",
+      "category": "kolektor_surface",
+      "defect": "defective",
+      "source": "test/20434.png",
+      "label": 1,
+      "score": 0.9999974966049194,
+      "predicted_defective": true
+    },
+    {
+      "file": "TN_0289_kolektor_surface_good.png",
+      "group": "TN",
+      "category": "kolektor_surface",
+      "defect": "good",
+      "source": "test/20289.png",
+      "label": 0,
+      "score": 2.3215353195382704e-08,
+      "predicted_defective": false
+    },
+    {
+      "file": "TN_0890_kolektor_surface_good.png",
+      "group": "TN",
+      "category": "kolektor_surface",
+      "defect": "good",
+      "source": "test/20890.png",
+      "label": 0,
+      "score": 7.522784528646298e-08,
+      "predicted_defective": false
+    },
+    {
+      "file": "TN_0361_kolektor_surface_good.png",
+      "group": "TN",
+      "category": "kolektor_surface",
+      "defect": "good",
+      "source": "test/20361.png",
+      "label": 0,
+      "score": 2.2741663485703612e-07,
+      "predicted_defective": false
+    }
+  ],
+  "threshold": 2.276815479262951e-07,
+  "display_max": 4.553630958525902e-07,
+  "display_rule": "fixed per-checkpoint range, never per-image min/max; saturation is not a pixel decision",
+  "dataset": "KolektorSDD2",
+  "source_url": "https://www.vicos.si/resources/kolektorsdd2/",
+  "license": "KolektorSDD2 derivatives: CC BY-NC-SA 4.0"
+}

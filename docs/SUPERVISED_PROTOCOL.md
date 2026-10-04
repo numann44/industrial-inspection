@@ -46,3 +46,7 @@ After training, `checkpoint.pt` holds the selected weights and calibrated operat
 Freeze all candidate checkpoints and thresholds before observing official test predictions. Restore maps from letterbox geometry and evaluate original masks. Report AUROC, image/pixel AP, recall, false-alarm counts/rates, precision, confusion counts, per-seed variability and timing scope. The official test's defective prevalence is approximately 11%; accuracy alone can obscure missed defects.
 
 After the first test inspection, later tuning on those observations is exploratory and must be labeled accordingly. Results do not establish transfer to unseen product types, previously unseen defect families, new cameras or production batches.
+
+## Completed study result
+
+The declared three-seed study completed. Seed 44, epoch 60, was selected by validation before test evaluation. It detects 105/110 defects (95.45%) with 89/894 normal false alarms (9.955%) and native pixel AP 0.815463. These point estimates meet the declared target, but confidence intervals cross both target boundaries and brightness/JPEG perturbations expose excess false alarms. The [controlled report](results/CONTROLLED_STUDY.md) preserves every seed; the [model card](MODEL_CARD.md) gives the selected model’s uncertainty, scope and limitations. This outcome does not alter the protocol above or establish success on the separate MVTec categories.
