@@ -25,7 +25,7 @@ The release-tag and main-branch Linux workflows passed:
 - [Release-tag workflow, successful attempt 2](https://github.com/numann44/industrial-inspection/actions/runs/37167492944/attempts/2).
 - [Main-branch workflow](https://github.com/numann44/industrial-inspection/actions/runs/37167626497).
 
-The first release-tag attempt ran before its model assets were available; the successful retry verifies the published assets. The current local test suite passes **137 tests**, including the separate v3 screen checks. That count is not attributed retroactively to the earlier release-tag workflow.
+The first release-tag attempt ran before its model assets were available; the successful retry verifies the published assets. The preview follow-up passed **139 local tests** and [its Linux workflow](https://github.com/numann44/industrial-inspection/actions/runs/37173629613). That count is not attributed retroactively to the earlier release-tag workflow.
 
 ## Community Cloud configuration
 
@@ -45,6 +45,12 @@ The root `requirements.txt` installs CPU PyTorch on Linux. Follow the [official 
 A first request downloads the selected weight, validates its SHA-256 and stores it in `.cache/inspection`; later requests reuse the cached engine. Invalid checksums stop loading. The application does not accept uploaded checkpoint files.
 
 The original v0.1.0 checkpoint-relative color range can saturate for the surface model's extremely low image threshold. The follow-up app renderer uses a fixed 0–1 sigmoid activation range for supervised surface previews, preserving both the original checkpoint range and the explicit preview range in exported JSON. It changes no weights, image scores, thresholds or float32 maps; the historical CLI/engine rendering remains reproducible. Normal-only previews retain their checkpoint scale. **Exported float32 maps are authoritative for underlying activation values**; display images are previews. Scores and color intensities are not defect probabilities, and model activations are not certified defect boundaries.
+
+The [hosted preview check](results/PREVIEW_VERIFICATION.json) downloaded all four exports again after this change. The score, threshold, decision and raw maps match the prior hosted result exactly; the new overlay and heatmap match the local preview exactly on this tested example.
+
+![Actual hosted surface example and fixed-range activation overlay](images/live-surface-overlay.png)
+
+Actual hosted screenshot captured October 4, 2026, showing KolektorSDD2 `test/20042.png`. It is a demonstration example, not an independent evaluation; see [image attribution](images/ATTRIBUTION.md).
 
 Users explicitly choose the matching task; the application does not identify arbitrary parts. PNG, JPEG and WebP uploads are limited to 10 MiB and 20 million decoded pixels. Uploaded images are decoded and processed in memory and are never saved by the application. The application does not log image bytes or filenames; hosting-provider access logging is outside its control.
 

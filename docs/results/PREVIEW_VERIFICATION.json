@@ -1,0 +1,42 @@
+{
+  "verified_at_utc": "2026-10-04T03:20:53.099630+00:00",
+  "url": "https://numan-industrial-inspection.streamlit.app/",
+  "deployment_commit": "18a0244",
+  "category": "kolektor_surface",
+  "source": "assets/examples/kolektor_surface_01_defective.png",
+  "source_dataset_image": "test/20042.png",
+  "checkpoint_sha256": "0c2222771ac7b9719eede442f20f120d81790eba1e20b435b706ebc142f0eed8",
+  "rendering_policy": "supervised-full-activation-range-v1",
+  "new_display_scale": {
+    "minimum": 0.0,
+    "maximum": 1.0,
+    "definition": "fixed 0\u20131 sigmoid activation display; not a pixel decision or defect probability"
+  },
+  "original_checkpoint_display_scale": {
+    "minimum": 0.0,
+    "maximum": 4.553630958525902e-07,
+    "definition": "fixed checkpoint display range; saturation is not a pixel decision"
+  },
+  "score": 0.9999679327011108,
+  "threshold": 2.276815479262951e-07,
+  "decision": "defective",
+  "raw_maps_max_abs_difference_from_prechange_hosted": {
+    "model": 0.0,
+    "original": 0.0
+  },
+  "rendered_images_max_abs_uint8_difference_from_local": {
+    "overlay": 0,
+    "heatmap": 0
+  },
+  "downloads_verified": [
+    "inspection.json",
+    "overlay.png",
+    "anomaly-map.npz",
+    "heatmap.png"
+  ],
+  "weights_scores_thresholds_decisions_unchanged": true,
+  "scope": "Real Chrome-hosted example and four downloaded exports. This follow-up checks rendering only; original hosted upload/error checks remain in DEPLOYMENT_VERIFICATION.json.",
+  "linux_ci": "https://github.com/numann44/industrial-inspection/actions/runs/37173629613",
+  "linux_ci_conclusion": "success",
+  "local_test_count": 139
+}
