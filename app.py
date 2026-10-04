@@ -9,6 +9,7 @@ import torch
 
 from inspection.artifacts import load_registry, resolve_checkpoint
 from inspection.engine import InspectionEngine
+from demo_visuals import display_result
 
 ROOT = Path(__file__).resolve().parent
 st.set_page_config(page_title="Industrial Inspection", page_icon="◈", layout="wide", initial_sidebar_state="expanded")
@@ -113,7 +114,7 @@ def main():
             try:
                 engine = get_engine(json.dumps(entry, sort_keys=True))
                 with st.spinner("Inspecting image…"):
-                    result = engine.inspect(image, entry["category"])
+                    result = display_result(engine.inspect(image, entry["category"]))
             except (ValueError, OSError, RuntimeError) as exc:
                 st.error(str(exc))
             else:
@@ -131,6 +132,8 @@ def main():
                 threshold.metric("Frozen decision threshold", f'{summary["threshold"]:.6g}')
                 duration.metric("Model inference · CPU", f'{summary["inference_ms"]:.0f} ms')
                 st.caption("The score is not a defect probability. Red regions show model activations, not confirmed defect boundaries. Color scale is fixed for this checkpoint.")
+                if summary.get("rendering_policy"):
+                    st.caption("Overlay scale: fixed 0–1 activation range. The image decision uses the separate frozen threshold above; color intensity is not a probability.")
                 if example:
                     actual = "Defective" if example["defective"] else "Normal"
                     matches = example["defective"] == summary["predicted_defective"]

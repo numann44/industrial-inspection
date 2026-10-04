@@ -12,7 +12,7 @@ The project target is a category-specific defect detector trained from random in
 | Supervised fallback | Three KSDD2 runs complete; validation-selected seed 44 detects 105/110 defects with 89/894 false alarms | Point estimates pass; uncertainty crosses targets and brightness/JPEG robustness fails |
 | Demo | All four v0.1.0 models observed; surface upload and four exports verified; malformed and oversized uploads rejected correctly | Separate physical-client check remains unperformed |
 | Publication | Public v0.1.0 release at e76ff78; four remote weights match local checksums; main/tag Linux checks pass | Retain honest measured limits while quality work continues |
-| Follow-up study v3 | Source/protocol frozen at b158f56; fresh control/A/B screen active, sequential and local | Apply validation-only gate; at most six conditional continuation runs require an executor and review |
+| Follow-up study v3 | Three 100-epoch runs complete; both candidates fail the validation gate; no model promoted and no conditional runs started | Diagnose validation failures before declaring any further bounded training |
 
 The [completed study](results/CONTROLLED_STUDY.md) records all candidates and seeds, including failed targets. The [model card](MODEL_CARD.md) separates the passing supervised surface task from the failing normal-only MVTec tasks. Source checks and hosted publication are engineering gates, not evidence of model quality.
 
@@ -37,10 +37,12 @@ Code and analysis can proceed in parallel. Heavy MPS jobs are serialized. Traini
 
 Detailed methods are in [EXPERIMENTS.md](EXPERIMENTS.md), [DATA.md](DATA.md) and [SUPERVISED_PROTOCOL.md](SUPERVISED_PROTOCOL.md). The result report is evidence; a planned or running experiment is not reported as completed.
 
-## Active bounded quality work
+## Completed bounded screen and next diagnosis
 
-The frozen v2 study and [v0.1.0 release](https://github.com/numann44/industrial-inspection/releases/tag/v0.1.0) are complete and preserved. This is not a claim that every category meets its quality target. The [v3 declaration](../experiments/study_v3/README.md) tests subtler donor-based synthesis (A) and additional silhouette-crossing deformation (B) against a freshly trained unchanged control, with identical budgets and a shared immutable validation bank. Source and protocol were frozen at `b158f56` before execution.
+The frozen v2 study and [v0.1.0 release](https://github.com/numann44/industrial-inspection/releases/tag/v0.1.0) are complete and preserved. This does not mean every category meets its quality target. The [v3 screen](results/STUDY_V3_SCREEN.md) has also completed: fresh control/A/B each trained for 100 epochs, with source/protocol frozen at `b158f56`, identical budgets and one immutable synthetic validation bank.
 
-The three screening runs are active and serialized on local MPS. Continue only when a candidate improves family-macro validation H by ≥0.01, with ≤0.02 regression on the old-family mean. A failed gate stops the cycle. A passed gate permits only the six listed continuation jobs, capping this cycle at nine new runs; their executor is not implemented yet and requires review. The published registry stays on v0.1.0 during screening.
+Family-macro H was 0.8971445541893278 for control, 0.7626782874899303 for A and 0.7425017629318905 for B. Neither candidate achieved the required ≥0.01 gain and ≤0.02 old-family regression. The cycle stopped at its gate: **three new runs completed, zero of the six conditional continuation runs started, no candidate selected**. The published registry remains on v0.1.0. [Portable evidence](results/study-v3-screen.json) retains all outcomes and provenance; the screen read no real test images.
 
-The original metal-nut, screw and transistor tests are development-inspected/exploratory for v3. Repartitioning these images cannot restore independence. Cable is a prospective separate-category comparison requiring a prior-test-exposure audit and frozen models/thresholds before its test is read. No new independent same-category holdout is available. Broader success claims need genuinely untouched holdouts and robustness evidence, not more epochs or random-seed searches.
+The next step is diagnosis of the validation failure groups and calibration evidence. No new training is declared or represented as running in this checklist. Any further cycle needs an explicit hypothesis, controlled change, bounded budget and validation-only selection rule; the failed gate is not bypassed by extra seeds or epochs.
+
+The original metal-nut, screw and transistor tests remain development-inspected/exploratory for v3. Repartitioning these images cannot restore independence. Cable remained prospective, with no continuation run or test evaluation; a future comparison would require a prior-test-exposure audit and frozen models/thresholds before its test is read. No new independent same-category holdout is available. Broader success claims require genuinely untouched holdouts and robustness evidence.

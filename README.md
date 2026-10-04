@@ -120,7 +120,7 @@ python -m inspection.predict --checkpoint runs/my-ksdd2-seed44/checkpoint.pt \
   --image /path/to/surface.png --output outputs/my-inspection --device cpu
 ```
 
-Exports include JSON, an original-size overlay, a display heatmap and a compressed **float32** map. The color scale is fixed per checkpoint and can saturate for the surface model’s very low display range; exported float32 maps retain the underlying values. The score is not a defect probability, and highlighted pixels are not certified boundaries. Users select the matching task; the app does not automatically recognize arbitrary parts. Uploaded images are processed in memory by the application.
+Exports include JSON, an original-size overlay, a display heatmap and a compressed **float32** map. The supervised surface preview uses a fixed **0–1 activation scale** so that its very small image decision threshold does not saturate the entire display. JSON records both this preview scale and the original checkpoint scale. Scores, thresholds and raw maps are unchanged; neither color intensity nor the score is a defect probability. Normal-only previews retain their checkpoint scale. Users select the matching task; the app does not automatically recognize arbitrary parts. Uploaded images are processed in memory by the application.
 
 ## Earlier experiments and pretrained reference
 
@@ -147,13 +147,13 @@ python -m inspection.patchcore_baseline --manifest data/manifest.json \
 | `app.py`, `artifacts`, `assets` | CPU demo, model registry and attributed examples |
 | `data`, `runs`, `outputs` | Local datasets, weights and generated artifacts; excluded from Git |
 
-## Bounded follow-up: study v3
+## Completed follow-up: study v3
 
-A new [three-run synthesis screen](experiments/study_v3/README.md) is active, with its source and protocol frozen at `b158f56`. A freshly trained unchanged control is compared with subtler normal-donor defects (A), then the same change plus boundary-crossing deformation (B). The runs execute sequentially with equal training budgets and one immutable validation bank. They do not read real test pixels.
+The [three-run synthesis screen](docs/results/STUDY_V3_SCREEN.md) completed with a **negative result**. A fresh unchanged control, subtler normal-donor synthesis (A), and the same change plus boundary-crossing deformation (B) each ran for 100 epochs under one frozen validation bank and equal training budgets. Family-macro validation H was **0.897145 for control, 0.762678 for A and 0.742502 for B**.
 
-A candidate must improve family-macro validation H by at least 0.01 while losing no more than 0.02 on the old-family mean. If neither passes, the cycle stops. If one passes, at most six declared continuation runs are permitted, for **nine new runs total**; the continuation executor still requires implementation and review. No v3 model replaces the published v0.1.0 models at this stage.
+Neither candidate met the predeclared +0.01 improvement and ≤0.02 old-family-regression gate. **No candidate was promoted and none of the six conditional continuation runs started.** The v0.1.0 demo remains unchanged. All source, bank, split and checkpoint identities are preserved in [portable screen evidence](docs/results/study-v3-screen.json), including per-family failures and full-precision scores. The screen read zero real test images.
 
-The metal-nut, screw and transistor test sets are **development-inspected / exploratory for v3**, because their v2 failures informed this follow-up. Cable is only a prospective separate-category comparison and requires an audit of prior test exposure before independent evaluation. No new independent same-category holdout is currently available. The [delivery checklist](docs/PLAN.md) keeps these quality limits separate from completed release engineering; all v2 evidence remains intact.
+The next step is diagnosis of these validation failures; no additional training is declared or reported running here. The metal-nut, screw and transistor tests are **development-inspected / exploratory for v3**, because their v2 failures informed this follow-up. Cable remained a prospective comparison, with no continuation run or test evaluation. No new independent same-category holdout is currently available. The [delivery checklist](docs/PLAN.md) separates completed release engineering from unresolved quality goals; all v2 evidence remains intact.
 
 ## Sources and licenses
 

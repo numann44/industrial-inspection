@@ -1,0 +1,1267 @@
+{
+  "active_demo_release": "v0.1.0 unchanged",
+  "completed_new_runs": 3,
+  "conditional_continuation_runs_started": 0,
+  "continuation": {
+    "continuation_jobs": [],
+    "evidence_status": {
+      "cable": "prospective method/category comparison only; separate category weights",
+      "metal_nut": "development-inspected/exploratory",
+      "screw": "development-inspected/exploratory",
+      "transistor": "development-inspected/exploratory"
+    },
+    "executor_implemented": false,
+    "maximum_new_runs_including_screen": 9,
+    "protocol": "study-v3-screen-1",
+    "required_before_execution": [
+      "Implement and review the continuation executor",
+      "Keep existing audited category splits; no repartitioning",
+      "Freeze both cable weights, seed choices and q90 thresholds before its first test read",
+      "Verify cable test images/predictions were not previously inspected for method decisions"
+    ],
+    "same_category_independent_holdout": "No new same-category holdout is currently available.",
+    "screen_result_digest": "78b6a1bb940d816275f9557417b2c5be068064e1db5b93b8a16d1bf0cc1d0a91",
+    "screen_runs": 3,
+    "state": "stopped"
+  },
+  "declaration": {
+    "bank_family_counts": {
+      "clean": 33,
+      "foreground/appearance": 33,
+      "foreground/lighting": 33,
+      "foreground/scratch": 33,
+      "foreground/texture": 33,
+      "foreground/warp": 33,
+      "legacy/appearance": 33,
+      "legacy/scratch": 33,
+      "legacy/texture": 33,
+      "v3/boundary_warp": 33,
+      "v3/subtle_patch": 33,
+      "withheld/hard_translation": 33
+    },
+    "candidate_ties": "A before B",
+    "checkpoint_ties": "keep earliest eligible epoch",
+    "continuation": "At most six additional preregistered jobs; executor not yet implemented. See continuation.json after gate.",
+    "controlled_comparison": "Fresh control, A and B have identical training/selection budgets and the same v3 bank.",
+    "declaration_digest": "19d20b3348a0b522235149f8faf7e7406abf45ec727330438a2422f284c3d723",
+    "evidence_status": "All three previously evaluated MVTec categories are development-inspected/exploratory in v3.",
+    "gate": {
+      "maximum_old_macro_h_regression": 0.02,
+      "minimum_macro_h_gain": 0.01
+    },
+    "historical_v2_control": {
+      "checkpoint": "runs/protocol-v2-joint-256-seed42/checkpoint.pt",
+      "role": "preserved historical reference only; not the screening comparator",
+      "sha256": "2747173f63eaf3f4d32c0b01cc05074e69f0b4ef2ecebae7961926c6eeb4a7b3"
+    },
+    "inputs": {
+      "bank": "outputs/study-v3/bank/bank.json",
+      "bank_digest": "372054ed54c9bba433dfa79ffc77824711c8d5cd5ea019d55a6f2e53927dc4bc",
+      "manifest": "data/manifest.json",
+      "manifest_file_sha256": "623dc97b049f12fc283a82709aa7d7d6fbaa5f678f11d40871233dcef3a081fe",
+      "split_digest": "2df9587b2f8d3f7f389a7ef2a1e9e13cf21ea6b6738a1d9023e7daf1d59de5ad",
+      "v2_results_sha256": "70d0c721824a7b78066044452c45a9ec739d16e08390630121ff59c84c9f5a1a"
+    },
+    "maximum_total_new_runs": 9,
+    "protocol": "study-v3-screen-1",
+    "runs": [
+      {
+        "config": {
+          "base_channels": 16,
+          "batch_size": 8,
+          "candidate": "control",
+          "category": "metal_nut",
+          "cpu_threads": 1,
+          "data_seed": 42,
+          "device": "mps",
+          "epochs": 100,
+          "image_size": 256,
+          "learning_rate": 0.0003,
+          "model_kind": "joint_reconstruction_segmentation",
+          "normal_probability": 0.25,
+          "protocol": "study-v3-screen-1",
+          "selection_every": 5,
+          "threshold_quantile": 0.9,
+          "training_seed": 42
+        },
+        "output": "outputs/study-v3/runs/metal_nut-control-seed42"
+      },
+      {
+        "config": {
+          "base_channels": 16,
+          "batch_size": 8,
+          "candidate": "A",
+          "category": "metal_nut",
+          "cpu_threads": 1,
+          "data_seed": 42,
+          "device": "mps",
+          "epochs": 100,
+          "image_size": 256,
+          "learning_rate": 0.0003,
+          "model_kind": "joint_reconstruction_segmentation",
+          "normal_probability": 0.25,
+          "protocol": "study-v3-screen-1",
+          "selection_every": 5,
+          "threshold_quantile": 0.9,
+          "training_seed": 42
+        },
+        "output": "outputs/study-v3/runs/metal_nut-A-seed42"
+      },
+      {
+        "config": {
+          "base_channels": 16,
+          "batch_size": 8,
+          "candidate": "B",
+          "category": "metal_nut",
+          "cpu_threads": 1,
+          "data_seed": 42,
+          "device": "mps",
+          "epochs": 100,
+          "image_size": 256,
+          "learning_rate": 0.0003,
+          "model_kind": "joint_reconstruction_segmentation",
+          "normal_probability": 0.25,
+          "protocol": "study-v3-screen-1",
+          "selection_every": 5,
+          "threshold_quantile": 0.9,
+          "training_seed": 42
+        },
+        "output": "outputs/study-v3/runs/metal_nut-B-seed42"
+      }
+    ],
+    "screen_candidates": [
+      "control",
+      "A",
+      "B"
+    ],
+    "selection_rule": "arithmetic mean of per-family H(image AUROC, pixel AP), each with the same clean validation controls",
+    "source_files": {
+      "experiments/study_v3/README.md": "dd39b0aa6763400055edd54353ace1a851e8507aea06edad9c87aeb2216096b2",
+      "experiments/study_v3/__init__.py": "e3a5180c6c6e3ef86bd70fadcb16724038b07bea2f53914a37f496e2acdb1b4c",
+      "experiments/study_v3/bank.py": "06056c0927a214d37e222b8e0f663b00fdcf7646118c3874b4118044274e911d",
+      "experiments/study_v3/protocol.py": "bd788b986e7b91cab3464ec3ccd4361b6b0d416427a33dce1785face42649e81",
+      "experiments/study_v3/runner.py": "c5df77fe7b79458b3610da88c9f4e03c2829c7bf08f42d8dea49716a06dd988c",
+      "experiments/study_v3/synthesis.py": "f3287f27be65ba5dd6ac7f295fb0b1ba860532ac5ebf13cac2d7bdc86bc30529",
+      "experiments/study_v3/trainer.py": "451cac077146fe7bd82440d293490bc8f69188e44d7eb2eace39fe7d88f5b70a",
+      "scripts/run_study.py": "728257bb10c157f8c5d0aebf0d4cf9076b543f720c3869b98bd6d51c191d17f6",
+      "src/inspection/__init__.py": "24786f339710e8cb059c4db923380bba0bdb1266740f05cd53120b6dcfbebef1",
+      "src/inspection/artifacts.py": "7257913e019930d2de9d39c58a5a2cbdfe190629451a455622ee6c439898793a",
+      "src/inspection/baseline.py": "2b3c4d9f80d963a831f7897f5ed2db0d62ecb559f74b762fa83b434fc2b8df48",
+      "src/inspection/checkpointing.py": "32fb507f67ecb3ccca18ec6f68f93e083d64d89ae999dd11e5bcc472b5ab2f8c",
+      "src/inspection/data.py": "a32a241782d5e108ae940118d594d4e588ecdd602f90b34247c743bc1a21b382",
+      "src/inspection/engine.py": "6603cd4adeb4798490cb569a812068929d5cb4b21bf232c56021296672a8029a",
+      "src/inspection/evaluate.py": "d70936541db0ccd2c9c14726a163e939ace8ac5a13566bc4c42f2e6b774ff594",
+      "src/inspection/ksdd2.py": "eb07b78c128c74e213b8dae596a4de18e25c88529ef38c3a58a36e24b67ef5aa",
+      "src/inspection/ksdd2_evaluate.py": "d22e9b6011f70263fb188d71d5ce4428f39d131f0c442f58befc8b137c08d4c7",
+      "src/inspection/losses.py": "1df225f277ea942a41a6ab61925c49d9694958088d4fe4f3fc3ce064a8d660dd",
+      "src/inspection/model.py": "b9c4f0755512518d52d290131d051f6395c336a16ed08aefe934ffcfbc5b4768",
+      "src/inspection/patchcore_baseline.py": "496a7002c4da7b6713bb793eaee422e1c83cf8ea1d7365f3c1d29e1975284472",
+      "src/inspection/predict.py": "4224c7d6567877756859e323688a57e7e5c10795597815d14749b12d03bcae83",
+      "src/inspection/preprocessing.py": "af0175422fa02fadbdb3b61a6c08929808b1bffeb3d0b20f4efdd975df284d69",
+      "src/inspection/reporting.py": "979f4357e651191689849bed8748cd063008705a10acc221d8821270a4093ba4",
+      "src/inspection/supervised.py": "a929d18d21a705ccbf5122340e56b3230d5f1cea3f13a4bfe4d6e1888aa302c8",
+      "src/inspection/synthesis.py": "f955a92beb6c613ea9d10c986fa0ec057ed1b80642802cdf96970137bd37bce3",
+      "src/inspection/train.py": "8d90324fce4908e95eadace0534157e607112d791072a4488a5097083e5480f0",
+      "src/inspection/validation_bank.py": "d758693bad36743c4c0290effc34ba0d255d8c77aefdf4e7b3572beca649398c"
+    },
+    "stage": "three-run-screen-only",
+    "test_access": "This runner never opens test images or masks and performs no test evaluation.",
+    "uncertainty": "Validation is synthetic; neither passing the gate nor a previous test result proves new real-defect success."
+  },
+  "limits": [
+    "One training seed and one synthetic bank; no real-defect success claim.",
+    "Original metal_nut/screw/transistor tests remain development-inspected/exploratory for this follow-up.",
+    "No new independent same-category holdout is available.",
+    "The validation gate failed; the conditional six jobs did not start and are not pending training."
+  ],
+  "next_step": "Diagnosis of validation failure groups; no additional training is declared or reported running by this report.",
+  "original_local_artifact_sha256": {
+    "outputs/study-v3/continuation.json": "65f77e436bffdbe054212746bf43ccefd2ae5d1087eecf969640c58823e1a33e",
+    "outputs/study-v3/declaration.json": "83da71f48825560dde0cb163e5c6e8ccbad81701e644356e8ae572a85e1c7cc1",
+    "outputs/study-v3/screen-result.json": "3bdb7fc431156e73b382b3b6e105e7598c96175f88ac5b3fe40712740a5b1df2",
+    "outputs/study-v3/status.json": "3081dc4c6825645bb246bb62a27bf546969c9329789e0fd8ac67a2cab7db171a"
+  },
+  "outcome": "negative_validation_screen_no_candidate_promoted",
+  "portability_note": "Absolute repository-root prefixes are replaced with repository-relative paths. Original artifact hashes and declaration/screen digests identify the unmodified local records; they are not digests of these path-normalized copies. The portable_evidence_digest hashes this JSON payload without its own field using canonical sorted compact JSON.",
+  "portable_evidence_digest": "2d9d7cf32e1804da01e2bd4ddf7ea7e9072a2191b9c67eb2fa2ad7a02e7d8827",
+  "real_test_images_read": 0,
+  "run_summaries": [
+    {
+      "candidate": "control",
+      "checkpoint_sha256": "f6affb94c2c1b67be0360b37d9e3a46f18ec2c8bad87ee2f452d421b5e9f0038",
+      "run_path": "outputs/study-v3/runs/metal_nut-control-seed42",
+      "summary": {
+        "bank_digest": "372054ed54c9bba433dfa79ffc77824711c8d5cd5ea019d55a6f2e53927dc4bc",
+        "best_epoch": 100,
+        "best_metric": 0.8971445541893278,
+        "best_validation": {
+          "bank_digest": "372054ed54c9bba433dfa79ffc77824711c8d5cd5ea019d55a6f2e53927dc4bc",
+          "families": {
+            "foreground/appearance": {
+              "clean_controls": 33,
+              "defective_images": 33,
+              "harmonic_mean": 0.9918819869105119,
+              "image_auroc": 1.0,
+              "pixel_ap": 0.9838947167214886
+            },
+            "foreground/lighting": {
+              "clean_controls": 33,
+              "defective_images": 33,
+              "harmonic_mean": 0.7972803736981664,
+              "image_auroc": 0.9155188246097337,
+              "pixel_ap": 0.7060895317466757
+            },
+            "foreground/scratch": {
+              "clean_controls": 33,
+              "defective_images": 33,
+              "harmonic_mean": 0.9729297812202132,
+              "image_auroc": 1.0,
+              "pixel_ap": 0.9472865276690668
+            },
+            "foreground/texture": {
+              "clean_controls": 33,
+              "defective_images": 33,
+              "harmonic_mean": 0.992815693261283,
+              "image_auroc": 1.0,
+              "pixel_ap": 0.9857338787138574
+            },
+            "foreground/warp": {
+              "clean_controls": 33,
+              "defective_images": 33,
+              "harmonic_mean": 0.9940797350434275,
+              "image_auroc": 1.0,
+              "pixel_ap": 0.9882291565985539
+            },
+            "legacy/appearance": {
+              "clean_controls": 33,
+              "defective_images": 33,
+              "harmonic_mean": 0.9174291417513365,
+              "image_auroc": 1.0,
+              "pixel_ap": 0.8474541271464796
+            },
+            "legacy/scratch": {
+              "clean_controls": 33,
+              "defective_images": 33,
+              "harmonic_mean": 0.9918746262478516,
+              "image_auroc": 1.0,
+              "pixel_ap": 0.983880231638439
+            },
+            "legacy/texture": {
+              "clean_controls": 33,
+              "defective_images": 33,
+              "harmonic_mean": 0.8536305145222953,
+              "image_auroc": 0.997245179063361,
+              "pixel_ap": 0.7461730904816575
+            },
+            "v3/boundary_warp": {
+              "clean_controls": 33,
+              "defective_images": 33,
+              "harmonic_mean": 0.7782443933348916,
+              "image_auroc": 0.9954086317722681,
+              "pixel_ap": 0.6388656762706464
+            },
+            "v3/subtle_patch": {
+              "clean_controls": 33,
+              "defective_images": 33,
+              "harmonic_mean": 0.6860923679264237,
+              "image_auroc": 0.9109274563820018,
+              "pixel_ap": 0.5502738036212467
+            },
+            "withheld/hard_translation": {
+              "clean_controls": 33,
+              "defective_images": 33,
+              "harmonic_mean": 0.892331482166207,
+              "image_auroc": 0.9926538108356291,
+              "pixel_ap": 0.8104259684040402
+            }
+          },
+          "macro_h": 0.8971445541893278,
+          "new_macro_h": 0.7855560811425074,
+          "old_macro_h": 0.9389902315818857,
+          "real_test_images_read": 0,
+          "selection_rule": "arithmetic mean of per-family H(image AUROC, pixel AP), each with the same clean validation controls",
+          "split_digest": "2df9587b2f8d3f7f389a7ef2a1e9e13cf21ea6b6738a1d9023e7daf1d59de5ad"
+        },
+        "calibration": {
+          "count": 33,
+          "decision_rule": ">=",
+          "quantile": 0.9,
+          "quantile_method": "linear",
+          "scores": [
+            2.1588344679912552e-05,
+            3.137089152005501e-05,
+            2.3736378352623433e-05,
+            3.6995810660300776e-05,
+            2.3471382519346662e-05,
+            2.2300622731563635e-05,
+            2.2412248654291034e-05,
+            2.3308608433580957e-05,
+            4.571547106024809e-05,
+            2.0226725609973073e-05,
+            2.8956977985217236e-05,
+            2.230421159765683e-05,
+            3.758779712370597e-05,
+            0.007360849529504776,
+            3.16787809424568e-05,
+            2.4391159968217835e-05,
+            4.267666372470558e-05,
+            2.9002590963500552e-05,
+            2.4567094442318194e-05,
+            2.3226297344081104e-05,
+            2.742093965935055e-05,
+            2.5068635295610875e-05,
+            0.00043691802420653403,
+            2.8629023290704936e-05,
+            2.3469398001907393e-05,
+            2.995077011291869e-05,
+            2.2376869310392067e-05,
+            2.2243506464292295e-05,
+            2.2389856894733384e-05,
+            2.3708580556558445e-05,
+            2.2577800336875953e-05,
+            2.3464406694984064e-05,
+            0.0007572302711196244
+          ],
+          "split": "calibration",
+          "threshold": 4.510770959313959e-05,
+          "warning": "Normal calibration quantile is not a future false-alarm guarantee."
+        },
+        "checkpoint_kind": "inference",
+        "completed_epochs": 100,
+        "config": {
+          "base_channels": 16,
+          "batch_size": 8,
+          "candidate": "control",
+          "category": "metal_nut",
+          "cpu_threads": 1,
+          "data_seed": 42,
+          "device": "mps",
+          "epochs": 100,
+          "image_size": 256,
+          "learning_rate": 0.0003,
+          "model_kind": "joint_reconstruction_segmentation",
+          "normal_probability": 0.25,
+          "protocol": "study-v3-screen-1",
+          "selection_every": 5,
+          "threshold_quantile": 0.9,
+          "training_seed": 42
+        },
+        "config_digest": "1ad476446abbda598ad2336b756252a93761be5e049b1b5ac90450cf09f8b7ab",
+        "declaration_digest": "19d20b3348a0b522235149f8faf7e7406abf45ec727330438a2422f284c3d723",
+        "device": "mps",
+        "elapsed_seconds": 1035.923016749999,
+        "image_size": 256,
+        "manifest_digest": "3613fcb5e685f106cef900b788ccd7ccdab23fa942bb4dc34c383aa9821275d0",
+        "model_config": {
+          "base_channels": 16
+        },
+        "model_kind": "joint_reconstruction_segmentation",
+        "model_selection": "arithmetic mean of per-family H(image AUROC, pixel AP), each with the same clean validation controls",
+        "preprocess": {
+          "height": 256,
+          "mode": "square",
+          "width": 256
+        },
+        "provenance": {
+          "bank_digest": "372054ed54c9bba433dfa79ffc77824711c8d5cd5ea019d55a6f2e53927dc4bc",
+          "config_digest": "1ad476446abbda598ad2336b756252a93761be5e049b1b5ac90450cf09f8b7ab",
+          "cpu_threads": 1,
+          "created_at_utc": "2026-10-04T01:29:00.857531+00:00",
+          "data_seed": 42,
+          "dataset_provenance": {
+            "archive_sha256": "cf4313b13603bec67abb49ca959488f7eedce2a9f7795ec54446c649ac98cd3d",
+            "dataset": "MVTec AD"
+          },
+          "deterministic_algorithms": false,
+          "git_dirty": false,
+          "git_revision": "b158f56233af492efd33a9ab6e0371aff1e5f292",
+          "packages": {
+            "Pillow": "12.3.0",
+            "numpy": "2.5.3",
+            "scikit-learn": "1.9.1",
+            "scipy": "1.18.1",
+            "torch": "2.14.1"
+          },
+          "platform": "macOS-27.0.1-arm64-arm-64bit",
+          "python": "3.12.14 (main, Aug 25 2026, 13:50:33) [Clang 22.1.3 ]",
+          "reproducibility_note": "Exact CPU resume is tested in one fixed environment; accelerator kernels may be nondeterministic.",
+          "source_files": {
+            "baseline.py": "2b3c4d9f80d963a831f7897f5ed2db0d62ecb559f74b762fa83b434fc2b8df48",
+            "checkpointing.py": "32fb507f67ecb3ccca18ec6f68f93e083d64d89ae999dd11e5bcc472b5ab2f8c",
+            "data.py": "a32a241782d5e108ae940118d594d4e588ecdd602f90b34247c743bc1a21b382",
+            "losses.py": "1df225f277ea942a41a6ab61925c49d9694958088d4fe4f3fc3ce064a8d660dd",
+            "model.py": "b9c4f0755512518d52d290131d051f6395c336a16ed08aefe934ffcfbc5b4768",
+            "preprocessing.py": "af0175422fa02fadbdb3b61a6c08929808b1bffeb3d0b20f4efdd975df284d69",
+            "synthesis.py": "f955a92beb6c613ea9d10c986fa0ec057ed1b80642802cdf96970137bd37bce3",
+            "train.py": "8d90324fce4908e95eadace0534157e607112d791072a4488a5097083e5480f0",
+            "validation_bank.py": "d758693bad36743c4c0290effc34ba0d255d8c77aefdf4e7b3572beca649398c"
+          },
+          "split_digest": "2df9587b2f8d3f7f389a7ef2a1e9e13cf21ea6b6738a1d9023e7daf1d59de5ad",
+          "training_seed": 42,
+          "v3_source_files": {
+            "experiments/study_v3/README.md": "dd39b0aa6763400055edd54353ace1a851e8507aea06edad9c87aeb2216096b2",
+            "experiments/study_v3/__init__.py": "e3a5180c6c6e3ef86bd70fadcb16724038b07bea2f53914a37f496e2acdb1b4c",
+            "experiments/study_v3/bank.py": "06056c0927a214d37e222b8e0f663b00fdcf7646118c3874b4118044274e911d",
+            "experiments/study_v3/protocol.py": "bd788b986e7b91cab3464ec3ccd4361b6b0d416427a33dce1785face42649e81",
+            "experiments/study_v3/runner.py": "c5df77fe7b79458b3610da88c9f4e03c2829c7bf08f42d8dea49716a06dd988c",
+            "experiments/study_v3/synthesis.py": "f3287f27be65ba5dd6ac7f295fb0b1ba860532ac5ebf13cac2d7bdc86bc30529",
+            "experiments/study_v3/trainer.py": "451cac077146fe7bd82440d293490bc8f69188e44d7eb2eace39fe7d88f5b70a",
+            "scripts/run_study.py": "728257bb10c157f8c5d0aebf0d4cf9076b543f720c3869b98bd6d51c191d17f6",
+            "src/inspection/__init__.py": "24786f339710e8cb059c4db923380bba0bdb1266740f05cd53120b6dcfbebef1",
+            "src/inspection/artifacts.py": "7257913e019930d2de9d39c58a5a2cbdfe190629451a455622ee6c439898793a",
+            "src/inspection/baseline.py": "2b3c4d9f80d963a831f7897f5ed2db0d62ecb559f74b762fa83b434fc2b8df48",
+            "src/inspection/checkpointing.py": "32fb507f67ecb3ccca18ec6f68f93e083d64d89ae999dd11e5bcc472b5ab2f8c",
+            "src/inspection/data.py": "a32a241782d5e108ae940118d594d4e588ecdd602f90b34247c743bc1a21b382",
+            "src/inspection/engine.py": "6603cd4adeb4798490cb569a812068929d5cb4b21bf232c56021296672a8029a",
+            "src/inspection/evaluate.py": "d70936541db0ccd2c9c14726a163e939ace8ac5a13566bc4c42f2e6b774ff594",
+            "src/inspection/ksdd2.py": "eb07b78c128c74e213b8dae596a4de18e25c88529ef38c3a58a36e24b67ef5aa",
+            "src/inspection/ksdd2_evaluate.py": "d22e9b6011f70263fb188d71d5ce4428f39d131f0c442f58befc8b137c08d4c7",
+            "src/inspection/losses.py": "1df225f277ea942a41a6ab61925c49d9694958088d4fe4f3fc3ce064a8d660dd",
+            "src/inspection/model.py": "b9c4f0755512518d52d290131d051f6395c336a16ed08aefe934ffcfbc5b4768",
+            "src/inspection/patchcore_baseline.py": "496a7002c4da7b6713bb793eaee422e1c83cf8ea1d7365f3c1d29e1975284472",
+            "src/inspection/predict.py": "4224c7d6567877756859e323688a57e7e5c10795597815d14749b12d03bcae83",
+            "src/inspection/preprocessing.py": "af0175422fa02fadbdb3b61a6c08929808b1bffeb3d0b20f4efdd975df284d69",
+            "src/inspection/reporting.py": "979f4357e651191689849bed8748cd063008705a10acc221d8821270a4093ba4",
+            "src/inspection/supervised.py": "a929d18d21a705ccbf5122340e56b3230d5f1cea3f13a4bfe4d6e1888aa302c8",
+            "src/inspection/synthesis.py": "f955a92beb6c613ea9d10c986fa0ec057ed1b80642802cdf96970137bd37bce3",
+            "src/inspection/train.py": "8d90324fce4908e95eadace0534157e607112d791072a4488a5097083e5480f0",
+            "src/inspection/validation_bank.py": "d758693bad36743c4c0290effc34ba0d255d8c77aefdf4e7b3572beca649398c"
+          }
+        },
+        "resumable": false,
+        "schema_version": 2,
+        "score_definition": "mean of highest 1% sigmoid anomaly-map pixels; not a calibrated probability",
+        "split_digest": "2df9587b2f8d3f7f389a7ef2a1e9e13cf21ea6b6738a1d9023e7daf1d59de5ad",
+        "test_status": "development-inspected/exploratory; never used for selection",
+        "threshold": 4.510770959313959e-05,
+        "threshold_source": "separate normal calibration split",
+        "torch_version": "2.14.1",
+        "training_kind": "random_initialization_normal_only_v3_synthetic_defects"
+      },
+      "summary_file_sha256": "7f79be707304e914fd30024a546c2eb92ce958890ef55071c843f0106feed3dd"
+    },
+    {
+      "candidate": "A",
+      "checkpoint_sha256": "3a6ee3752a1e74cc0aca5eed09e0f78f30d3ff64d07eb19ae2e327fb66c24f0e",
+      "run_path": "outputs/study-v3/runs/metal_nut-A-seed42",
+      "summary": {
+        "bank_digest": "372054ed54c9bba433dfa79ffc77824711c8d5cd5ea019d55a6f2e53927dc4bc",
+        "best_epoch": 100,
+        "best_metric": 0.7626782874899303,
+        "best_validation": {
+          "bank_digest": "372054ed54c9bba433dfa79ffc77824711c8d5cd5ea019d55a6f2e53927dc4bc",
+          "families": {
+            "foreground/appearance": {
+              "clean_controls": 33,
+              "defective_images": 33,
+              "harmonic_mean": 0.9435694063852453,
+              "image_auroc": 0.9797979797979798,
+              "pixel_ap": 0.9099244456298264
+            },
+            "foreground/lighting": {
+              "clean_controls": 33,
+              "defective_images": 33,
+              "harmonic_mean": 0.7167570810686194,
+              "image_auroc": 0.859504132231405,
+              "pixel_ap": 0.6146719337345002
+            },
+            "foreground/scratch": {
+              "clean_controls": 33,
+              "defective_images": 33,
+              "harmonic_mean": 0.7042600568182058,
+              "image_auroc": 0.6235078053259872,
+              "pixel_ap": 0.8090412696909275
+            },
+            "foreground/texture": {
+              "clean_controls": 33,
+              "defective_images": 33,
+              "harmonic_mean": 0.7792887213636294,
+              "image_auroc": 0.9219467401285584,
+              "pixel_ap": 0.6748633145571276
+            },
+            "foreground/warp": {
+              "clean_controls": 33,
+              "defective_images": 33,
+              "harmonic_mean": 0.9323898986318307,
+              "image_auroc": 0.9504132231404958,
+              "pixel_ap": 0.9150374290741341
+            },
+            "legacy/appearance": {
+              "clean_controls": 33,
+              "defective_images": 33,
+              "harmonic_mean": 0.6518018832612356,
+              "image_auroc": 0.9908172635445363,
+              "pixel_ap": 0.485637468250991
+            },
+            "legacy/scratch": {
+              "clean_controls": 33,
+              "defective_images": 33,
+              "harmonic_mean": 0.8277673717558877,
+              "image_auroc": 0.9513314967860422,
+              "pixel_ap": 0.732611759486572
+            },
+            "legacy/texture": {
+              "clean_controls": 33,
+              "defective_images": 33,
+              "harmonic_mean": 0.5943150625913496,
+              "image_auroc": 0.9164370982552801,
+              "pixel_ap": 0.43974676419943026
+            },
+            "v3/boundary_warp": {
+              "clean_controls": 33,
+              "defective_images": 33,
+              "harmonic_mean": 0.6611520553910479,
+              "image_auroc": 0.8943985307621671,
+              "pixel_ap": 0.5243967948564172
+            },
+            "v3/subtle_patch": {
+              "clean_controls": 33,
+              "defective_images": 33,
+              "harmonic_mean": 0.7771435466075993,
+              "image_auroc": 0.9191919191919191,
+              "pixel_ap": 0.6731218873137851
+            },
+            "withheld/hard_translation": {
+              "clean_controls": 33,
+              "defective_images": 33,
+              "harmonic_mean": 0.801016078514584,
+              "image_auroc": 0.8879706152433425,
+              "pixel_ap": 0.7295726637266602
+            }
+          },
+          "macro_h": 0.7626782874899303,
+          "new_macro_h": 0.7464372268377438,
+          "old_macro_h": 0.7687686852345004,
+          "real_test_images_read": 0,
+          "selection_rule": "arithmetic mean of per-family H(image AUROC, pixel AP), each with the same clean validation controls",
+          "split_digest": "2df9587b2f8d3f7f389a7ef2a1e9e13cf21ea6b6738a1d9023e7daf1d59de5ad"
+        },
+        "calibration": {
+          "count": 33,
+          "decision_rule": ">=",
+          "quantile": 0.9,
+          "quantile_method": "linear",
+          "scores": [
+            0.4370515048503876,
+            0.12069704383611679,
+            0.8915833830833435,
+            0.03496306389570236,
+            0.22898633778095245,
+            0.5678361654281616,
+            0.03040562942624092,
+            0.3006495535373688,
+            0.057458169758319855,
+            0.8382383584976196,
+            0.48716220259666443,
+            0.03135697543621063,
+            0.7258281111717224,
+            0.8837916851043701,
+            0.010229850187897682,
+            0.039605334401130676,
+            0.04657575115561485,
+            0.5430800914764404,
+            0.7967491745948792,
+            0.015674201771616936,
+            0.01584051363170147,
+            0.08153320848941803,
+            0.006930276285856962,
+            0.01866922341287136,
+            0.2126884162425995,
+            0.6352570652961731,
+            0.019671432673931122,
+            0.40533921122550964,
+            0.14669567346572876,
+            0.6257287859916687,
+            0.21433575451374054,
+            0.6189543604850769,
+            0.025422781705856323
+          ],
+          "split": "calibration",
+          "threshold": 0.7825649619102478,
+          "warning": "Normal calibration quantile is not a future false-alarm guarantee."
+        },
+        "checkpoint_kind": "inference",
+        "completed_epochs": 100,
+        "config": {
+          "base_channels": 16,
+          "batch_size": 8,
+          "candidate": "A",
+          "category": "metal_nut",
+          "cpu_threads": 1,
+          "data_seed": 42,
+          "device": "mps",
+          "epochs": 100,
+          "image_size": 256,
+          "learning_rate": 0.0003,
+          "model_kind": "joint_reconstruction_segmentation",
+          "normal_probability": 0.25,
+          "protocol": "study-v3-screen-1",
+          "selection_every": 5,
+          "threshold_quantile": 0.9,
+          "training_seed": 42
+        },
+        "config_digest": "89a32ae48d833a891934d483f2511b0b7b8ffa773768e51d38fa1b3cfe122b9a",
+        "declaration_digest": "19d20b3348a0b522235149f8faf7e7406abf45ec727330438a2422f284c3d723",
+        "device": "mps",
+        "elapsed_seconds": 954.8691901249986,
+        "image_size": 256,
+        "manifest_digest": "3613fcb5e685f106cef900b788ccd7ccdab23fa942bb4dc34c383aa9821275d0",
+        "model_config": {
+          "base_channels": 16
+        },
+        "model_kind": "joint_reconstruction_segmentation",
+        "model_selection": "arithmetic mean of per-family H(image AUROC, pixel AP), each with the same clean validation controls",
+        "preprocess": {
+          "height": 256,
+          "mode": "square",
+          "width": 256
+        },
+        "provenance": {
+          "bank_digest": "372054ed54c9bba433dfa79ffc77824711c8d5cd5ea019d55a6f2e53927dc4bc",
+          "config_digest": "89a32ae48d833a891934d483f2511b0b7b8ffa773768e51d38fa1b3cfe122b9a",
+          "cpu_threads": 1,
+          "created_at_utc": "2026-10-04T01:46:18.824015+00:00",
+          "data_seed": 42,
+          "dataset_provenance": {
+            "archive_sha256": "cf4313b13603bec67abb49ca959488f7eedce2a9f7795ec54446c649ac98cd3d",
+            "dataset": "MVTec AD"
+          },
+          "deterministic_algorithms": false,
+          "git_dirty": false,
+          "git_revision": "0f81d02a03c0d8db282ebe35c894e4477d791f8a",
+          "packages": {
+            "Pillow": "12.3.0",
+            "numpy": "2.5.3",
+            "scikit-learn": "1.9.1",
+            "scipy": "1.18.1",
+            "torch": "2.14.1"
+          },
+          "platform": "macOS-27.0.1-arm64-arm-64bit",
+          "python": "3.12.14 (main, Aug 25 2026, 13:50:33) [Clang 22.1.3 ]",
+          "reproducibility_note": "Exact CPU resume is tested in one fixed environment; accelerator kernels may be nondeterministic.",
+          "source_files": {
+            "baseline.py": "2b3c4d9f80d963a831f7897f5ed2db0d62ecb559f74b762fa83b434fc2b8df48",
+            "checkpointing.py": "32fb507f67ecb3ccca18ec6f68f93e083d64d89ae999dd11e5bcc472b5ab2f8c",
+            "data.py": "a32a241782d5e108ae940118d594d4e588ecdd602f90b34247c743bc1a21b382",
+            "losses.py": "1df225f277ea942a41a6ab61925c49d9694958088d4fe4f3fc3ce064a8d660dd",
+            "model.py": "b9c4f0755512518d52d290131d051f6395c336a16ed08aefe934ffcfbc5b4768",
+            "preprocessing.py": "af0175422fa02fadbdb3b61a6c08929808b1bffeb3d0b20f4efdd975df284d69",
+            "synthesis.py": "f955a92beb6c613ea9d10c986fa0ec057ed1b80642802cdf96970137bd37bce3",
+            "train.py": "8d90324fce4908e95eadace0534157e607112d791072a4488a5097083e5480f0",
+            "validation_bank.py": "d758693bad36743c4c0290effc34ba0d255d8c77aefdf4e7b3572beca649398c"
+          },
+          "split_digest": "2df9587b2f8d3f7f389a7ef2a1e9e13cf21ea6b6738a1d9023e7daf1d59de5ad",
+          "training_seed": 42,
+          "v3_source_files": {
+            "experiments/study_v3/README.md": "dd39b0aa6763400055edd54353ace1a851e8507aea06edad9c87aeb2216096b2",
+            "experiments/study_v3/__init__.py": "e3a5180c6c6e3ef86bd70fadcb16724038b07bea2f53914a37f496e2acdb1b4c",
+            "experiments/study_v3/bank.py": "06056c0927a214d37e222b8e0f663b00fdcf7646118c3874b4118044274e911d",
+            "experiments/study_v3/protocol.py": "bd788b986e7b91cab3464ec3ccd4361b6b0d416427a33dce1785face42649e81",
+            "experiments/study_v3/runner.py": "c5df77fe7b79458b3610da88c9f4e03c2829c7bf08f42d8dea49716a06dd988c",
+            "experiments/study_v3/synthesis.py": "f3287f27be65ba5dd6ac7f295fb0b1ba860532ac5ebf13cac2d7bdc86bc30529",
+            "experiments/study_v3/trainer.py": "451cac077146fe7bd82440d293490bc8f69188e44d7eb2eace39fe7d88f5b70a",
+            "scripts/run_study.py": "728257bb10c157f8c5d0aebf0d4cf9076b543f720c3869b98bd6d51c191d17f6",
+            "src/inspection/__init__.py": "24786f339710e8cb059c4db923380bba0bdb1266740f05cd53120b6dcfbebef1",
+            "src/inspection/artifacts.py": "7257913e019930d2de9d39c58a5a2cbdfe190629451a455622ee6c439898793a",
+            "src/inspection/baseline.py": "2b3c4d9f80d963a831f7897f5ed2db0d62ecb559f74b762fa83b434fc2b8df48",
+            "src/inspection/checkpointing.py": "32fb507f67ecb3ccca18ec6f68f93e083d64d89ae999dd11e5bcc472b5ab2f8c",
+            "src/inspection/data.py": "a32a241782d5e108ae940118d594d4e588ecdd602f90b34247c743bc1a21b382",
+            "src/inspection/engine.py": "6603cd4adeb4798490cb569a812068929d5cb4b21bf232c56021296672a8029a",
+            "src/inspection/evaluate.py": "d70936541db0ccd2c9c14726a163e939ace8ac5a13566bc4c42f2e6b774ff594",
+            "src/inspection/ksdd2.py": "eb07b78c128c74e213b8dae596a4de18e25c88529ef38c3a58a36e24b67ef5aa",
+            "src/inspection/ksdd2_evaluate.py": "d22e9b6011f70263fb188d71d5ce4428f39d131f0c442f58befc8b137c08d4c7",
+            "src/inspection/losses.py": "1df225f277ea942a41a6ab61925c49d9694958088d4fe4f3fc3ce064a8d660dd",
+            "src/inspection/model.py": "b9c4f0755512518d52d290131d051f6395c336a16ed08aefe934ffcfbc5b4768",
+            "src/inspection/patchcore_baseline.py": "496a7002c4da7b6713bb793eaee422e1c83cf8ea1d7365f3c1d29e1975284472",
+            "src/inspection/predict.py": "4224c7d6567877756859e323688a57e7e5c10795597815d14749b12d03bcae83",
+            "src/inspection/preprocessing.py": "af0175422fa02fadbdb3b61a6c08929808b1bffeb3d0b20f4efdd975df284d69",
+            "src/inspection/reporting.py": "979f4357e651191689849bed8748cd063008705a10acc221d8821270a4093ba4",
+            "src/inspection/supervised.py": "a929d18d21a705ccbf5122340e56b3230d5f1cea3f13a4bfe4d6e1888aa302c8",
+            "src/inspection/synthesis.py": "f955a92beb6c613ea9d10c986fa0ec057ed1b80642802cdf96970137bd37bce3",
+            "src/inspection/train.py": "8d90324fce4908e95eadace0534157e607112d791072a4488a5097083e5480f0",
+            "src/inspection/validation_bank.py": "d758693bad36743c4c0290effc34ba0d255d8c77aefdf4e7b3572beca649398c"
+          }
+        },
+        "resumable": false,
+        "schema_version": 2,
+        "score_definition": "mean of highest 1% sigmoid anomaly-map pixels; not a calibrated probability",
+        "split_digest": "2df9587b2f8d3f7f389a7ef2a1e9e13cf21ea6b6738a1d9023e7daf1d59de5ad",
+        "test_status": "development-inspected/exploratory; never used for selection",
+        "threshold": 0.7825649619102478,
+        "threshold_source": "separate normal calibration split",
+        "torch_version": "2.14.1",
+        "training_kind": "random_initialization_normal_only_v3_synthetic_defects"
+      },
+      "summary_file_sha256": "3bd53482b316ac450c35d71c9c2fc6c43ea890e156a15af1bc5876f6000f4341"
+    },
+    {
+      "candidate": "B",
+      "checkpoint_sha256": "b871477da383666baa0587665244e4b50820ca720796aeb4047f5a2ef21a67f1",
+      "run_path": "outputs/study-v3/runs/metal_nut-B-seed42",
+      "summary": {
+        "bank_digest": "372054ed54c9bba433dfa79ffc77824711c8d5cd5ea019d55a6f2e53927dc4bc",
+        "best_epoch": 95,
+        "best_metric": 0.7425017629318905,
+        "best_validation": {
+          "bank_digest": "372054ed54c9bba433dfa79ffc77824711c8d5cd5ea019d55a6f2e53927dc4bc",
+          "families": {
+            "foreground/appearance": {
+              "clean_controls": 33,
+              "defective_images": 33,
+              "harmonic_mean": 0.9172661639783768,
+              "image_auroc": 0.9641873278236914,
+              "pixel_ap": 0.8746998159312459
+            },
+            "foreground/lighting": {
+              "clean_controls": 33,
+              "defective_images": 33,
+              "harmonic_mean": 0.7399397479821973,
+              "image_auroc": 0.8475665748393022,
+              "pixel_ap": 0.6565667190235225
+            },
+            "foreground/scratch": {
+              "clean_controls": 33,
+              "defective_images": 33,
+              "harmonic_mean": 0.7061110835914479,
+              "image_auroc": 0.6244260789715335,
+              "pixel_ap": 0.8123840189764203
+            },
+            "foreground/texture": {
+              "clean_controls": 33,
+              "defective_images": 33,
+              "harmonic_mean": 0.744325152763709,
+              "image_auroc": 0.9026629935720845,
+              "pixel_ap": 0.63324622263564
+            },
+            "foreground/warp": {
+              "clean_controls": 33,
+              "defective_images": 33,
+              "harmonic_mean": 0.9308409018251674,
+              "image_auroc": 0.977961432506887,
+              "pixel_ap": 0.8880524040763467
+            },
+            "legacy/appearance": {
+              "clean_controls": 33,
+              "defective_images": 33,
+              "harmonic_mean": 0.491760121137044,
+              "image_auroc": 0.9568411386593205,
+              "pixel_ap": 0.3309156638501111
+            },
+            "legacy/scratch": {
+              "clean_controls": 33,
+              "defective_images": 33,
+              "harmonic_mean": 0.7501852610396269,
+              "image_auroc": 0.9201101928374656,
+              "pixel_ap": 0.6332393237602643
+            },
+            "legacy/texture": {
+              "clean_controls": 33,
+              "defective_images": 33,
+              "harmonic_mean": 0.4741372804013759,
+              "image_auroc": 0.797979797979798,
+              "pixel_ap": 0.337265506294651
+            },
+            "v3/boundary_warp": {
+              "clean_controls": 33,
+              "defective_images": 33,
+              "harmonic_mean": 0.8118554579747367,
+              "image_auroc": 0.9550045913682277,
+              "pixel_ap": 0.706026553851977
+            },
+            "v3/subtle_patch": {
+              "clean_controls": 33,
+              "defective_images": 33,
+              "harmonic_mean": 0.6698779711887629,
+              "image_auroc": 0.9265381083562902,
+              "pixel_ap": 0.5245676036140572
+            },
+            "withheld/hard_translation": {
+              "clean_controls": 33,
+              "defective_images": 33,
+              "harmonic_mean": 0.9312202503683508,
+              "image_auroc": 0.9586776859504131,
+              "pixel_ap": 0.905291836017317
+            }
+          },
+          "macro_h": 0.7425017629318905,
+          "new_macro_h": 0.8043178931772834,
+          "old_macro_h": 0.7193207140898681,
+          "real_test_images_read": 0,
+          "selection_rule": "arithmetic mean of per-family H(image AUROC, pixel AP), each with the same clean validation controls",
+          "split_digest": "2df9587b2f8d3f7f389a7ef2a1e9e13cf21ea6b6738a1d9023e7daf1d59de5ad"
+        },
+        "calibration": {
+          "count": 33,
+          "decision_rule": ">=",
+          "quantile": 0.9,
+          "quantile_method": "linear",
+          "scores": [
+            0.06685646623373032,
+            0.13028442859649658,
+            0.049991440027952194,
+            0.08377377688884735,
+            0.23921336233615875,
+            0.5103839635848999,
+            0.29335668683052063,
+            0.13837699592113495,
+            0.5862184762954712,
+            0.4970071315765381,
+            0.20231342315673828,
+            0.0749179869890213,
+            0.8340849280357361,
+            0.6415825486183167,
+            0.2373352348804474,
+            0.03239061310887337,
+            0.22729264199733734,
+            0.1792782098054886,
+            0.2508029043674469,
+            0.042824216187000275,
+            0.21925415098667145,
+            0.03139856085181236,
+            0.047973696142435074,
+            0.36428597569465637,
+            0.06741894036531448,
+            0.04954172298312187,
+            0.08979593217372894,
+            0.06255005300045013,
+            0.16493108868598938,
+            0.4553697407245636,
+            0.08527303487062454,
+            0.5184713006019592,
+            0.14424258470535278
+          ],
+          "split": "calibration",
+          "threshold": 0.5168538331985474,
+          "warning": "Normal calibration quantile is not a future false-alarm guarantee."
+        },
+        "checkpoint_kind": "inference",
+        "completed_epochs": 100,
+        "config": {
+          "base_channels": 16,
+          "batch_size": 8,
+          "candidate": "B",
+          "category": "metal_nut",
+          "cpu_threads": 1,
+          "data_seed": 42,
+          "device": "mps",
+          "epochs": 100,
+          "image_size": 256,
+          "learning_rate": 0.0003,
+          "model_kind": "joint_reconstruction_segmentation",
+          "normal_probability": 0.25,
+          "protocol": "study-v3-screen-1",
+          "selection_every": 5,
+          "threshold_quantile": 0.9,
+          "training_seed": 42
+        },
+        "config_digest": "d7593a8772e5d1e4849fc3d3183f3fb9be2ed415d8234701cf9b56c3ec966724",
+        "declaration_digest": "19d20b3348a0b522235149f8faf7e7406abf45ec727330438a2422f284c3d723",
+        "device": "mps",
+        "elapsed_seconds": 937.7558287919965,
+        "image_size": 256,
+        "manifest_digest": "3613fcb5e685f106cef900b788ccd7ccdab23fa942bb4dc34c383aa9821275d0",
+        "model_config": {
+          "base_channels": 16
+        },
+        "model_kind": "joint_reconstruction_segmentation",
+        "model_selection": "arithmetic mean of per-family H(image AUROC, pixel AP), each with the same clean validation controls",
+        "preprocess": {
+          "height": 256,
+          "mode": "square",
+          "width": 256
+        },
+        "provenance": {
+          "bank_digest": "372054ed54c9bba433dfa79ffc77824711c8d5cd5ea019d55a6f2e53927dc4bc",
+          "config_digest": "d7593a8772e5d1e4849fc3d3183f3fb9be2ed415d8234701cf9b56c3ec966724",
+          "cpu_threads": 1,
+          "created_at_utc": "2026-10-04T02:02:15.224261+00:00",
+          "data_seed": 42,
+          "dataset_provenance": {
+            "archive_sha256": "cf4313b13603bec67abb49ca959488f7eedce2a9f7795ec54446c649ac98cd3d",
+            "dataset": "MVTec AD"
+          },
+          "deterministic_algorithms": false,
+          "git_dirty": false,
+          "git_revision": "0f81d02a03c0d8db282ebe35c894e4477d791f8a",
+          "packages": {
+            "Pillow": "12.3.0",
+            "numpy": "2.5.3",
+            "scikit-learn": "1.9.1",
+            "scipy": "1.18.1",
+            "torch": "2.14.1"
+          },
+          "platform": "macOS-27.0.1-arm64-arm-64bit",
+          "python": "3.12.14 (main, Aug 25 2026, 13:50:33) [Clang 22.1.3 ]",
+          "reproducibility_note": "Exact CPU resume is tested in one fixed environment; accelerator kernels may be nondeterministic.",
+          "source_files": {
+            "baseline.py": "2b3c4d9f80d963a831f7897f5ed2db0d62ecb559f74b762fa83b434fc2b8df48",
+            "checkpointing.py": "32fb507f67ecb3ccca18ec6f68f93e083d64d89ae999dd11e5bcc472b5ab2f8c",
+            "data.py": "a32a241782d5e108ae940118d594d4e588ecdd602f90b34247c743bc1a21b382",
+            "losses.py": "1df225f277ea942a41a6ab61925c49d9694958088d4fe4f3fc3ce064a8d660dd",
+            "model.py": "b9c4f0755512518d52d290131d051f6395c336a16ed08aefe934ffcfbc5b4768",
+            "preprocessing.py": "af0175422fa02fadbdb3b61a6c08929808b1bffeb3d0b20f4efdd975df284d69",
+            "synthesis.py": "f955a92beb6c613ea9d10c986fa0ec057ed1b80642802cdf96970137bd37bce3",
+            "train.py": "8d90324fce4908e95eadace0534157e607112d791072a4488a5097083e5480f0",
+            "validation_bank.py": "d758693bad36743c4c0290effc34ba0d255d8c77aefdf4e7b3572beca649398c"
+          },
+          "split_digest": "2df9587b2f8d3f7f389a7ef2a1e9e13cf21ea6b6738a1d9023e7daf1d59de5ad",
+          "training_seed": 42,
+          "v3_source_files": {
+            "experiments/study_v3/README.md": "dd39b0aa6763400055edd54353ace1a851e8507aea06edad9c87aeb2216096b2",
+            "experiments/study_v3/__init__.py": "e3a5180c6c6e3ef86bd70fadcb16724038b07bea2f53914a37f496e2acdb1b4c",
+            "experiments/study_v3/bank.py": "06056c0927a214d37e222b8e0f663b00fdcf7646118c3874b4118044274e911d",
+            "experiments/study_v3/protocol.py": "bd788b986e7b91cab3464ec3ccd4361b6b0d416427a33dce1785face42649e81",
+            "experiments/study_v3/runner.py": "c5df77fe7b79458b3610da88c9f4e03c2829c7bf08f42d8dea49716a06dd988c",
+            "experiments/study_v3/synthesis.py": "f3287f27be65ba5dd6ac7f295fb0b1ba860532ac5ebf13cac2d7bdc86bc30529",
+            "experiments/study_v3/trainer.py": "451cac077146fe7bd82440d293490bc8f69188e44d7eb2eace39fe7d88f5b70a",
+            "scripts/run_study.py": "728257bb10c157f8c5d0aebf0d4cf9076b543f720c3869b98bd6d51c191d17f6",
+            "src/inspection/__init__.py": "24786f339710e8cb059c4db923380bba0bdb1266740f05cd53120b6dcfbebef1",
+            "src/inspection/artifacts.py": "7257913e019930d2de9d39c58a5a2cbdfe190629451a455622ee6c439898793a",
+            "src/inspection/baseline.py": "2b3c4d9f80d963a831f7897f5ed2db0d62ecb559f74b762fa83b434fc2b8df48",
+            "src/inspection/checkpointing.py": "32fb507f67ecb3ccca18ec6f68f93e083d64d89ae999dd11e5bcc472b5ab2f8c",
+            "src/inspection/data.py": "a32a241782d5e108ae940118d594d4e588ecdd602f90b34247c743bc1a21b382",
+            "src/inspection/engine.py": "6603cd4adeb4798490cb569a812068929d5cb4b21bf232c56021296672a8029a",
+            "src/inspection/evaluate.py": "d70936541db0ccd2c9c14726a163e939ace8ac5a13566bc4c42f2e6b774ff594",
+            "src/inspection/ksdd2.py": "eb07b78c128c74e213b8dae596a4de18e25c88529ef38c3a58a36e24b67ef5aa",
+            "src/inspection/ksdd2_evaluate.py": "d22e9b6011f70263fb188d71d5ce4428f39d131f0c442f58befc8b137c08d4c7",
+            "src/inspection/losses.py": "1df225f277ea942a41a6ab61925c49d9694958088d4fe4f3fc3ce064a8d660dd",
+            "src/inspection/model.py": "b9c4f0755512518d52d290131d051f6395c336a16ed08aefe934ffcfbc5b4768",
+            "src/inspection/patchcore_baseline.py": "496a7002c4da7b6713bb793eaee422e1c83cf8ea1d7365f3c1d29e1975284472",
+            "src/inspection/predict.py": "4224c7d6567877756859e323688a57e7e5c10795597815d14749b12d03bcae83",
+            "src/inspection/preprocessing.py": "af0175422fa02fadbdb3b61a6c08929808b1bffeb3d0b20f4efdd975df284d69",
+            "src/inspection/reporting.py": "979f4357e651191689849bed8748cd063008705a10acc221d8821270a4093ba4",
+            "src/inspection/supervised.py": "a929d18d21a705ccbf5122340e56b3230d5f1cea3f13a4bfe4d6e1888aa302c8",
+            "src/inspection/synthesis.py": "f955a92beb6c613ea9d10c986fa0ec057ed1b80642802cdf96970137bd37bce3",
+            "src/inspection/train.py": "8d90324fce4908e95eadace0534157e607112d791072a4488a5097083e5480f0",
+            "src/inspection/validation_bank.py": "d758693bad36743c4c0290effc34ba0d255d8c77aefdf4e7b3572beca649398c"
+          }
+        },
+        "resumable": false,
+        "schema_version": 2,
+        "score_definition": "mean of highest 1% sigmoid anomaly-map pixels; not a calibrated probability",
+        "split_digest": "2df9587b2f8d3f7f389a7ef2a1e9e13cf21ea6b6738a1d9023e7daf1d59de5ad",
+        "test_status": "development-inspected/exploratory; never used for selection",
+        "threshold": 0.5168538331985474,
+        "threshold_source": "separate normal calibration split",
+        "torch_version": "2.14.1",
+        "training_kind": "random_initialization_normal_only_v3_synthetic_defects"
+      },
+      "summary_file_sha256": "feb337cbc27a96381f1715d27e1c98975f0d4a89cefce00a8c5e23da9799b4d2"
+    }
+  ],
+  "schema_version": "study-v3-screen-report-1",
+  "scope": "Three completed 100-epoch screening runs; synthetic validation only. No real-test evaluation.",
+  "screen_result": {
+    "candidates": [
+      {
+        "bank_digest": "372054ed54c9bba433dfa79ffc77824711c8d5cd5ea019d55a6f2e53927dc4bc",
+        "best_epoch": 100,
+        "candidate": "A",
+        "checkpoint": "outputs/study-v3/runs/metal_nut-A-seed42/checkpoint.pt",
+        "checkpoint_sha256": "3a6ee3752a1e74cc0aca5eed09e0f78f30d3ff64d07eb19ae2e327fb66c24f0e",
+        "families": {
+          "foreground/appearance": {
+            "clean_controls": 33,
+            "defective_images": 33,
+            "harmonic_mean": 0.9435694063852453,
+            "image_auroc": 0.9797979797979798,
+            "pixel_ap": 0.9099244456298264
+          },
+          "foreground/lighting": {
+            "clean_controls": 33,
+            "defective_images": 33,
+            "harmonic_mean": 0.7167570810686194,
+            "image_auroc": 0.859504132231405,
+            "pixel_ap": 0.6146719337345002
+          },
+          "foreground/scratch": {
+            "clean_controls": 33,
+            "defective_images": 33,
+            "harmonic_mean": 0.7042600568182058,
+            "image_auroc": 0.6235078053259872,
+            "pixel_ap": 0.8090412696909275
+          },
+          "foreground/texture": {
+            "clean_controls": 33,
+            "defective_images": 33,
+            "harmonic_mean": 0.7792887213636294,
+            "image_auroc": 0.9219467401285584,
+            "pixel_ap": 0.6748633145571276
+          },
+          "foreground/warp": {
+            "clean_controls": 33,
+            "defective_images": 33,
+            "harmonic_mean": 0.9323898986318307,
+            "image_auroc": 0.9504132231404958,
+            "pixel_ap": 0.9150374290741341
+          },
+          "legacy/appearance": {
+            "clean_controls": 33,
+            "defective_images": 33,
+            "harmonic_mean": 0.6518018832612356,
+            "image_auroc": 0.9908172635445363,
+            "pixel_ap": 0.485637468250991
+          },
+          "legacy/scratch": {
+            "clean_controls": 33,
+            "defective_images": 33,
+            "harmonic_mean": 0.8277673717558877,
+            "image_auroc": 0.9513314967860422,
+            "pixel_ap": 0.732611759486572
+          },
+          "legacy/texture": {
+            "clean_controls": 33,
+            "defective_images": 33,
+            "harmonic_mean": 0.5943150625913496,
+            "image_auroc": 0.9164370982552801,
+            "pixel_ap": 0.43974676419943026
+          },
+          "v3/boundary_warp": {
+            "clean_controls": 33,
+            "defective_images": 33,
+            "harmonic_mean": 0.6611520553910479,
+            "image_auroc": 0.8943985307621671,
+            "pixel_ap": 0.5243967948564172
+          },
+          "v3/subtle_patch": {
+            "clean_controls": 33,
+            "defective_images": 33,
+            "harmonic_mean": 0.7771435466075993,
+            "image_auroc": 0.9191919191919191,
+            "pixel_ap": 0.6731218873137851
+          },
+          "withheld/hard_translation": {
+            "clean_controls": 33,
+            "defective_images": 33,
+            "harmonic_mean": 0.801016078514584,
+            "image_auroc": 0.8879706152433425,
+            "pixel_ap": 0.7295726637266602
+          }
+        },
+        "macro_h": 0.7626782874899303,
+        "new_macro_h": 0.7464372268377438,
+        "old_macro_h": 0.7687686852345004,
+        "real_test_images_read": 0,
+        "selection_rule": "arithmetic mean of per-family H(image AUROC, pixel AP), each with the same clean validation controls",
+        "split_digest": "2df9587b2f8d3f7f389a7ef2a1e9e13cf21ea6b6738a1d9023e7daf1d59de5ad",
+        "threshold": 0.7825649619102478
+      },
+      {
+        "bank_digest": "372054ed54c9bba433dfa79ffc77824711c8d5cd5ea019d55a6f2e53927dc4bc",
+        "best_epoch": 95,
+        "candidate": "B",
+        "checkpoint": "outputs/study-v3/runs/metal_nut-B-seed42/checkpoint.pt",
+        "checkpoint_sha256": "b871477da383666baa0587665244e4b50820ca720796aeb4047f5a2ef21a67f1",
+        "families": {
+          "foreground/appearance": {
+            "clean_controls": 33,
+            "defective_images": 33,
+            "harmonic_mean": 0.9172661639783768,
+            "image_auroc": 0.9641873278236914,
+            "pixel_ap": 0.8746998159312459
+          },
+          "foreground/lighting": {
+            "clean_controls": 33,
+            "defective_images": 33,
+            "harmonic_mean": 0.7399397479821973,
+            "image_auroc": 0.8475665748393022,
+            "pixel_ap": 0.6565667190235225
+          },
+          "foreground/scratch": {
+            "clean_controls": 33,
+            "defective_images": 33,
+            "harmonic_mean": 0.7061110835914479,
+            "image_auroc": 0.6244260789715335,
+            "pixel_ap": 0.8123840189764203
+          },
+          "foreground/texture": {
+            "clean_controls": 33,
+            "defective_images": 33,
+            "harmonic_mean": 0.744325152763709,
+            "image_auroc": 0.9026629935720845,
+            "pixel_ap": 0.63324622263564
+          },
+          "foreground/warp": {
+            "clean_controls": 33,
+            "defective_images": 33,
+            "harmonic_mean": 0.9308409018251674,
+            "image_auroc": 0.977961432506887,
+            "pixel_ap": 0.8880524040763467
+          },
+          "legacy/appearance": {
+            "clean_controls": 33,
+            "defective_images": 33,
+            "harmonic_mean": 0.491760121137044,
+            "image_auroc": 0.9568411386593205,
+            "pixel_ap": 0.3309156638501111
+          },
+          "legacy/scratch": {
+            "clean_controls": 33,
+            "defective_images": 33,
+            "harmonic_mean": 0.7501852610396269,
+            "image_auroc": 0.9201101928374656,
+            "pixel_ap": 0.6332393237602643
+          },
+          "legacy/texture": {
+            "clean_controls": 33,
+            "defective_images": 33,
+            "harmonic_mean": 0.4741372804013759,
+            "image_auroc": 0.797979797979798,
+            "pixel_ap": 0.337265506294651
+          },
+          "v3/boundary_warp": {
+            "clean_controls": 33,
+            "defective_images": 33,
+            "harmonic_mean": 0.8118554579747367,
+            "image_auroc": 0.9550045913682277,
+            "pixel_ap": 0.706026553851977
+          },
+          "v3/subtle_patch": {
+            "clean_controls": 33,
+            "defective_images": 33,
+            "harmonic_mean": 0.6698779711887629,
+            "image_auroc": 0.9265381083562902,
+            "pixel_ap": 0.5245676036140572
+          },
+          "withheld/hard_translation": {
+            "clean_controls": 33,
+            "defective_images": 33,
+            "harmonic_mean": 0.9312202503683508,
+            "image_auroc": 0.9586776859504131,
+            "pixel_ap": 0.905291836017317
+          }
+        },
+        "macro_h": 0.7425017629318905,
+        "new_macro_h": 0.8043178931772834,
+        "old_macro_h": 0.7193207140898681,
+        "real_test_images_read": 0,
+        "selection_rule": "arithmetic mean of per-family H(image AUROC, pixel AP), each with the same clean validation controls",
+        "split_digest": "2df9587b2f8d3f7f389a7ef2a1e9e13cf21ea6b6738a1d9023e7daf1d59de5ad",
+        "threshold": 0.5168538331985474
+      }
+    ],
+    "control": {
+      "bank_digest": "372054ed54c9bba433dfa79ffc77824711c8d5cd5ea019d55a6f2e53927dc4bc",
+      "best_epoch": 100,
+      "candidate": "control",
+      "checkpoint": "outputs/study-v3/runs/metal_nut-control-seed42/checkpoint.pt",
+      "checkpoint_sha256": "f6affb94c2c1b67be0360b37d9e3a46f18ec2c8bad87ee2f452d421b5e9f0038",
+      "families": {
+        "foreground/appearance": {
+          "clean_controls": 33,
+          "defective_images": 33,
+          "harmonic_mean": 0.9918819869105119,
+          "image_auroc": 1.0,
+          "pixel_ap": 0.9838947167214886
+        },
+        "foreground/lighting": {
+          "clean_controls": 33,
+          "defective_images": 33,
+          "harmonic_mean": 0.7972803736981664,
+          "image_auroc": 0.9155188246097337,
+          "pixel_ap": 0.7060895317466757
+        },
+        "foreground/scratch": {
+          "clean_controls": 33,
+          "defective_images": 33,
+          "harmonic_mean": 0.9729297812202132,
+          "image_auroc": 1.0,
+          "pixel_ap": 0.9472865276690668
+        },
+        "foreground/texture": {
+          "clean_controls": 33,
+          "defective_images": 33,
+          "harmonic_mean": 0.992815693261283,
+          "image_auroc": 1.0,
+          "pixel_ap": 0.9857338787138574
+        },
+        "foreground/warp": {
+          "clean_controls": 33,
+          "defective_images": 33,
+          "harmonic_mean": 0.9940797350434275,
+          "image_auroc": 1.0,
+          "pixel_ap": 0.9882291565985539
+        },
+        "legacy/appearance": {
+          "clean_controls": 33,
+          "defective_images": 33,
+          "harmonic_mean": 0.9174291417513365,
+          "image_auroc": 1.0,
+          "pixel_ap": 0.8474541271464796
+        },
+        "legacy/scratch": {
+          "clean_controls": 33,
+          "defective_images": 33,
+          "harmonic_mean": 0.9918746262478516,
+          "image_auroc": 1.0,
+          "pixel_ap": 0.983880231638439
+        },
+        "legacy/texture": {
+          "clean_controls": 33,
+          "defective_images": 33,
+          "harmonic_mean": 0.8536305145222953,
+          "image_auroc": 0.997245179063361,
+          "pixel_ap": 0.7461730904816575
+        },
+        "v3/boundary_warp": {
+          "clean_controls": 33,
+          "defective_images": 33,
+          "harmonic_mean": 0.7782443933348916,
+          "image_auroc": 0.9954086317722681,
+          "pixel_ap": 0.6388656762706464
+        },
+        "v3/subtle_patch": {
+          "clean_controls": 33,
+          "defective_images": 33,
+          "harmonic_mean": 0.6860923679264237,
+          "image_auroc": 0.9109274563820018,
+          "pixel_ap": 0.5502738036212467
+        },
+        "withheld/hard_translation": {
+          "clean_controls": 33,
+          "defective_images": 33,
+          "harmonic_mean": 0.892331482166207,
+          "image_auroc": 0.9926538108356291,
+          "pixel_ap": 0.8104259684040402
+        }
+      },
+      "macro_h": 0.8971445541893278,
+      "new_macro_h": 0.7855560811425074,
+      "old_macro_h": 0.9389902315818857,
+      "real_test_images_read": 0,
+      "selection_rule": "arithmetic mean of per-family H(image AUROC, pixel AP), each with the same clean validation controls",
+      "split_digest": "2df9587b2f8d3f7f389a7ef2a1e9e13cf21ea6b6738a1d9023e7daf1d59de5ad",
+      "threshold": 4.510770959313959e-05
+    },
+    "maximum_old_family_macro_h_regression": 0.02,
+    "minimum_macro_h_gain": 0.01,
+    "selected": null,
+    "state": "stopped_no_validation_gain",
+    "test_metrics_used_for_selection": false,
+    "warning": "Synthetic validation is not evidence of real-defect target success."
+  },
+  "status": {
+    "completed": [
+      "control",
+      "A",
+      "B"
+    ],
+    "continuation_state": "stopped",
+    "current_candidate": null,
+    "declaration_digest": "19d20b3348a0b522235149f8faf7e7406abf45ec727330438a2422f284c3d723",
+    "finished_at": "2026-10-04T02:17:54.229853+00:00",
+    "gate_state": "stopped_no_validation_gain",
+    "protocol": "study-v3-screen-1",
+    "started_at": "2026-10-04T01:29:00.587800+00:00",
+    "state": "screen_complete"
+  },
+  "test_metrics_used_for_selection": false,
+  "total_training_epochs": 300,
+  "verification": {
+    "all_runs_completed_100_epochs": true,
+    "bank_and_split_identity_match": true,
+    "checkpoint_sha256_matches_saved_screen_records": true,
+    "frozen_source_hashes_match_all_run_summaries": true,
+    "portable_paths_no_home_directory": true
+  }
+}
