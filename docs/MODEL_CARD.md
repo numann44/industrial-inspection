@@ -73,6 +73,8 @@ The KolektorSDD2 fallback was triggered by frozen MVTec target outcomes. It is a
 
 Metal-nut tests were inspected during development and remain exploratory. Screw, transistor and KolektorSDD2 were evaluated after the study's methods, weights, selections and thresholds were frozen. Any future method changes informed by these results must treat reused tests as development-inspected/exploratory; fresh independent success claims require an untouched holdout. Dataset providers do not supply all physical product/acquisition-group identities, so pixel-duplicate checks cannot prove production-batch independence.
 
+The subsequent [acquisition-robustness screen](KSDD2_ROBUSTNESS_SCREEN.md) is motivated by these surface-test failures and a validation-only diagnostic. Consequently, any reused KolektorSDD2 test evaluation of its new weights is exploratory. This does not alter the historical frozen v0.1.0 measurements or the current deployed weights.
+
 Original-resolution ground-truth masks are preserved for final pixel AP; predictions are restored to native geometry. Resizing can remove detail that interpolation cannot recover. Image-bootstrap and Wilson intervals assume image-level sampling and do not quantify domain shift or independent-pixel uncertainty. Precision depends on prevalence and will change outside this test mixture.
 
 ## Inference, distribution and privacy

@@ -85,7 +85,7 @@ python -m pytest
 streamlit run app.py
 ```
 
-`artifacts/models.json` is authoritative for the four active demo models and their checksum-pinned v0.1.0 download URLs. The full datasets are not required to serve the demo. `requirements.lock.txt` records the local experiment environment; deployment requirements use CPU PyTorch wheels on Linux. The release and main-branch Linux checks passed, and the current local suite passes 137 tests. [Deployment evidence](docs/DEPLOYMENT.md) records actual hosted example/upload/export checks separately from offline evaluation.
+`artifacts/models.json` is authoritative for the four active demo models and their checksum-pinned v0.1.0 download URLs. The full datasets are not required to serve the demo. `requirements.lock.txt` records the local experiment environment; deployment requirements use CPU PyTorch wheels on Linux. The release and main-branch Linux checks passed; the preview follow-up passed 139 local tests. [Deployment evidence](docs/DEPLOYMENT.md) records actual hosted example/upload/export checks separately from offline evaluation.
 
 ### Reproduce normal-only training
 
@@ -153,7 +153,13 @@ The [three-run synthesis screen](docs/results/STUDY_V3_SCREEN.md) completed with
 
 Neither candidate met the predeclared +0.01 improvement and ≤0.02 old-family-regression gate. **No candidate was promoted and none of the six conditional continuation runs started.** The v0.1.0 demo remains unchanged. All source, bank, split and checkpoint identities are preserved in [portable screen evidence](docs/results/study-v3-screen.json), including per-family failures and full-precision scores. The screen read zero real test images.
 
-The next step is diagnosis of these validation failures; no additional training is declared or reported running here. The metal-nut, screw and transistor tests are **development-inspected / exploratory for v3**, because their v2 failures informed this follow-up. Cable remained a prospective comparison, with no continuation run or test evaluation. No new independent same-category holdout is currently available. The [delivery checklist](docs/PLAN.md) separates completed release engineering from unresolved quality goals; all v2 evidence remains intact.
+The metal-nut, screw and transistor tests are **development-inspected / exploratory for v3**, because their v2 failures informed this follow-up. Cable remained a prospective comparison, with no continuation run or test evaluation. All v2 evidence remains intact.
+
+## Next bounded experiment: acquisition robustness
+
+A [validation-only diagnostic](docs/results/KSDD2_VALIDATION_STRESS_PLANNING.json) reproduced the surface model's brightness/JPEG sensitivity. The [next protocol](docs/KSDD2_ROBUSTNESS_SCREEN.md) compares exactly two fresh seed-42 trainings: unchanged supervised training and a mixture of original, brightness-varied and JPEG-compressed images. Both use one frozen, grouped four-condition validation bank; the augmented candidate must pass a predeclared improvement gate before calibration or exploratory test evaluation.
+
+The implementation is isolated from preserved experiments. No improvement result is available yet, and the published weights remain v0.1.0. Any reused KSDD2 test results for the new method will be **development-inspected / exploratory**, because earlier test failures motivated the change. No new independent same-category holdout is currently available. The [delivery checklist](docs/PLAN.md) separates completed release engineering from unresolved quality goals.
 
 ## Sources and licenses
 

@@ -12,7 +12,8 @@ The project target is a category-specific defect detector trained from random in
 | Supervised fallback | Three KSDD2 runs complete; validation-selected seed 44 detects 105/110 defects with 89/894 false alarms | Point estimates pass; uncertainty crosses targets and brightness/JPEG robustness fails |
 | Demo | All four v0.1.0 models observed; surface upload and four exports verified; malformed and oversized uploads rejected correctly | Separate physical-client check remains unperformed |
 | Publication | Public v0.1.0 release at e76ff78; four remote weights match local checksums; main/tag Linux checks pass | Retain honest measured limits while quality work continues |
-| Follow-up study v3 | Three 100-epoch runs complete; both candidates fail the validation gate; no model promoted and no conditional runs started | Diagnose validation failures before declaring any further bounded training |
+| Follow-up study v3 | Three 100-epoch runs complete; both candidates fail the validation gate; no model promoted and no conditional runs started | Closed; preserve negative evidence |
+| Surface acquisition screen | Validation-only diagnostic confirms brightness/JPEG score shifts; exactly two matched runs declared | Validate implementation, freeze provenance, execute bounded screen and honor its gate |
 
 The [completed study](results/CONTROLLED_STUDY.md) records all candidates and seeds, including failed targets. The [model card](MODEL_CARD.md) separates the passing supervised surface task from the failing normal-only MVTec tasks. Source checks and hosted publication are engineering gates, not evidence of model quality.
 
@@ -43,6 +44,6 @@ The frozen v2 study and [v0.1.0 release](https://github.com/numann44/industrial-
 
 Family-macro H was 0.8971445541893278 for control, 0.7626782874899303 for A and 0.7425017629318905 for B. Neither candidate achieved the required ≥0.01 gain and ≤0.02 old-family regression. The cycle stopped at its gate: **three new runs completed, zero of the six conditional continuation runs started, no candidate selected**. The published registry remains on v0.1.0. [Portable evidence](results/study-v3-screen.json) retains all outcomes and provenance; the screen read no real test images.
 
-The next step is diagnosis of the validation failure groups and calibration evidence. No new training is declared or represented as running in this checklist. Any further cycle needs an explicit hypothesis, controlled change, bounded budget and validation-only selection rule; the failed gate is not bypassed by extra seeds or epochs.
+The separate [surface acquisition screen](KSDD2_ROBUSTNESS_SCREEN.md) follows a validation-only diagnosis of brightness/JPEG score shifts. Exactly two fresh seed-42 runs compare unchanged training with one combined acquisition-augmentation policy. This does not extend the failed v3 budget. Its validation gate is frozen before any calibration; failure closes the screen, and passing allows fixed-threshold exploratory evaluation. Preparation is not a reported quality improvement.
 
 The original metal-nut, screw and transistor tests remain development-inspected/exploratory for v3. Repartitioning these images cannot restore independence. Cable remained prospective, with no continuation run or test evaluation; a future comparison would require a prior-test-exposure audit and frozen models/thresholds before its test is read. No new independent same-category holdout is available. Broader success claims require genuinely untouched holdouts and robustness evidence.
