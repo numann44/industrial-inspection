@@ -1,0 +1,200 @@
+{
+  "recorded_at_utc": "2026-10-04T07:59:52.971584+00:00",
+  "event": "Frozen two-run local MPS decision screen launched; no quality result yet",
+  "source_commit": "7d324fe6bf0e27edb8be1b64ff443a3ebce686c1",
+  "launched_at_utc": "2026-10-04T07:56:28.767343+00:00",
+  "declaration_digest": "1313dc36f755ad42b3ef63a9867011af476eaf3010cbae1593b7af0d70308e28",
+  "bank_digest": "0f8507628eea094a925e9fc4631806e400bc47aae2b455ac3f3c44e598c31a1d",
+  "split_digest": "30d06172a747eeaae3d12d3dd4e0b42a1f7dcb7f90759a5ecd4d6610df9a3b75",
+  "source_files": {
+    "experiments/ksdd2_decision/README.md": "213ac516becdd756c715f6d33d8b62125183b92d1dd3db84ea1e1079be5e1aa2",
+    "experiments/ksdd2_decision/__init__.py": "49a48a3970e0c384eca7917d2060bb3107c4964503ec51feed966f139895852b",
+    "experiments/ksdd2_decision/metrics.py": "86423e96872080686a405739b47c6a5eced140eeb187c956c25fe1fd69370dc2",
+    "experiments/ksdd2_decision/model.py": "98d7f8263d1c7dac79c413e7341e0c5fa402e24be9bdf6cdad23939be6fecba6",
+    "experiments/ksdd2_decision/protocol.py": "f5b601d1c5013178ba295aa097610abec88c33b352115de3679143a38d44d42a",
+    "experiments/ksdd2_decision/runner.py": "7ef3d3ab76d18f97b3b3b3f13c11a86aaea8080ea3f9639b804ae2d9b5f0af5a",
+    "experiments/ksdd2_decision/trainer.py": "9b2d710136ca3ddb895a4c0f6944fdd878bbc61c4fb08a968cc27bcdb11ccda3",
+    "experiments/ksdd2_robustness/README.md": "899e685483e8864ca1db1a979f8cd998b014b74a26083d10edff8777026486b7",
+    "experiments/ksdd2_robustness/__init__.py": "aacbfe94b1c31f4fe4abbefe2dd62516f36d1c11b6564133d99ee567806ccdfe",
+    "experiments/ksdd2_robustness/data.py": "ee6b6627cd919bd88b7e1b2072cb5142c0fe4f58f582820c255b7aab89b53954",
+    "experiments/ksdd2_robustness/metrics.py": "3fce9a33f1271e35d79d0cbaae177ce9220b18af4b1c5162497eb219c8529d42",
+    "experiments/ksdd2_robustness/protocol.py": "17c725646cf8f90f24bf0f6aa2863bd19d71eea3633ea949463c5c5c0d895c85",
+    "experiments/ksdd2_robustness/runner.py": "bbacfa448a5a31693a774e3a01497288602035f7a7b3940acedd96e40176f86e",
+    "experiments/ksdd2_robustness/trainer.py": "3a44beb194435cebcb0f5ad7182f93d85a30b9b2724004ea53e275153467a646",
+    "scripts/run_study.py": "728257bb10c157f8c5d0aebf0d4cf9076b543f720c3869b98bd6d51c191d17f6",
+    "src/inspection/__init__.py": "24786f339710e8cb059c4db923380bba0bdb1266740f05cd53120b6dcfbebef1",
+    "src/inspection/artifacts.py": "7257913e019930d2de9d39c58a5a2cbdfe190629451a455622ee6c439898793a",
+    "src/inspection/baseline.py": "2b3c4d9f80d963a831f7897f5ed2db0d62ecb559f74b762fa83b434fc2b8df48",
+    "src/inspection/checkpointing.py": "32fb507f67ecb3ccca18ec6f68f93e083d64d89ae999dd11e5bcc472b5ab2f8c",
+    "src/inspection/data.py": "a32a241782d5e108ae940118d594d4e588ecdd602f90b34247c743bc1a21b382",
+    "src/inspection/engine.py": "6603cd4adeb4798490cb569a812068929d5cb4b21bf232c56021296672a8029a",
+    "src/inspection/evaluate.py": "d70936541db0ccd2c9c14726a163e939ace8ac5a13566bc4c42f2e6b774ff594",
+    "src/inspection/ksdd2.py": "eb07b78c128c74e213b8dae596a4de18e25c88529ef38c3a58a36e24b67ef5aa",
+    "src/inspection/ksdd2_evaluate.py": "d22e9b6011f70263fb188d71d5ce4428f39d131f0c442f58befc8b137c08d4c7",
+    "src/inspection/losses.py": "1df225f277ea942a41a6ab61925c49d9694958088d4fe4f3fc3ce064a8d660dd",
+    "src/inspection/model.py": "b9c4f0755512518d52d290131d051f6395c336a16ed08aefe934ffcfbc5b4768",
+    "src/inspection/patchcore_baseline.py": "496a7002c4da7b6713bb793eaee422e1c83cf8ea1d7365f3c1d29e1975284472",
+    "src/inspection/predict.py": "4224c7d6567877756859e323688a57e7e5c10795597815d14749b12d03bcae83",
+    "src/inspection/preprocessing.py": "af0175422fa02fadbdb3b61a6c08929808b1bffeb3d0b20f4efdd975df284d69",
+    "src/inspection/reporting.py": "979f4357e651191689849bed8748cd063008705a10acc221d8821270a4093ba4",
+    "src/inspection/supervised.py": "a929d18d21a705ccbf5122340e56b3230d5f1cea3f13a4bfe4d6e1888aa302c8",
+    "src/inspection/synthesis.py": "f955a92beb6c613ea9d10c986fa0ec057ed1b80642802cdf96970137bd37bce3",
+    "src/inspection/train.py": "8d90324fce4908e95eadace0534157e607112d791072a4488a5097083e5480f0",
+    "src/inspection/validation_bank.py": "d758693bad36743c4c0290effc34ba0d255d8c77aefdf4e7b3572beca649398c"
+  },
+  "prior_evidence": {
+    "docs/results/KSDD2_DECISION_PLANNING.json": "7f92e39bba9807059c2e254f61ae944fa60965ed496fc525b26ebe70ac067dbe",
+    "docs/results/KSDD2_ROBUSTNESS_RESULTS.json": "b2b901616a3d9881ddb7a15b07d54e55f470c2c1b98a6ace4483a98deba3d23f",
+    "outputs/ksdd2-robustness/screen-result.json": "13b11cd160651f09711593d70c754ef205e9f9e8146f196e20c6c7413e5a6468"
+  },
+  "run_configs": [
+    {
+      "protocol": "ksdd2-detached-decision-screen-1",
+      "candidate": "control",
+      "base_channels": 16,
+      "training_seed": 42,
+      "batch_size": 8,
+      "epochs": 100,
+      "patience_epochs": 15,
+      "selection_every": 5,
+      "learning_rate": 0.0003,
+      "positive_pixel_weight": 3.0,
+      "threshold_quantile": 0.9,
+      "preprocess": {
+        "mode": "letterbox",
+        "height": 640,
+        "width": 256
+      },
+      "device": "mps",
+      "cpu_threads": 1,
+      "augmentation": {
+        "unchanged_probability": 0.5,
+        "brightness_range": [
+          0.75,
+          1.25
+        ],
+        "jpeg_quality_inclusive": [
+          60,
+          95
+        ],
+        "order": [
+          "brightness",
+          "jpeg",
+          "letterbox"
+        ]
+      },
+      "head_seed": 9000042,
+      "classification_loss_weight": 1.0,
+      "max_fpr": 0.1,
+      "classification_gradients_to_segmentation": false
+    },
+    {
+      "protocol": "ksdd2-detached-decision-screen-1",
+      "candidate": "decision_head",
+      "base_channels": 16,
+      "training_seed": 42,
+      "batch_size": 8,
+      "epochs": 100,
+      "patience_epochs": 15,
+      "selection_every": 5,
+      "learning_rate": 0.0003,
+      "positive_pixel_weight": 3.0,
+      "threshold_quantile": 0.9,
+      "preprocess": {
+        "mode": "letterbox",
+        "height": 640,
+        "width": 256
+      },
+      "device": "mps",
+      "cpu_threads": 1,
+      "augmentation": {
+        "unchanged_probability": 0.5,
+        "brightness_range": [
+          0.75,
+          1.25
+        ],
+        "jpeg_quality_inclusive": [
+          60,
+          95
+        ],
+        "order": [
+          "brightness",
+          "jpeg",
+          "letterbox"
+        ]
+      },
+      "head_seed": 9000042,
+      "classification_loss_weight": 1.0,
+      "max_fpr": 0.1,
+      "classification_gradients_to_segmentation": false
+    }
+  ],
+  "original_validation_images": 350,
+  "correlated_variants": 1400,
+  "selection_rule": "pooled standardized image partial AUROC over FPR [0,0.1]; all four conditions; earliest exact tie",
+  "gate": {
+    "minimum_positive_pauc_gain": true,
+    "minimum_pauc_shortfall_reduction": 0.1,
+    "maximum_each_condition_pauc_regression": 0.01,
+    "maximum_pooled_pixel_ap_regression": 0.01,
+    "maximum_each_condition_pixel_ap_regression": 0.01
+  },
+  "stop_boundary": "Exactly two fresh runs. Failed gate closes this experiment; passed gate permits calibration then awaits exploratory evaluation. No further training.",
+  "calibration_order": "only after both runs finish, both partial-AUROC-selected weights are frozen and the global gate passes",
+  "test_access": "This screen never reads original test images or masks and performs no test evaluation.",
+  "independence": "All reused KSDD2 tests are development-inspected/exploratory for this method; no new independent holdout exists.",
+  "parameter_counts": {
+    "control_parameters": 488705,
+    "candidate_parameters": 514452,
+    "head_parameters": 25747,
+    "gradient_policy": "classification inputs completely detached; segmentation objective unchanged",
+    "candidate_score": "raw classification logit, not a calibrated probability"
+  },
+  "local_tests": 180,
+  "focused_tests": 16,
+  "code_review": "Separate implementer and reviewer; parent full-suite and canonical synthetic MPS checks",
+  "status_snapshot": {
+    "protocol": "ksdd2-detached-decision-screen-1",
+    "state": "running",
+    "started_at": "2026-10-04T07:56:29.864827+00:00",
+    "declaration_digest": "1313dc36f755ad42b3ef63a9867011af476eaf3010cbae1593b7af0d70308e28",
+    "completed": [],
+    "current_candidate": "control"
+  },
+  "published_weights": "v0.1.0 unchanged; no automatic promotion",
+  "first_checkpoint_verified": {
+    "checked_at_utc": "2026-10-04T07:58:42.579077+00:00",
+    "epoch": 1,
+    "resumable": true,
+    "optimizer_saved": true,
+    "rng_keys": [
+      "python",
+      "numpy",
+      "torch",
+      "shuffle",
+      "mps",
+      "augmentation"
+    ],
+    "threshold": null,
+    "source_config_split_bank_identity_verified": true,
+    "last_epoch_seconds": 72.17358687500382,
+    "lease_and_command_verified": true
+  },
+  "mps_smoke": {
+    "data": "synthetic only; no real images or study training",
+    "model_source_sha256": "98d7f8263d1c7dac79c413e7341e0c5fa402e24be9bdf6cdad23939be6fecba6",
+    "shape": [
+      8,
+      3,
+      640,
+      256
+    ],
+    "both_forward_backward_optimizer_steps_finite": true,
+    "is_latency_benchmark": false
+  },
+  "linux_ci": {
+    "url": "https://github.com/numann44/industrial-inspection/actions/runs/37187260126",
+    "status": "completed",
+    "conclusion": "success"
+  }
+}
