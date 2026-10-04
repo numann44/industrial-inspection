@@ -1,6 +1,6 @@
 # Bounded learned-decision experiment
 
-**Status: declared design under implementation and review; no training or quality result yet.** This is the final two-run architecture comparison in the current KSDD2 follow-up search. It does not extend the closed MVTec synthesis budget or repeat the completed acquisition screen.
+**Status: implementation reviewed and prelaunch checks passed; no training or quality result yet.** This is the final two-run architecture comparison in the current KSDD2 follow-up search. It does not extend the closed MVTec synthesis budget or repeat the completed acquisition screen.
 
 ## Why change the image decision?
 
@@ -22,7 +22,7 @@ Both runs start from seed 42 and random weights. They share the same audited tra
 - **Control:** image score is the mean of the highest 1% of valid sigmoid segmentation responses.
 - **Decision head:** concatenate detached bottleneck features and downsampled detached segmentation logits; apply three small convolutional blocks; combine masked global mean/max features with valid segmentation mean/max statistics; output a raw image logit. Add image-level BCE using existing training labels. Classification gradients never change the U-Net. The image logit is a ranking score, not a calibrated defect probability.
 
-Head initialization must not change backbone initialization or augmentation/sampling randomness. Padding is excluded from the head's pooling and score statistics. This compares learned scoring with fixed scoring; it adds parameters and supervised computation, which will be reported explicitly.
+Head initialization preserves backbone initialization and augmentation/sampling randomness. Padding is excluded from the head's pooling and score statistics. The control has **488,705 parameters**; the candidate adds **25,747**, for **514,452 total** (5.3% more). Both begin with identical segmentation weights. This compares learned scoring with fixed scoring and adds image-supervised computation.
 
 The cap is 100 epochs per run, validation every five epochs, and stopping after 15 stale **training epochs**. Actual stopping epochs may differ. No extra seeds, restart selection, learning-rate search, threshold search or continuation jobs are allowed. Local heavy computation stays serialized by the project lock.
 
@@ -52,4 +52,4 @@ Regardless of the outcome, new independent same-surface reliability claims requi
 
 Implementation is isolated in `experiments/ksdd2_decision`; it imports preserved data and exact-AP helpers without modifying earlier experiment sources. Before any training, freeze source/configuration/environment/split/bank identities and both allowed output paths. Compatible run-owned epoch snapshots must retain optimizer, global, sampler and augmentation RNG states. A completed or unrelated run cannot be overwritten.
 
-Required prelaunch checks cover gradient detachment, identical backbone initialization, padding exclusion, scoring and checkpoint identity, real interrupted-versus-continuous CPU training, data separation, finite metrics, the two-run budget and one-time gated calibration. Launch evidence will record the verified source, actual parameter counts and checks once implementation is reviewed; this document alone is not execution evidence.
+The complete local suite passed **180 tests**, including 16 focused checks covering gradient detachment, identical backbone initialization, padding exclusion, scoring and checkpoint identity, real interrupted-versus-continuous CPU training for both candidates, data separation, finite metrics, the two-run budget and one-time gated calibration. A separate reviewer found no remaining actionable issue. Both candidates also completed a synthetic MPS forward/backward/Adam step at batch 8 and 640×256 with finite scores and gradients. The smoke check used no real images and is not a model-quality result or latency benchmark. Launch evidence will record the source and first saved training checkpoint; this document alone is not execution evidence.
